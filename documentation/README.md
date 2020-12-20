@@ -6,10 +6,10 @@ This folder contains all the documentation for the project. The documentation wa
 
 | File/ Section                                                                                      | Group                                    |
 | -------------------------------------------------------------------------------------------------- | ---------------------------------------- |
-| StRS: [banks and payment services](banks_and_payment_services_StRS_2020-v1.docx)                   | Giannis Kazelidis, Marios Kerasiotis     |
-| StRS: [electric power production companies](electric_power_production_companies_StRS_2020-v1.docx) | Konstantinos Rizavas, Marios Mitropoulos |
-| StRS: [parking companies](parking_companies_StRS_2020-v1.docx)                                     | Giannis Giortzis, Kyriakos Panagiotidis  |
-| StRS: [vehicle owners](vehicle_owners_StRS_2020-v1.docx)                                           | Giannis Kazelidis, Marios Kerasiotis     |
+| StRS: [banks and payment services](StRS files/banks_and_payment_services_StRS_2020-v1.docx)                   | Giannis Kazelidis, Marios Kerasiotis     |
+| StRS: [electric power production companies](StRS files/electric_power_production_companies_StRS_2020-v1.docx) | Konstantinos Rizavas, Marios Mitropoulos |
+| StRS: [parking companies](StRS files/parking_companies_StRS_2020-v1.docx)                                     | Giannis Giortzis, Kyriakos Panagiotidis  |
+| StRS: [vehicle owners](StRS files/vehicle_owners_StRS_2020-v1.docx)                                           | Giannis Kazelidis, Marios Kerasiotis     |
 | [SRS](SRS_2020-v1.docx) use case: User reviews charging station                                    | Giannis Giortzis, Kyriakos Panagiotidis  |
 | [SRS](SRS_2020-v1.docx) use case: Add/ remove charging station                                     | Giannis Giortzis, Kyriakos Panagiotidis  |
 | [SRS](SRS_2020-v1.docx) use case: User adds new form of payment                                    | Giannis Kazelidis, Marios Kerasiotis     |
