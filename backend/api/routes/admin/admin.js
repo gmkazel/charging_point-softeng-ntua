@@ -2,7 +2,8 @@ const express = require('express')
 const router = express.Router()
 const mongoose = require('mongoose')
 
-const userController = require('../../controllers/getbyusername')
+const User = require('../../services/userService')
+const user = new User()
 
 router.get('/healthcheck', (req, res) => {
   if (mongoose.connection.readyState === 1) { res.send({ status: 'OK' }) } else {
@@ -11,9 +12,21 @@ router.get('/healthcheck', (req, res) => {
 })
 
 router.get('/users/:username', (req, res) => {
-  userController.getByUsername(req.params.username, (name) => {
-    res.send(name)
+  user.getByUsername(req.params.username, (err, name) => {
+    if (err) {
+      res.status(400)
+    } else {
+      res.send(name)
+    }
   })
 })
 
+router.post('/usermod/:username/:password', (req, res) => {
+  try {
+    user.createUser({ username: req.params.username, password: req.params.password })
+    res.send('Successful insert')
+  } catch {
+    res.send('Problem!')
+  }
+})
 module.exports = router
