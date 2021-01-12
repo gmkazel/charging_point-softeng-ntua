@@ -1,8 +1,11 @@
 require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
-
+const bodyParser = require('body-parser')
 const app = express()
+
+app.use(bodyParser.json()) // support json encoded bodies
+app.use(bodyParser.urlencoded({ extended: true })) // support encoded bodies
 
 const api = require('./api/routes/api')
 
