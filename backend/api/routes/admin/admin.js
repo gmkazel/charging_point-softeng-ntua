@@ -5,13 +5,16 @@ const mongoose = require('mongoose')
 const User = require('../../services/userService')
 const user = new User()
 
+const userAuth = require('../../services/verifyUser')
+const verifyAdmin = require('../../services/verifyAdmin')
+
 router.get('/healthcheck', (req, res) => {
   if (mongoose.connection.readyState === 1) { res.send({ status: 'OK' }) } else {
     res.send({ status: 'failed' })
   }
 })
 
-router.get('/users/:username', (req, res) => {
+router.get('/users/:username', userAuth, verifyAdmin, (req, res) => {
   user.getByUsername(req.params.username, (err, name) => {
     if (err) {
       console.log('Username does not exist')
@@ -29,7 +32,7 @@ router.get('/users', (req, res) => {
   res.sendStatus(400)
 })
 
-router.post('/usermod/:username/:password', async (req, res) => {
+router.post('/usermod/:username/:password', userAuth, verifyAdmin, async (req, res) => {
   await user.getByUsername(req.params.username, async (err, name) => {
     if (err) {
       res.sendStatus(400)
