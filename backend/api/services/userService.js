@@ -15,10 +15,22 @@ module.exports = class UserService {
     })
   }
 
-  async getByUsername (name, callback) {
-    await User.find({ username: name }, (err, doc) => {
-      callback && callback(err, doc)
-      throw err
+  async changeUserPassword (name, newpwd) {
+    bcrypt.hash(newpwd, parseInt(process.env.SALTROUNDS)).then(function (err, hash) {
+      if (err) {
+        throw err
+      } else {
+        return User.findOneAndUpdate({ username: name }, { password: hash })
+      }
+    })
+  }
+
+  getByUsername (name, callback) {
+    User.find({ username: name }, (err, doc) => {
+      if (err) {
+        throw (err)
+      }
+      callback(err, doc)
     })
   }
 }
