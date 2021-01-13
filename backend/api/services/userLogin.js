@@ -7,13 +7,15 @@ module.exports = async (req, res, next) => {
 
   const data = await getUserbyUsername(username).catch((err) => {
     console.log(err)
-    res.sendStatus(400)
+    res.status(400)
+    res.send('Error getting username')
     return next('route')
   })
 
   if (data === null) {
-    res.sendStatus(400)
-    return next('route')
+    res.status(400)
+    res.send('No user name like this')
+    next()
   }
 
   const hash = String(data.password)
@@ -25,16 +27,18 @@ module.exports = async (req, res, next) => {
     const token = jwt.sign({ _id: data.id, username: data.username, account_type: data.account_type, date: now }, process.env.TOKEN_SECRET)
     await changeAPIKey(data.id, token).catch((err) => {
       console.log(err)
-      res.sendStatus(400)
-      return next('route')
-    })
 
+      res.status(400)
+      res.send('Couldn\'t change token')
+    })
     res.header('X-OBSERVATORY-AUTH', token).send(token)
     next()
   } else {
-    res.sendStatus(400)
+    res.status(400)
+    res.send('Password does not match')
     return next('route')
   }
+  next()
 }
 
 function getUserbyUsername (usernameInput) {
