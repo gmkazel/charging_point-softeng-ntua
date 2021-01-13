@@ -17,5 +17,4 @@ const PointSchema = mongoose.Schema({
   }
 })
 
-const Point = mongoose.model('Point', PointSchema)
-module.exports = { Point }
+module.exports = mongoose.model('Point', PointSchema)

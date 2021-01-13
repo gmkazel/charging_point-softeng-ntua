@@ -35,8 +35,7 @@ const UserSchema = mongoose.Schema({
   },
   api_key: {
     type: String,
-    minLength: 14,
-    maxLength: 14
+    minLength: 5
   },
   account_type: {
     type: String,

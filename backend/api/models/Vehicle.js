@@ -41,5 +41,4 @@ const VehicleSchema = mongoose.Schema({
 
 })
 
-const Vehicle = mongoose.model('Vehicle', VehicleSchema)
-module.exports = { Vehicle }
+module.exports = mongoose.model('Vehicle', VehicleSchema)
