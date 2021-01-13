@@ -2,16 +2,22 @@ const jwt = require('jsonwebtoken')
 
 module.exports = async (req, res, next) => {
   const token = req.header('X-OBSERVATORY-AUTH')
-  if (!token) return res.sendStatus(400)
+  if (!token) {
+    res.status(400)
+    res.send('No token given')
+    return next('route')
+  }
 
   const verified = jwt.verify(token, process.env.TOKEN_SECRET)
   await changeAPIKey(verified._id, '').catch((err) => {
     console.log(err)
-    res.sendStatus(400)
+    res.status(400)
+    res.send('Couldn\'t remove token')
     return next('route')
   })
   res.header('X-OBSERVATORY-AUTH', '')
-  res.sendStatus(200)
+  res.status(200)
+  res.send()
   next()
 }
 
