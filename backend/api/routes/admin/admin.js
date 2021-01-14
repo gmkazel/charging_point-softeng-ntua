@@ -10,8 +10,8 @@ const verifyAdmin = require('../../services/verifyAdmin')
 const healthcheck = require('../../services/healthcheck')
 router.get('/healthcheck', healthcheck)
 
-const resetsessions = require('../../services/resetSessions')
-router.post('/resetsessions', resetsessions)
+// const resetsessions = require('../../services/resetSessions')
+// router.post('/resetsessions', resetsessions)
 
 router.get('/users/:username', userAuth, verifyAdmin, (req, res) => {
   user.getByUsername(req.params.username, (err, name) => {
@@ -45,8 +45,12 @@ router.post('/usermod/:username/:password', userAuth, verifyAdmin, async (req, r
       }
     } else {
       // change user password
-      await user.changeUserPassword(req.params.username, req.params.password)
-      res.send('Password changed')
+      try {
+        await user.changeUserPassword(req.params.username, req.params.password)
+        res.send('Password changed')
+      } catch (err) {
+        res.status(400)
+      }
     }
   })
 })

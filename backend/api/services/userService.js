@@ -20,13 +20,8 @@ module.exports = class UserService {
   }
 
   async changeUserPassword (name, newpwd) {
-    bcrypt.hash(newpwd, parseInt(process.env.SALTROUNDS)).then(function (err, hash) {
-      if (err) {
-        throw err
-      } else {
-        return User.findOneAndUpdate({ username: name }, { password: hash })
-      }
-    })
+    const hash = bcrypt.hashSync(newpwd, parseInt(process.env.SALTROUNDS))
+    return User.findOneAndUpdate({ username: name }, { password: hash })
   }
 
   getByUsername (name, callback) {
