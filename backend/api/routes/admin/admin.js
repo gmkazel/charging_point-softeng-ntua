@@ -1,6 +1,5 @@
 const express = require('express')
 const router = express.Router()
-const mongoose = require('mongoose')
 
 const User = require('../../services/userService')
 const user = new User()
@@ -8,11 +7,11 @@ const user = new User()
 const userAuth = require('../../services/verifyUser')
 const verifyAdmin = require('../../services/verifyAdmin')
 
-router.get('/healthcheck', (req, res) => {
-  if (mongoose.connection.readyState === 1) { res.send({ status: 'OK' }) } else {
-    res.send({ status: 'failed' })
-  }
-})
+const healthcheck = require('../../services/healthcheck')
+router.get('/healthcheck', healthcheck)
+
+const resetsessions = require('../../services/resetSessions')
+router.post('/resetsessions', resetsessions)
 
 router.get('/users/:username', userAuth, verifyAdmin, (req, res) => {
   user.getByUsername(req.params.username, (err, name) => {
