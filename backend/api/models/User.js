@@ -47,13 +47,11 @@ const UserSchema = mongoose.Schema({
   cars: [
     {
       model: {
-        type: String,
-        required: true
+        type: String
       },
       info: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Vehicle',
-        required: true
+        type: mongoose.Types.ObjectId,
+        ref: 'Vehicle'
       }
     }
   ],
@@ -95,8 +93,7 @@ const UserSchema = mongoose.Schema({
       },
       info: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Station',
-        required: true
+        ref: 'Station'
       }
     }
   ],
@@ -107,10 +104,10 @@ const UserSchema = mongoose.Schema({
   electricalCompanyOperatorSessions: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Session',
-      required: true
+      ref: 'Session'
     }
   ]
 })
 
-module.exports = mongoose.model('User', UserSchema)
+const model = mongoose.model('User', UserSchema)
+module.exports = model
