@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken')
 require('dotenv').config()
 
 module.exports = class UserService {
-  async createUser (user) {
+  async createUser (user, res) {
     const now = new Date()
     const token = jwt.sign({ _id: user.id, username: user.username, account_type: user.account_type, date: now }, process.env.TOKEN_SECRET)
     user.api_key = token
@@ -13,7 +13,9 @@ module.exports = class UserService {
       user.password = hash
       User.create(user, (err) => {
         if (err) {
-          throw err
+          res.status(400).send(err)
+        } else {
+          res.send('User created')
         }
       })
     })
@@ -24,12 +26,9 @@ module.exports = class UserService {
     return User.findOneAndUpdate({ username: name }, { password: hash })
   }
 
-  getByUsername (name, callback) {
+  getByUsername (name, cb) {
     User.find({ username: name }, (err, doc) => {
-      if (err) {
-        throw (err)
-      }
-      callback(err, doc)
+      cb(err, doc)
     })
   }
 }
