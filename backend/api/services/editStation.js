@@ -11,12 +11,14 @@ module.exports = async (req, res, next) => {
   }
 
   if (!(check(cand) && check(stationId) && check(userId))) {
-    res.sendStatus(400)
+    res.status(400)
+    res.send()
     return next('route')
   }
 
   if (!await stationService.ownedBy(userId, stationId)) {
-    res.sendStatus(401)
+    res.status(401)
+    res.send()
     return next('routes')
   }
 
@@ -25,7 +27,8 @@ module.exports = async (req, res, next) => {
     res.send(result)
     next()
   } catch (err) {
-    res.sendStatus(400)
+    res.status(400)
+    res.send()
     return next('route')
   }
   next()

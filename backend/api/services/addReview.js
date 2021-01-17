@@ -11,7 +11,8 @@ module.exports = async (req, res, next) => {
   }
 
   if (!(check(req.body) && check(stationId) && check(userId))) {
-    res.sendStatus(400)
+    res.status(400)
+    res.send()
     return next('route')
   }
 
@@ -27,7 +28,8 @@ module.exports = async (req, res, next) => {
     next()
   } catch (err) {
     console.log(err)
-    res.sendStatus(400)
+    res.status(400)
+    res.send()
     return next('route')
   }
   next()

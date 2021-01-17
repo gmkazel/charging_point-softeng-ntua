@@ -1,6 +1,7 @@
 const stationModel = require('../models/Station')
 const userModel = require('../models/User')
 const Joi = require('joi-oid')
+const mongoose = require('mongoose')
 
 module.exports = class {
   async ownedBy (userId, stationId) {
