@@ -11,4 +11,7 @@ router.post('/logout', userAuth, userLogout)
 const admin = require('./admin/admin')
 router.use('/admin', admin)
 
+const stationmod = require('./stationmod.js')
+router.use('/stationmod', userAuth, stationmod)
+
 module.exports = router

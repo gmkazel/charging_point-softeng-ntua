@@ -1,7 +1,12 @@
 const mongoose = require('mongoose')
 
 const StationSchema = mongoose.Schema({
-  name: String,
+  name: {
+    type: String,
+    minLength: 1,
+    maxLength: 255,
+    required: true
+  },
   address: {
     type: String,
     minLength: 1,
@@ -21,14 +26,11 @@ const StationSchema = mongoose.Schema({
       maxLength: 2000
     }
   },
-  operator: String,
-  number_of_active_points: {
-    type: Number,
-    default: 0
-  },
-  total_energy_delivered: {
-    type: Number,
-    default: 0
+  operator: {
+    type: String,
+    minLength: 1,
+    maxLength: 255,
+    required: true
   },
   points: [
     {
@@ -42,7 +44,7 @@ const StationSchema = mongoose.Schema({
     ref: 'User',
     required: true
   },
-  comments: [{
+  reviews: [{
     date: {
       type: Date,
       required: true
