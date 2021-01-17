@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
 
 const PointSchema = mongoose.Schema({
-  charging_mode: Number,
   total_energy_delivered: Number,
   sessions: [
     {

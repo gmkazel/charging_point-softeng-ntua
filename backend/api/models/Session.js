@@ -20,7 +20,7 @@ const SessionSchema = mongoose.Schema({
     required: true
   },
   price_policy_ref: Number,
-  cost_per_kw: Number,
+  cost_per_kwh: Number,
   session_cost: Number,
   current_kilometers: {
     type: Number,

@@ -102,8 +102,7 @@ const UserSchema = mongoose.Schema({
   ],
 
   // for electricalCompanyOperator
-  cost_per_kw: Number,
-  session_cost: Number,
+  cost_per_kwh: Number,
   electricalCompanyOperatorSessions: [
     {
       type: mongoose.Schema.Types.ObjectId,

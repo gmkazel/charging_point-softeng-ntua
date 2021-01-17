@@ -29,8 +29,6 @@ const VehicleSchema = mongoose.Schema({
     max_power: Number,
     ports: [{ type: String }]
   },
-  number_of_visited_points: { type: Number, default: 0 },
-  number_of_vehicle_charging_sessions: { type: Number, default: 0 },
   sessions: [
     {
       type: mongoose.Schema.Types.ObjectId,
