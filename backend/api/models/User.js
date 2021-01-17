@@ -47,13 +47,11 @@ const UserSchema = mongoose.Schema({
   cars: [
     {
       model: {
-        type: String,
-        required: true
+        type: String
       },
       info: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Vehicle',
-        required: true
+        type: mongoose.Types.ObjectId,
+        ref: 'Vehicle'
       }
     }
   ],
@@ -95,22 +93,21 @@ const UserSchema = mongoose.Schema({
       },
       info: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Station',
-        required: true
+        ref: 'Station'
       }
     }
   ],
 
   // for electricalCompanyOperator
-  cost_per_kw: Number,
+  cost_per_kwh: Number,
   session_cost: Number,
   electricalCompanyOperatorSessions: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Session',
-      required: true
+      ref: 'Session'
     }
   ]
 })
 
-module.exports = mongoose.model('User', UserSchema)
+const model = mongoose.model('User', UserSchema)
+module.exports = model
