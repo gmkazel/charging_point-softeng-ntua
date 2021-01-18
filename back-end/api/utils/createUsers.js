@@ -13,10 +13,10 @@ const user = new UserService()
 module.exports = async () => {
   await createVehicles.createDataset('./electric_vehicles_data.json')
 
-  for (let i = 0; i < 70; i++) { await createVehicleOwner() }
-  console.log('Vehicle Owners Done')
   for (let i = 0; i < 20; i++) { await createElectricalOperators() }
   console.log('Electrical Operators Done')
+  for (let i = 0; i < 70; i++) { await createVehicleOwner() }
+  console.log('Vehicle Owners Done')
   for (let i = 0; i < 3; i++) { await createAdmin() }
   console.log('Admins Done')
   for (let i = 0; i < 20; i++) { await createStationOwner() }
