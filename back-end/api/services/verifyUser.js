@@ -1,3 +1,4 @@
+const config = require('config')
 const jwt = require('jsonwebtoken')
 
 module.exports = async function (req, res, next) {
@@ -5,7 +6,7 @@ module.exports = async function (req, res, next) {
   if (!token) return res.sendStatus(400)
 
   try {
-    const verified = jwt.verify(token, process.env.TOKEN_SECRET)
+    const verified = jwt.verify(token, config.TOKEN_SECRET)
 
     const apiKey = await getAPIKey(verified._id).catch((err) => {
       console.log(err)

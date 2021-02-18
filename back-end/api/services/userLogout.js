@@ -1,3 +1,5 @@
+
+const config = require('config')
 const jwt = require('jsonwebtoken')
 
 module.exports = async (req, res, next) => {
@@ -8,7 +10,7 @@ module.exports = async (req, res, next) => {
     return next('route')
   }
 
-  const verified = jwt.verify(token, process.env.TOKEN_SECRET)
+  const verified = jwt.verify(token, config.TOKEN_SECRET)
   await changeAPIKey(verified._id, '').catch((err) => {
     console.log(err)
     res.status(400)

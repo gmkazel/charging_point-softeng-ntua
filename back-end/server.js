@@ -1,4 +1,4 @@
-require('dotenv').config()
+const config = require('config')
 const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
@@ -9,12 +9,12 @@ app.use(bodyParser.urlencoded({ extended: true })) // support encoded bodies
 
 const api = require('./api/routes/api')
 
-mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true }, () => {
+mongoose.connect(config.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true }, () => {
   console.log('Connected to database')
 })
 
-app.listen(process.env.PORT, function () {
-  console.log('Server is listening at port ' + process.env.PORT)
+app.listen(config.PORT, function () {
+  console.log('Server is listening at port ' + config.PORT)
 })
 
-app.use(process.env.BASE_URL, api)
+app.use(config.BASE_URL, api)

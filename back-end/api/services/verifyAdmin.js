@@ -1,3 +1,5 @@
+
+const config = require('config')
 const jwt = require('jsonwebtoken')
 
 module.exports = function (req, res, next) {
@@ -9,7 +11,7 @@ module.exports = function (req, res, next) {
   }
 
   try {
-    const verified = jwt.verify(token, process.env.TOKEN_SECRET)
+    const verified = jwt.verify(token, config.TOKEN_SECRET)
     if (verified.account_type === 'admin') {
       req.user = verified
       next()
