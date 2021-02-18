@@ -447,4 +447,10 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+#EXTRA
+dev.json
+prod.josn
+test.json
+
+
 # End of https://www.toptal.com/developers/gitignore/api/git,linux,windows,macos,node,vscode,react,reactnative,dotenv
