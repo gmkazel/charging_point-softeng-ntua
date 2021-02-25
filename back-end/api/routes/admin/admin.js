@@ -7,18 +7,17 @@ const user = new User()
 const userAuth = require('../../services/verifyUser')
 const verifyAdmin = require('../../services/verifyAdmin')
 
-const healthcheck = require('../../services/healthcheck')
-
-// const resetsessions = require('../../services/resetSessions')
-// router.post('/resetsessions', resetsessions)
-
-const createUsers = require('../../utils/createUsers')
-router.get('/createUsers', createUsers)
-
 const upload = require('../../services/csvService')
 const multiparty = require('multiparty')
 const form = new multiparty.Form()
 
+const resetsessions = require('../../services/resetSessions')
+router.post('/resetsessions', resetsessions)
+
+const createUsers = require('../../utils/createUsers')
+router.get('/createUsers', createUsers)
+
+const healthcheck = require('../../services/healthcheck')
 router.get('/healthcheck', healthcheck)
 
 router.get('/users/:username', userAuth, verifyAdmin, (req, res) => {

@@ -43,7 +43,8 @@ module.exports = async (req, res, next) => {
       res.status(400)
       res.send('Couldn\'t change token')
     })
-    res.header('X-OBSERVATORY-AUTH', token).send(token)
+    res.status(200)
+    res.header('X-OBSERVATORY-AUTH', token).send({ token: token })
     next()
   } else {
     res.status(400)
