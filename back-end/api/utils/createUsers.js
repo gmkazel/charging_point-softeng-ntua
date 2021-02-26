@@ -10,7 +10,17 @@ const createVehicles = new CreateVehicles()
 const dict = {}
 const user = new UserService()
 
-module.exports = async () => {
+module.exports = async (req, res) => {
+  try {
+    await createUsers()
+    res.send({ status: 'ok' })
+  } catch (err) {
+    console.log(err)
+    res.status(400)
+    res.send({ status: 'fail' })
+  }
+}
+async function createUsers () {
   await createVehicles.createDataset('./electric_vehicles_data.json')
 
   for (let i = 0; i < 20; i++) { await createElectricalOperators() }
@@ -57,7 +67,7 @@ async function createVehicleOwner () {
       exp_date: '10/21'
     }]
   }
-  const someUser = await user.createUser(newuser)
+  const someUser = await user.createUserF(newuser)
   return someUser
 }
 
@@ -81,7 +91,7 @@ async function createElectricalOperators () {
     cost_per_kwh: getRndFloat(0.2, 0.5),
     session_cost: getRndFloat(5, 10)
   }
-  const someUser = await user.createUser(newuser)
+  const someUser = await user.createUserF(newuser)
   return someUser
 }
 
@@ -107,7 +117,7 @@ async function createStationOwner () {
     }]
   }
 
-  const someUser = await user.createUser(newuser)
+  const someUser = await user.createUserF(newuser)
   return someUser
 }
 
@@ -125,7 +135,7 @@ async function createAdmin () {
     },
     account_type: 'admin'
   }
-  const someUser = await user.createUser(newuser)
+  const someUser = await user.createUserF(newuser)
   return someUser
 }
 

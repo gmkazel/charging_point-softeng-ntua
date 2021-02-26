@@ -8,7 +8,7 @@ const createPoints = new CreatePoints()
 
 module.exports = async (userCount) => {
   const random = getRandomInt(userCount)
-  const randUser = await userModel.findOne({ account_type: 'electricalCompanyOperator' }, 'username _id').skip(random)
+  const randUser = await userModel.findOne({ account_type: 'vehicleOwner' }, 'username _id').skip(random)
   // console.log(randUser)
   const newStation = {
     name: faker.fake('{{address.streetAddress}}, {{address.city}}'),
@@ -18,6 +18,7 @@ module.exports = async (userCount) => {
         email: faker.internet.email(),
         phone: [faker.phone.phoneNumber()]
       },
+    operator: faker.internet.userName(),
     energy_provider: mongoose.Types.ObjectId(randUser._id)
   }
 
