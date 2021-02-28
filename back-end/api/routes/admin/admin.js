@@ -26,7 +26,7 @@ router.get('/users/:username', userAuth, verifyAdmin, (req, res) => {
       res.status(400).send(err)
     } else {
       if (!Object.keys(name).length) {
-        res.sendStatus(204)
+        res.sendStatus(400)
       } else {
         res.send(name)
       }
