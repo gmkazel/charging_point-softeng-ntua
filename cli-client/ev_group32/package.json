@@ -1,16 +1,20 @@
 {
-  "name": "evgroup32",
+  "name": "ev_group32",
   "description": "The cli-client of Charging Point",
   "version": "1.0.0",
   "author": "Softeng-32",
   "bin": {
-    "evgroup32": "./bin/run"
+    "ev_group32": "./bin/run"
   },
   "bugs": "https://github.com/ntua/TL20-32/issues",
   "dependencies": {
     "@oclif/command": "^1.8.0",
     "@oclif/config": "^1.17.0",
-    "@oclif/plugin-help": "^3.2.2"
+    "@oclif/plugin-help": "^3.2.2",
+    "axios": "^0.21.1",
+    "chalk": "^4.1.0",
+    "fs": "0.0.1-security",
+    "https": "^1.0.0"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1.26.0",
@@ -39,7 +43,7 @@
   "main": "src/index.js",
   "oclif": {
     "commands": "./src/commands",
-    "bin": "evgroup32",
+    "bin": "ev_group32",
     "plugins": [
       "@oclif/plugin-help"
     ]
