@@ -14,13 +14,17 @@ module.exports = class UserService {
         if (err) {
           res.status(400).send(err)
         } else {
-          res.send('User created')
+          res.send({ token: token })
         }
       })
     })
   }
 
   async createUserF (user) {
+    User.find({ username: user.username }, (err, doc) => {
+      if (err) throw (err)
+      if (doc) return null
+    })
     const now = new Date()
     const token = jwt.sign({ _id: user.id, username: user.username, account_type: user.account_type, date: now }, config.TOKEN_SECRET)
     user.api_key = token
