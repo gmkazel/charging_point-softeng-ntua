@@ -29,8 +29,7 @@ module.exports = class UserService {
       const newuser = new User(user)
       newuser.save((err) => {
         if (err) {
-          if (err.code === 11000) console.log('User already exists')
-          else throw (err)
+          if (err.code !== 11000) { throw (err) }
         }
       })
     })
