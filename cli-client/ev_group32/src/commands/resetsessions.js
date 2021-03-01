@@ -9,19 +9,19 @@ const chalk = require('chalk')
 const config = require('../../config/config.json')
 axios.defaults.httpsAgent = new https.Agent()
 
-class HealthCheck extends Command {
+class resetSessions extends Command {
   async run() {
     try {
-      const {flags} = this.parse(HealthCheck)
-      const status = await axios.get(`${config.BASE_URL}/admin/healthcheck`)
-      console.log(status.data)
+      const {flags} = this.parse(resetSessions)
+      await axios.post(`${config.BASE_URL}/admin/resetsessions`)
+      console.log('Reset Successful')
     } catch (error) {
       console.error(chalk.red(error))
     }
   }
 }
 
-HealthCheck.flags = {
+resetSessions.flags = {
   format: flags.string({
     options: ['json', 'csv'],
     required: true,
@@ -29,6 +29,6 @@ HealthCheck.flags = {
   }),
 }
 
-HealthCheck.description = 'tests live server for errors'
+resetSessions.description = 'reset evcharge data and insert default admin to the db'
 
-module.exports = HealthCheck
+module.exports = resetSessions

@@ -29,11 +29,11 @@ Logout.flags = {
   format: flags.string({
     options: ['json', 'csv'],
     required: true,
+    default: 'json',
   }),
   apikey: flags.string({
     required: true,
     description: 'the api key used for authorization',
-    default: '1',
   }),
 }
 
