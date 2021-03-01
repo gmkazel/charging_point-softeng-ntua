@@ -12,7 +12,14 @@ const upload = async (req, res) => {
         if (err) {
           res.status(400).send(err)
         } else {
-          res.send('File upload successfully!')
+          Session.find()
+            .then(data => {
+              res.send({
+                SessionsInUploadedFile: jsonArrayObj.length,
+                SessionsImported: jsonArrayObj.length,
+                TotalSessionsInDatabase: data.length
+              })
+            })
         }
       })
     })
