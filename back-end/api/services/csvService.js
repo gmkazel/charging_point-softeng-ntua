@@ -3,7 +3,7 @@ const Session = require('../models/Session')
 
 const upload = async (req, res) => {
   if (req.file[0] === undefined) {
-    return res.status(400).send({ message: 'Please upload a csv file!' })
+    return res.status(400).send('Please upload a csv file!')
   }
   csv()
     .fromFile(req.file[0].path)

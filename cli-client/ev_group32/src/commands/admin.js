@@ -1,3 +1,4 @@
+/* eslint-disable node/no-extraneous-require */
 /* eslint-disable no-negated-condition */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-console */
@@ -7,8 +8,9 @@ const {Command, flags} = require('@oclif/command')
 const https = require('https')
 const axios = require('axios')
 const chalk = require('chalk')
+const fs = require('fs')
 const config = require('../../config/config.json')
-const {captureRejectionSymbol} = require('events')
+const FormData = require('form-data')
 axios.defaults.httpsAgent = new https.Agent()
 
 class admin extends Command {
@@ -31,11 +33,13 @@ class admin extends Command {
         }
         if (flags.users !== undefined) {
           const status = await axios.get(`${config.BASE_URL}/admin/users/${flags.username}`)
-          console.log(status.data)
+          console.log({username: status.data[0].username, apikey: status.data[0].api_key})
         }
         if (flags.sessionsupd !== undefined) {
-          // Should use headers.common to upload the csv file taken from source!
-          const status = await axios.post(`${config.BASE_URL}/admin/sessionsupd`)
+          const form = new FormData()
+          form.append('file', fs.createReadStream(flags.source))
+
+          const status = await axios.post(`${config.BASE_URL}/admin/system/sessionsupd`, form, {headers: form.getHeaders()})
           console.log(status.data)
         }
       }
