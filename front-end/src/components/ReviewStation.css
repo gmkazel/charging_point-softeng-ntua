@@ -54,7 +54,3 @@ label {
 .rating:not(:checked)>label:hover~label {
     color: #FFD700
 }
-
-.reset-option {
-    display: none
-}

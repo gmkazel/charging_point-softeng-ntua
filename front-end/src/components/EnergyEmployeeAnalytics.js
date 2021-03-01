@@ -1,29 +1,28 @@
 import 'bootstrap/dist/css/bootstrap.css';
-import './UserAnalytics.css';
+import './EnergyEmployeeAnalytics.css';
 import NavBar2 from '../components/NavBar2';
-import LineChart from './LineChart';
-import UserLinks from './UserLinks';
+import EnergyLineChart from './EnergyLineChart';
 import { Link } from 'react-router-dom';
 
-let carsData = [
-    { value: 'All Cars' },
-    { value: 'Tesla' },
-    { value: 'Mercedes' }
+let stationsData = [
+    { value: 'All Stations' },
+    { value: 'Station 1' },
+    { value: 'Station 2' }
 ];
 
 let data1=[5, 2, 1, 3, 3];
 
-function UserAnalytics() {
+function EnergyEmployeeAnalytics() {
     return (
         <div>
             <NavBar2/>
 
-            <UserLinks/>
+            <br/>
 
             <div className="container-fluid">
                 <div className="row justify-content-around align-items-center no-gutters">
-                    <select id="cars" name="cars" value={carsData.value} className="dropdownmargin">
-                        {carsData.map((e, key) => {return <option key={key} value={e.value}>{e.value}</option>;})}
+                    <select id="stations" name="stations" value={stationsData.value} className="dropdownmargin">
+                        {stationsData.map((e, key) => {return <option key={key} value={e.value}>{e.value}</option>;})}
                     </select>
 
                     <select id="timeperiod" name="timeperiod">
@@ -40,17 +39,17 @@ function UserAnalytics() {
             </div>
             <br/>
             <div className="container-fluid chart">
-                <LineChart/>
+                <EnergyLineChart/>
             </div>
             <br/>
             <div className="container-fluid">
                 <div className="row justify-content-around align-items-center">
-                    <Link to="/user/analytics/history"><button className="btn btn-primary">See full charge history</button></Link>
+                    <Link to="/energyemployee/analytics/history"><button className="btn btn-primary">See full charge history</button></Link>
                 </div>
             </div>
         </div>
     );
 }
 
-export default UserAnalytics;
+export default EnergyEmployeeAnalytics;
 export {data1};

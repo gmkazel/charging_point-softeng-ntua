@@ -2,6 +2,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import PaymentMethod from '../components/PaymentMethod';
 import NavBar2 from '../components/NavBar2';
 import UserLinks from './UserLinks';
+import { Link } from 'react-router-dom';
 
 function PaymentMethods() {
     return (
@@ -16,7 +17,7 @@ function PaymentMethods() {
 
             <div className="container-fluid">
                 <div className="row justify-content-around align-items-center">
-                    <button className="btn btn-primary">+ Add a new payment method</button>
+                    <Link to="/user/paymentmethods/add"><button className="btn btn-primary">+ Add a new payment method</button></Link>
                 </div>
             </div>
         </div>

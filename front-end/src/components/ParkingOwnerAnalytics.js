@@ -1,24 +1,22 @@
 import 'bootstrap/dist/css/bootstrap.css';
-import './UserAnalytics.css';
 import NavBar2 from '../components/NavBar2';
+import ParkingownerLinks from './ParkingownerLinks';
 import LineChart from './LineChart';
-import UserLinks from './UserLinks';
 import { Link } from 'react-router-dom';
 
 let carsData = [
     { value: 'All Cars' },
     { value: 'Tesla' },
-    { value: 'Mercedes' }
+    { value: 'Mercedes' }            
 ];
 
-let data1=[5, 2, 1, 3, 3];
+// let data1=[5, 2, 1, 3, 3];
 
-function UserAnalytics() {
+function ParkingOwnerAnalytics() {
     return (
         <div>
             <NavBar2/>
-
-            <UserLinks/>
+            <ParkingownerLinks/>
 
             <div className="container-fluid">
                 <div className="row justify-content-around align-items-center no-gutters">
@@ -45,12 +43,11 @@ function UserAnalytics() {
             <br/>
             <div className="container-fluid">
                 <div className="row justify-content-around align-items-center">
-                    <Link to="/user/analytics/history"><button className="btn btn-primary">See full charge history</button></Link>
+                    <Link to="/parkingowner/analytics/history"><button className="btn btn-primary">See full charge history</button></Link>
                 </div>
             </div>
         </div>
     );
 }
 
-export default UserAnalytics;
-export {data1};
+export default ParkingOwnerAnalytics;

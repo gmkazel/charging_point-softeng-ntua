@@ -10,9 +10,9 @@ function UserReview() {
 
             <UserLinks/>
 
-            <ReviewStation/>
-            <ReviewStation/>
-            <ReviewStation/>
+            <ReviewStation reviewid="review1"/>
+            <ReviewStation reviewid="review2"/>
+            <ReviewStation reviewid="review3"/>
         </div>
     );
 }
