@@ -14,4 +14,7 @@ router.use('/admin', admin)
 const stationmod = require('./stationmod.js')
 router.use('/stationmod', userAuth, stationmod)
 
+const sessions = require('./sessions.js')
+router.use('', sessions)
+
 module.exports = router
