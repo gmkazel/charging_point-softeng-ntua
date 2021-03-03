@@ -33,10 +33,10 @@ SessionsPerProvider.flags = {
     required: true,
     description: 'the api key used for authorization',
   }),
-  provider: {
-    Boolean,
+  provider: flags.string({
     required: true,
-  },
+    description: 'the id of the provider to search',
+  }),
   datefrom: flags.string({
     required: true,
   }),

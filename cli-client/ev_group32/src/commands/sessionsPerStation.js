@@ -33,10 +33,10 @@ SessionsPerStation.flags = {
     required: true,
     description: 'the api key used for authorization',
   }),
-  station: {
-    Boolean,
+  station: flags.string({
     required: true,
-  },
+    description: 'the id of the station to search',
+  }),
   datefrom: flags.string({
     required: true,
   }),

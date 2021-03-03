@@ -18,7 +18,7 @@ class Logout extends Command {
       axios.defaults.headers.common['X-OBSERVATORY-AUTH'] = flags.apikey
       await axios.post(`${config.BASE_URL}/logout`)
       console.log('Successful logout!')
-      fs.unlinkSync((__homedir, '../../softeng20bAPI.token'))
+      fs.unlinkSync((__homedir +  '/softeng20bAPI.token'))
     } catch (error) {
       console.error(chalk.red(error))
     }

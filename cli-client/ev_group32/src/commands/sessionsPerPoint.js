@@ -33,10 +33,10 @@ SessionsPerPoint.flags = {
     required: true,
     description: 'the api key used for authorization',
   }),
-  point: {
-    Boolean,
+  flags.string({
     required: true,
-  },
+    description: 'the id of the point to search',
+  }),
   datefrom: flags.string({
     required: true,
   }),
