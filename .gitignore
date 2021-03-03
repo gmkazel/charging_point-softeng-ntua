@@ -452,5 +452,7 @@ dev.json
 prod.josn
 test.json
 .editorconfig
+default.json
+user_passwords.txt
 
 # End of https://www.toptal.com/developers/gitignore/api/git,linux,windows,macos,node,vscode,react,reactnative,dotenv

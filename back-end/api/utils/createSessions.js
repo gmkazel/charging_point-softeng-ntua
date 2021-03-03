@@ -9,13 +9,13 @@ const paymentType = ['Bank Card', 'PayPal']
 
 module.exports = async (req, res) => {
   try {
-    for (let i = 0; i < 80; i++) { await createSessions() }
+    for (let i = 0; i < 500; i++) { await createSessions() }
     console.log('Sessions Done')
-    res.send({ status: 'ok' })
+    res.send({ status: 'OK' })
   } catch (err) {
     console.log(err)
     res.status(400)
-    res.send({ status: 'fail' })
+    res.send({ status: 'failed' })
   }
 }
 
@@ -45,9 +45,9 @@ async function createSessions () {
 
   const res = await sessionModel.create(newSession)
   const sessionID = res._id
-  await pointModel.findByIdAndUpdate(randPoint._id, { sessions: mongoose.Types.ObjectId(sessionID) })
-  await vehicleModel.findByIdAndUpdate(randVehicle._id, { sessions: mongoose.Types.ObjectId(sessionID) })
-  await userModel.findByIdAndUpdate(randUser._id, { electricalCompanyOperatorSessions: mongoose.Types.ObjectId(sessionID) })
+  await pointModel.findByIdAndUpdate(randPoint._id, { $push: { sessions: mongoose.Types.ObjectId(sessionID) } })
+  await vehicleModel.findByIdAndUpdate(randVehicle._id, { $push: { sessions: mongoose.Types.ObjectId(sessionID) } })
+  await userModel.findByIdAndUpdate(randUser._id, { $push: { electricalCompanyOperatorSessions: mongoose.Types.ObjectId(sessionID) } })
 }
 
 function getRndFloat (min, max) {

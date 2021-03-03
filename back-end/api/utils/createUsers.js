@@ -13,11 +13,11 @@ const user = new UserService()
 module.exports = async (req, res) => {
   try {
     await createUsers()
-    res.send({ status: 'ok' })
+    res.send({ status: 'OK' })
   } catch (err) {
     console.log(err)
     res.status(400)
-    res.send({ status: 'fail' })
+    res.send({ status: 'failed' })
   }
 }
 async function createUsers () {

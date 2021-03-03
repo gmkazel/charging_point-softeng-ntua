@@ -1,5 +1,7 @@
 const Session = require('../models/Session')
 const Vehicle = require('../models/Vehicle')
+const Point = require('../models/Point')
+const User = require('../models/User')
 const config = require('config')
 const UserService = require('./userService')
 const userService = new UserService()
@@ -19,7 +21,9 @@ const resetSessions = async (req, res, next) => {
 const deleteAllSessions = async () => {
   const deleteSessionRes = await Session.deleteMany()
   const deleteSessionInVehivleRes = await Vehicle.updateMany({}, { sessions: [] })
-  if (deleteSessionRes && deleteSessionInVehivleRes) return true
+  const deleteSessionInPointRes = await Point.updateMany({}, { sessions: [] })
+  const deleteSessionInUserRes = await User.updateMany({}, { electricalCompanyOperatorSessions: [] })
+  if (deleteSessionRes && deleteSessionInVehivleRes && deleteSessionInPointRes && deleteSessionInUserRes) return true
   else return false
 }
 
