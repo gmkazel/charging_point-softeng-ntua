@@ -23,7 +23,7 @@ class Login extends Command {
       const status = await axios.post(`${config.BASE_URL}/login`, params, {headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       }})
-      fs.writeFileSync((__homedir, '../../softeng20bAPI.token'), status.data.token)
+      fs.writeFileSync((__homedir + '/softeng20bAPI.token'), status.data.token)
       console.log('Successful login!')
     } catch (error) {
       console.error(chalk.red(error))

@@ -33,10 +33,10 @@ SessionsPerEV.flags = {
     required: true,
     description: 'the api key used for authorization',
   }),
-  ev: {
-    Boolean,
+  ev: flags.string({
     required: true,
-  },
+    description: 'the id of the car to search',
+  }),
   datefrom: flags.string({
     required: true,
   }),
