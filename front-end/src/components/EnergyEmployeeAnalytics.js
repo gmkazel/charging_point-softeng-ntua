@@ -1,16 +1,46 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import './EnergyEmployeeAnalytics.css';
 import NavBar2 from '../components/NavBar2';
-import EnergyLineChart from './EnergyLineChart';
+import { Line } from 'react-chartjs-2';
 import { Link } from 'react-router-dom';
 
-let stationsData = [
+let stationData = [
     { value: 'All Stations' },
-    { value: 'Station 1' },
-    { value: 'Station 2' }
+    { value: 'Station1' },
+    { value: 'Station2' }
 ];
 
+let labels1=['Jan', 'Feb', 'Mar', 'Apr', 'May'];
+let label_km='Total sessions completed';
+let label_kW='kWatts consumed';
 let data1=[5, 2, 1, 3, 3];
+let data2=[56, 13, 6, 19, 29];
+
+function LineChart() {
+    const data = {
+        labels: labels1,
+        datasets: [
+            {
+                label: label_km,
+                data: data1,
+                backgroundColor: 'rgba(255, 69, 0, 0.6)',
+                borderColor: 'rgba(0, 0, 139)',
+                pointBackgroundColor: 'rgba(0, 0, 139)'
+            },
+            {
+                label: label_kW,
+                data: data2,
+                backgroundColor: 'rgba(255, 69, 0, 0.6)',
+                borderColor: 'rgba(0, 0, 139)',
+                pointBackgroundColor: 'rgba(0, 0, 139)'
+            }
+        ]
+    }
+
+    return (
+        <Line data={data}/>
+    );
+}
 
 function EnergyEmployeeAnalytics() {
     return (
@@ -21,8 +51,8 @@ function EnergyEmployeeAnalytics() {
 
             <div className="container-fluid">
                 <div className="row justify-content-around align-items-center no-gutters">
-                    <select id="stations" name="stations" value={stationsData.value} className="dropdownmargin">
-                        {stationsData.map((e, key) => {return <option key={key} value={e.value}>{e.value}</option>;})}
+                    <select id="stations" name="stations" value={stationData.value} className="dropdownmargin">
+                        {stationData.map((e, key) => {return <option key={key} value={e.value}>{e.value}</option>;})}
                     </select>
 
                     <select id="timeperiod" name="timeperiod">
@@ -39,7 +69,7 @@ function EnergyEmployeeAnalytics() {
             </div>
             <br/>
             <div className="container-fluid chart">
-                <EnergyLineChart/>
+                {LineChart()}
             </div>
             <br/>
             <div className="container-fluid">

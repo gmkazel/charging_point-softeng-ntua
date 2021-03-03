@@ -1,27 +1,67 @@
 import 'bootstrap/dist/css/bootstrap.css';
+import './ParkingOwnerAnalytics.css';
 import NavBar2 from '../components/NavBar2';
-import ParkingownerLinks from './ParkingownerLinks';
-import LineChart from './LineChart';
+import ParkingOwnerLinks from './ParkingOwnerLinks';
+import { Line } from 'react-chartjs-2';
 import { Link } from 'react-router-dom';
 
-let carsData = [
-    { value: 'All Cars' },
-    { value: 'Tesla' },
-    { value: 'Mercedes' }            
+let stationData = [
+    { value: 'All Stations' },
+    { value: 'Station1' },
+    { value: 'Station2' }
 ];
 
-// let data1=[5, 2, 1, 3, 3];
+let labels1=['Jan', 'Feb', 'Mar', 'Apr', 'May'];
+let label_km='Total sessions completed';
+let label_kW='kWatts consumed';
+let label_money='Money earned';
+let data1=[5, 2, 1, 3, 3];
+let data2=[56, 13, 6, 19, 29];
+let data3=[63, 10, 8, 31, 15];
+
+function LineChart() {
+    const data = {
+        labels: labels1,
+        datasets: [
+            {
+                label: label_km,
+                data: data1,
+                backgroundColor: 'rgba(255, 69, 0, 0.6)',
+                borderColor: 'rgba(0, 0, 139)',
+                pointBackgroundColor: 'rgba(0, 0, 139)'
+            },
+            {
+                label: label_kW,
+                data: data2,
+                backgroundColor: 'rgba(255, 69, 0, 0.6)',
+                borderColor: 'rgba(0, 0, 139)',
+                pointBackgroundColor: 'rgba(0, 0, 139)'
+            },
+            {
+                label: label_money,
+                data: data3,
+                backgroundColor: 'rgba(255, 69, 0, 0.6)',
+                borderColor: 'rgba(0, 0, 139)',
+                pointBackgroundColor: 'rgba(0, 0, 139)'
+            }
+        ]
+    }
+
+    return (
+        <Line data={data}/>
+    );
+}
 
 function ParkingOwnerAnalytics() {
     return (
         <div>
             <NavBar2/>
-            <ParkingownerLinks/>
+            <ParkingOwnerLinks/>
 
             <div className="container-fluid">
                 <div className="row justify-content-around align-items-center no-gutters">
-                    <select id="cars" name="cars" value={carsData.value} className="dropdownmargin">
-                        {carsData.map((e, key) => {return <option key={key} value={e.value}>{e.value}</option>;})}
+                    <select id="cars" name="cars" value={stationData.value} className="dropdownmargin">
+                        {stationData.map((e, key) => {return <option key={key} value={e.value}>{e.value}</option>;})}
                     </select>
 
                     <select id="timeperiod" name="timeperiod">
@@ -38,7 +78,7 @@ function ParkingOwnerAnalytics() {
             </div>
             <br/>
             <div className="container-fluid chart">
-                <LineChart/>
+                {LineChart()}
             </div>
             <br/>
             <div className="container-fluid">
