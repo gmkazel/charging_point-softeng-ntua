@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const model = require('../models/User')
 
 const VehicleSchema = mongoose.Schema({
   model: {
@@ -56,6 +55,7 @@ module.exports = class Vehicle {
       const w = await vehiclesModel.create({ model: v.model, ac_charger: v.ac_charger, dc_charger: v.dc_charger, brand: v.brand, type: v.type, usable_battery_size: v.usable_battery_size, stations: [] })
       await vehicles.push(w)
     }
+
     return vehicles
   }
 

@@ -15,7 +15,10 @@ const resetsessions = require('../../services/resetSessions')
 router.post('/resetsessions', resetsessions)
 
 const createUsers = require('../../utils/createUsers')
-router.get('/createUsers', createUsers)
+router.post('/createUsers', createUsers)
+
+const createSessions = require('../../utils/createSessions')
+router.post('/createSessions/', createSessions)
 
 const healthcheck = require('../../services/healthcheck')
 router.get('/healthcheck', healthcheck)

@@ -11,7 +11,7 @@ module.exports = () => {
     useCreateIndex: true
   })
     .then(() => {
-      console.log('Connection estabislished with MongoDB')
+      console.log('Connection established with MongoDB')
     })
     .catch(error => console.error(error.message))
 }

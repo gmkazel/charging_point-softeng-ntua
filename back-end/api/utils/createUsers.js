@@ -25,10 +25,10 @@ async function createUsers () {
 
   for (let i = 0; i < 20; i++) { await createElectricalOperators() }
   console.log('Electrical Operators Done')
-  for (let i = 0; i < 70; i++) { await createVehicleOwner() }
-  console.log('Vehicle Owners Done')
   for (let i = 0; i < 3; i++) { await createAdmin() }
   console.log('Admins Done')
+  for (let i = 0; i < 70; i++) { await createVehicleOwner() }
+  console.log('Vehicle Owners Done')
   for (let i = 0; i < 20; i++) { await createStationOwner() }
   console.log('Station Owners Done')
   const json = JSON.stringify(dict)
@@ -44,7 +44,7 @@ async function createVehicleOwner () {
   carInstance.forEach((c) => {
     cars.push({
       model: c.model,
-      info: mongoose.ObjectId(c._id)
+      info: mongoose.Types.ObjectId(c._id)
     })
   })
   const usrnm = faker.internet.userName()
@@ -73,7 +73,6 @@ async function createVehicleOwner () {
 
 async function createElectricalOperators () {
   // electrical company
-
   const usrnm = faker.fake('{{name.lastName}}_{{name.firstName}}')
   const psw = faker.internet.password()
   dict[usrnm] = psw

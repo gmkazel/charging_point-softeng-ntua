@@ -8,8 +8,7 @@ const createPoints = new CreatePoints()
 
 module.exports = async (userCount) => {
   const random = getRandomInt(userCount)
-  const randUser = await userModel.findOne({ account_type: 'vehicleOwner' }, 'username _id').skip(random)
-  // console.log(randUser)
+  const randUser = await userModel.findOne({ account_type: 'electricalCompanyOperator' }, 'username _id').skip(random)
   const newStation = {
     name: faker.fake('{{address.streetAddress}}, {{address.city}}'),
     address: faker.fake('{{address.streetAddress}}, {{address.city}}'),
@@ -25,13 +24,14 @@ module.exports = async (userCount) => {
   const res = await stationModel.create(newStation)
   const stationID = res._id
   const pointInstance = await createPoints.createPoints(getRndInteger(5, 10), stationID)
-  const points = []
+  const pointsList = []
+
+  pointInstance.forEach((c) => {
+    pointsList.push(mongoose.Types.ObjectId(c._id))
+  })
+
   const v = await stationModel.findByIdAndUpdate(stationID, {
-    points: pointInstance.forEach((c) => {
-      points.push({
-        points: mongoose.Types.ObjectId(c._id)
-      })
-    })
+    points: pointsList
   })
 
   return v
