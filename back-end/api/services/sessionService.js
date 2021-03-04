@@ -35,54 +35,49 @@ module.exports = class SessionService {
     const dateFrom = dayjs(startDate).format('YYYY-MM-DD HH:MM:ss')
     const dateTo = dayjs(endDate).format('YYYY-MM-DD HH:MM:ss')
 
-    await Session.find(
+    const sessions = await Session.find(
       {
         point: pointId,
         start_date: {
           $gte: dateFrom,
           $lte: dateTo
         }
-      }).sort({ start_date: 1 }).exec(function (err, data) {
-      if (err) console.log(err)
-      else {
-        // Finding requested items and creating the list
-        const myList = []
+      }).sort({ start_date: 1 })
 
-        for (const counter in data) {
-          const myVehicle = data[counter].car
+    // Finding requested items and creating the list
+    const myList = []
 
-          Vehicle.findById(myVehicle, (err, car) => {
-            if (err) console.log(err)
-            else {
-              const myElement = {
-                SessionIndex: (toInteger(counter) + 1),
-                SessionID: data[counter]._id,
-                StartedOn: dateFrom,
-                FinishedOn: dateTo,
-                Protocol: data[counter].protocol,
-                EnergyDelivered: data[counter].energy_delivered,
-                Payment: data[counter].payment,
-                VehicleType: car.type
-              }
-              myList.push(myElement)
-            }
-          })
+    for (const counter in sessions) {
+      const myVehicle = sessions[counter].car
+
+      await Vehicle.findById(myVehicle, (err, car) => {
+        if (err) console.log(err)
+        else {
+          const myElement = {
+            SessionIndex: (toInteger(counter) + 1),
+            SessionID: sessions[counter]._id,
+            StartedOn: dateFrom,
+            FinishedOn: dateTo,
+            Protocol: sessions[counter].protocol,
+            EnergyDelivered: sessions[counter].energy_delivered,
+            Payment: sessions[counter].payment,
+            VehicleType: car.type
+          }
+          myList.push(myElement)
         }
-        result = {
-          Point: pointId,
-          PointOperator: myPointOperator,
-          RequestTimestamp: myRequestTimestamp,
-          PeriodFrom: dateFrom,
-          PeriodTo: dateTo,
-          NumberOfChargingSessions: data.length,
-          ChargingSessionsList: myList
-        }
+      })
+      result = {
+        Point: pointId,
+        PointOperator: myPointOperator,
+        RequestTimestamp: myRequestTimestamp,
+        PeriodFrom: dateFrom,
+        PeriodTo: dateTo,
+        NumberOfChargingSessions: sessions.length,
+        ChargingSessionsList: myList
       }
-    })
-    console.log(result)
+    }
     return result
   }
-
   // ----------------------------------------------------------------------------------------------------------------------------
 
   getSessionsPerStation (stationId, startDate, endDate) {
