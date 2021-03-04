@@ -46,10 +46,6 @@ function PaymentMethods() {
                 </div>
             </div>
 
-            {/* <PaymentMethod/>
-            <PaymentMethod/>
-            <PaymentMethod/> */}
-
             <div className="container-fluid">
                 <div className="row justify-content-around align-items-center">
                     <Link to="/user/paymentmethods/add"><button className="btn btn-primary">+ Add a new payment method</button></Link>
