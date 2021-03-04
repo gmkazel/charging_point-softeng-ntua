@@ -248,7 +248,7 @@ module.exports = class SessionService {
       myList.push(myElement)
     }
     result.myList = myList
-    
+
     console.log(result)
     return result
   }
