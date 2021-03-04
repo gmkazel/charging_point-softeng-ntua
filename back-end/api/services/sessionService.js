@@ -30,10 +30,10 @@ module.exports = class SessionService {
     })
 
     // Finding date and time of call
-    const myRequestTimestamp = dayjs(new Date()).format('YYYY-MM-DD HH:MM:ss')
+    const myRequestTimestamp = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
 
-    const dateFrom = dayjs(startDate).format('YYYY-MM-DD HH:MM:ss')
-    const dateTo = dayjs(endDate).format('YYYY-MM-DD HH:MM:ss')
+    const dateFrom = dayjs(startDate).format('YYYY-MM-DD HH:mm:ss')
+    const dateTo = dayjs(endDate).format('YYYY-MM-DD HH:mm:ss')
 
     const sessions = await Session.find(
       {
@@ -46,6 +46,7 @@ module.exports = class SessionService {
 
     // Finding requested items and creating the list
     const myList = []
+    let totalEnergyDelivered = 0
 
     for (const counter in sessions) {
       const myVehicle = sessions[counter].car
@@ -56,67 +57,67 @@ module.exports = class SessionService {
           const myElement = {
             SessionIndex: (toInteger(counter) + 1),
             SessionID: sessions[counter]._id,
-            StartedOn: dateFrom,
-            FinishedOn: dateTo,
+            StartedOn: dayjs(sessions[counter].start_date).format('YYYY-MM-DD HH:mm:ss'),
+            FinishedOn: dayjs(sessions[counter].end_date).format('YYYY-MM-DD HH:mm:ss'),
             Protocol: sessions[counter].protocol,
             EnergyDelivered: sessions[counter].energy_delivered,
             Payment: sessions[counter].payment,
             VehicleType: car.type
           }
           myList.push(myElement)
+          totalEnergyDelivered += myElement.EnergyDelivered
         }
       })
-      result = {
-        Point: pointId,
-        PointOperator: myPointOperator,
-        RequestTimestamp: myRequestTimestamp,
-        PeriodFrom: dateFrom,
-        PeriodTo: dateTo,
-        NumberOfChargingSessions: sessions.length,
-        ChargingSessionsList: myList
-      }
+    }
+    result = {
+      Point: pointId,
+      PointOperator: myPointOperator,
+      RequestTimestamp: myRequestTimestamp,
+      PeriodFrom: dateFrom,
+      PeriodTo: dateTo,
+      NumberOfChargingSessions: sessions.length,
+      ChargingSessionsList: myList,
+      TotalEnergyDelivered: totalEnergyDelivered
     }
     return result
   }
   // ----------------------------------------------------------------------------------------------------------------------------
 
-  getSessionsPerStation (stationId, startDate, endDate) {
+  async getSessionsPerStation (stationId, startDate, endDate) {
     const result = {}
 
     result.StationID = stationId
 
-    result.Operator = Station.find({ _id: stationId }).select({ opeartor: 1 }).exec(function (err, data) {
+    const myOperator = await Station.find({ _id: stationId }, 'operator', (err) => {
       if (err) console.log(err)
     })
+    result.Operator = myOperator[0].operator
 
     // Finding date and time of call
-    const currentDateTime = new Date()
+    result.RequestTimestamp = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
 
-    const currentDate = currentDateTime.toISOString().slice(0, 10)
-    const currentTime = currentDateTime.toISOString().slice(11, 19)
+    result.PeriodFrom = dayjs(startDate).format('YYYY-MM-DD HH:mm:ss')
+    result.PeriodTo = dayjs(endDate).format('YYYY-MM-DD HH:mm:ss')
 
-    result.RequestTimestamp = `${currentDate} ${currentTime}`
-
-    result.PeriodFrom = `${startDate.slice(0, 4)}:${startDate.slice(5, 7)}:${startDate.slice(8, 10)}`
-    result.PeriodTo = `${endDate.slice(0, 4)}:${endDate.slice(5, 7)}:${endDate.slice(8, 10)}`
-
-    const stationPoints = Station.find({ _id: stationId }).select({ points: 1 })
+    const aux = await Station.find({ _id: stationId }, 'points', (err) => {
+      if (err) console.log(err)
+    })
+    const stationPoints = aux[0].points
 
     let currentItem; let totalEnergy = 0; let totalChargingSessions = 0; let activePoints = 0
     const myList = []
-    for (const item in stationPoints) {
-      currentItem = getSessionsPerPoint(item, startDate, endDate)
+    for (const counter in stationPoints) {
+      currentItem = await this.getSessionsPerPoint(stationPoints[counter], startDate, endDate)
 
       if (currentItem.NumberOfChargingSessions !== 0) {
-        totalEnergy += currentItem.EnergyDelivered
+        totalEnergy += currentItem.TotalEnergyDelivered
         totalChargingSessions += currentItem.NumberOfChargingSessions
         activePoints++
 
         const myElement = {}
         myElement.PointID = currentItem.Point
         myElement.PointSessions = currentItem.NumberOfChargingSessions
-        myElement.EnergyDelivered = currentItem.EnergyDelivered
-
+        myElement.EnergyDelivered = currentItem.TotalEnergyDelivered
         myList.push(myElement)
       }
     }
@@ -125,122 +126,129 @@ module.exports = class SessionService {
     result.NumberOfActivePoints = activePoints
     result.SessionsSummaryList = myList
 
-    console.log(result)
     return result
   }
 
   // ----------------------------------------------------------------------------------------------------------------------------
 
-  getSessionsPerEV (carID, fromDate, toDate) {
-    // ISWS na 8elei:
-    // const dateFrom = dayjs(fromDate, 'YYYYMMDD').format('YYYY-MM-DD HH:MM:SS')
-    const dateFrom = dayjs(fromDate).format('YYYY-MM-DD HH:MM:SS')
-    const dateTo = dayjs(toDate).format('YYYY-MM-DD HH:MM:SS')
+  async getSessionsPerEV (carID, fromDate, toDate) {
+    
+    const dateFrom = dayjs(fromDate).format('YYYY-MM-DD HH:mm:ss')
+    const dateTo = dayjs(toDate).format('YYYY-MM-DD HH:mm:ss')
 
     const output = {}
 
     output.VehicleID = carID
-    output.RequestTimestamp = dayjs(new Date()).format('YYYY-MM-DD HH:MM:SS')
+    output.RequestTimestamp = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
     output.PeriodFrom = dateFrom
     output.PeriodTo = dateTo
-    output.TotalEnergyConsumed = Session.aggregate(
+    
+    const TotalEnergyConsumed = await Session.aggregate(
       [
-        { $match: { car: carID } },
-        { $group: { _id: '$car', sum: { $sum: '$energy_delivered' } } }
-      ]).exec(function (err, data) {
-      if (err) console.log(err)
+        // { $match: { car: carID } },
+        { $group: { _id: "$car", sum: { $sum: "$energy_delivered" } } }
+      ], (err) => {
+        if (err) console.log(err)
+      })
+    // i do this because $match doesn't work
+    TotalEnergyConsumed.forEach(element => {
+      if (element._id == carID) {
+        output.TotalEnergyConsumed = element.sum
+      }
     })
 
-    const mySessions = Session.find(
+    const mySessions = await Session.find(
       {
         start_date: {
           $gte: dateFrom,
           $lte: dateTo
         },
         car: carID
-      }).exec(function (err, data) {
-      if (err) console.group(err)
-    })
+      }, (err) => {
+        if (err) console.log(err)
+      })
 
-    output.NumberOfVisitedPoints = mySessions.distinct('point').count().exec(function (err, data) {
-      if (err) console.group(err)
-    })
-
-    output.NumberOfVehicleChargingSessions = mySessions.count().exec(function (err, data) {
-      if (err) console.group(err)
-    })
+    output.NumberOfVisitedPoints = await Session.distinct('point', 
+    {
+      start_date: {
+        $gte: dateFrom,
+        $lte: dateTo
+      },
+      car: carID
+    }, (err) => {
+      if (err) console.log(err)
+    }).countDocuments()
+    
+    output.NumberOfVehicleChargingSessions = mySessions.length
 
     const myList = [] // the list we want to show
-    let counter = 1
-    for (const object in mySessions) {
+    const data = mySessions
+
+    for (const counter in data) {
       const sessionObject = {}
 
-      sessionObject.SessionIndex = counter
-      sessionObject.SessionID = object._id
-      sessionObject.EnergyProvider = object.energy_provider_used
-      sessionObject.StartedOn = object.start_date
-      sessionObject.FinishedOn = object.end_date
-      sessionObject.EnergyDelivered = object.energy_delivered
-      sessionObject.PricePolicyRef = object.price_policy_ref
-      sessionObject.CostPerKWh = object.cost_per_kwh
-      sessionObject.SessionCost = object.session_cost
+      sessionObject.SessionIndex = (toInteger(counter)+1)
+      sessionObject.SessionID = data[counter]._id
+      sessionObject.EnergyProvider = data[counter].energy_provider_used
+      sessionObject.StartedOn = dayjs(data[counter].start_date).format('YYYY-MM-DD HH:mm:ss')
+      sessionObject.FinishedOn = dayjs(data[counter].end_date).format('YYYY-MM-DD HH:mm:ss')
+      sessionObject.EnergyDelivered = data[counter].energy_delivered
+      sessionObject.PricePolicyRef = data[counter].price_policy_ref
+      sessionObject.CostPerKWh = data[counter].cost_per_kwh
+      sessionObject.SessionCost = data[counter].session_cost
 
       myList.push(sessionObject)
-      counter++
     }
     output.VehicleChargingSessionsList = myList
-    console.log(output)
+
     return output
   }
 
   // ----------------------------------------------------------------------------------------------------------------------------
 
-  getSessionsPerProvider (providerId, startDate, endDate) {
+  async getSessionsPerProvider (providerId, startDate, endDate) {
     const result = {}
 
     result.ProviderID = providerId
 
-    result.ProviderName = User.find({ _id: providerId }).select({ username: 1 }).exec(function (err, data) {
+    const myProviderName = await User.find({ _id: providerId }, 'username', (err) => {
       if (err) console.log(err)
     })
+    result.ProviderName = myProviderName[0].username
 
-    Session.find({
+    const mySessions = await Session.find({
       energy_provider_used: providerId,
       start_date: {
-        $gte: new Date(parseInt(startDate.slice(0, 4), 10), parseInt(startDate.slice(5, 7), 10), parseInt(startDate.slice(8, 10), 10)),
-        $lte: new Date(parseInt(endDate.slice(0, 4), 10), parseInt(endDate.slice(5, 7), 10), parseInt(endDate.slice(8, 10), 10))
+        $gte: dayjs(startDate).format('YYYY-MM-DD HH:mm:ss'),
+        $lte: dayjs(endDate).format('YYYY-MM-DD HH:mm:ss')
       }
-    }).sort({ start_date: 1 }).exec(function (err, data) {
-      if (err) console.log(err)
-      else {
-        const myList = []
-        let myPoint
-        for (const item in data) {
-          const myElement = {}
+    }).sort({ start_date: 1 })
 
-          myPoint = item.point
-          myElement.StationID = Point.find({ _id: myPoint }, (err, data) => {
-            if (err) console.log(err)
-          }).select({ station: 1 })
+    const myList = []
+    let myPoint
 
-          myElement.SessionID = item._id
-          myElement.VehicleID = item.car
-          myElement.StartedOn = `${item.start_date.toISOString().slice(0, 10)} ${item.start_date.toISOString().slice(11, 19)}`
-          myElement.FinishedOn = `${item.end_date.toISOString().slice(0, 10)} ${item.end_date.toISOString().slice(11, 19)}`
-          myElement.EnergyDelivered = data.aggregate(
-            [
-              { $match: { point: myPoint } },
-              { $group: { _id: '$point', total: { $sum: '$energy_delivered' } } }
-            ])
-          myElement.PricePolicyRef = item.price_policy_ref
-          myElement.CostPerKWh = item.cost_per_kw
-          myElement.TotalCost = item.session_cost
+    for (const counter in mySessions) {
+      const myElement = {}
 
-          myList.push(myElement)
-        }
-        result.myList = myList
-      }
-    })
+      myPoint = mySessions[counter].point
+
+      const myStation = await Point.find({ _id: myPoint }, 'station', (err) => {
+        if (err) console.log(err)
+      })
+      myElement.StationID = myStation[0].station
+      myElement.SessionID = mySessions[counter]._id
+      myElement.VehicleID = mySessions[counter].car
+      myElement.StartedOn = dayjs(mySessions[counter].start_date).format('YYYY-MM-DD HH:mm:ss')
+      myElement.FinishedOn = dayjs(mySessions[counter].end_date).format('YYYY-MM-DD HH:mm:ss')
+      myElement.EnergyDelivered = mySessions[counter].energy_delivered
+      myElement.PricePolicyRef = mySessions[counter].price_policy_ref
+      myElement.CostPerKWh = mySessions[counter].cost_per_kwh
+      myElement.TotalCost = mySessions[counter].session_cost
+
+      myList.push(myElement)
+    }
+    result.myList = myList
+    
     console.log(result)
     return result
   }
