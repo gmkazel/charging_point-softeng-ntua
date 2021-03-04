@@ -1,0 +1,49 @@
+{
+  "name": "chargingpoint",
+  "version": "1.0.0",
+  "description": "The backend for our Charging Point platform",
+  "main": "server.js",
+  "scripts": {
+    "test": "NODE_ENV=test mocha --timeout 10000 --exit",
+    "coverage": "npx nyc npm test",
+    "devStart": "NODE_ENV=dev nodemon server.js",
+    "start": "NODE_ENV=dev node server.js"
+  },
+  "keywords": [
+    "evcharge",
+    "charging",
+    "restapi",
+    "car",
+    "electric"
+  ],
+  "author": "Softeng-32",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "config": "^3.3.3",
+    "csvtojson": "^2.0.10",
+    "dayjs": "^1.10.4",
+    "express": "^4.17.1",
+    "faker": "^5.4.0",
+    "joi": "^17.3.0",
+    "joi-oid": "^1.1.2",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.20",
+    "mongoose": "^5.11.10",
+    "morgan": "^1.10.0",
+    "multiparty": "^4.2.2"
+  },
+  "devDependencies": {
+    "chai": "^4.3.0",
+    "chai-http": "^4.3.0",
+    "eslint": "^7.17.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "mocha": "^8.3.0",
+    "mocha-suppress-logs": "^0.2.0",
+    "nodemon": "^2.0.7",
+    "nyc": "^15.1.0"
+  }
+}

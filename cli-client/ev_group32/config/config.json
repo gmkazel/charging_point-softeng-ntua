@@ -1,0 +1,9 @@
+{
+    "BASE_URL": "http://localhost:8765/evcharge/api",
+    "DATABASE_URL": "mongodb://localhost:27017/?readPreference=primary&ssl=false/test",
+    "DEFAULT_USER_NAME": "admin",
+    "DEFAULT_USER_PASSWORD": "petrol4ever",
+    "PORT": 8765,
+    "SALTROUNDS": 5,
+    "TOKEN_SECRET": "WAZZZZZUP"
+}
