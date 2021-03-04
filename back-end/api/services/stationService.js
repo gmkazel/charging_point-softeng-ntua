@@ -29,8 +29,6 @@ module.exports = class {
 
     const userRes = await userModel.findByIdAndUpdate(userId,
       { $push: { stations: { name: candidateStation.name, info: res._id } } })
-    console.log('res', res)
-    console.log('userRes', userRes)
     return (res)
   }
 

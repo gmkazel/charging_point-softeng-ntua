@@ -21,21 +21,19 @@ module.exports = class UserService {
   }
 
   async createUserF (user) {
-    User.find({ username: user.username }, (err, doc) => {
+    await User.find({ username: user.username }, (err, doc) => {
       if (err) throw (err)
       if (doc) return null
     })
     const now = new Date()
-    const token = jwt.sign({ _id: user.id, username: user.username, account_type: user.account_type, date: now }, config.TOKEN_SECRET)
-    user.api_key = token
-    bcrypt.hash(user.password, parseInt(config.SALTROUNDS)).then(function (hash) {
-      user.password = hash
-      const newuser = new User(user)
-      newuser.save((err) => {
-        if (err) {
-          if (err.code !== 11000) { throw (err) }
-        }
-      })
+    user.api_key = await jwt.sign({ _id: user.id, username: user.username, account_type: user.account_type, date: now }, config.TOKEN_SECRET)
+    user.password = await bcrypt.hash(user.password, parseInt(config.SALTROUNDS))
+
+    const newuser = new User(user)
+    await newuser.save((err) => {
+      if (err) {
+        if (err.code !== 11000) { throw (err) }
+      }
     })
   }
 

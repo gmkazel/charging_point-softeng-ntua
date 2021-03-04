@@ -62,7 +62,7 @@ it('it should not find a user', (done) => {
       if (err) {
         done(err)
       }
-      res.should.have.status(400)
+      res.should.have.status(204)
       done()
     })
 })

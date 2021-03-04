@@ -10,29 +10,19 @@ const createVehicles = new CreateVehicles()
 const dict = {}
 const user = new UserService()
 
-module.exports = async (req, res) => {
-  try {
-    await createUsers()
-    res.send({ status: 'OK' })
-  } catch (err) {
-    console.log(err)
-    res.status(400)
-    res.send({ status: 'failed' })
-  }
-}
-async function createUsers () {
+module.exports = async () => {
   await createVehicles.createDataset('./electric_vehicles_data.json')
 
   for (let i = 0; i < 20; i++) { await createElectricalOperators() }
-  console.log('Electrical Operators Done')
+  // console.log('Electrical Operators Done')
   for (let i = 0; i < 3; i++) { await createAdmin() }
-  console.log('Admins Done')
+  // console.log('Admins Done')
   for (let i = 0; i < 70; i++) { await createVehicleOwner() }
-  console.log('Vehicle Owners Done')
+  // console.log('Vehicle Owners Done')
   for (let i = 0; i < 20; i++) { await createStationOwner() }
-  console.log('Station Owners Done')
+  // console.log('Station Owners Done')
   const json = JSON.stringify(dict)
-  fsLibrary.writeFile('./user_passwords.txt', json, 'utf8', (error) => {
+  fsLibrary.writeFile('./user_passwords.json', json, 'utf8', (error) => {
     if (error) console.log('Error producing password txt file\n')
   })
   await createVehicles.dropDataset()

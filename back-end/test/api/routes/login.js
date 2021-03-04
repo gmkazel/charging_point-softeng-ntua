@@ -1,13 +1,16 @@
-
 const common = require('../../common')
 
 const chai = common.chai
 const server = common.server
 const config = common.config
+const createAdminAndLogin = common.createAdminAndLogin
+const deleteDatabase = common.deleteDatabase
+const createUsers = common.createUsers
 
-before((done) => {
-  chai.request(server)
-    .post(config.BASE_URL + '/admin/resetsessions').end((err, res) => { if (err) { done(err) } else { done() } })
+before(async () => {
+  await deleteDatabase()
+  await createUsers()
+  await createAdminAndLogin()
 })
 
 it('should login the user', (done) => {

@@ -14,7 +14,7 @@ const form = new multiparty.Form()
 const resetsessions = require('../../services/resetSessions')
 router.post('/resetsessions', resetsessions)
 
-const createUsers = require('../../utils/createUsers')
+const createUsers = require('../../utils/createUsersEndpoint')
 router.post('/createUsers', createUsers)
 
 const createSessions = require('../../utils/createSessions')
@@ -29,7 +29,7 @@ router.get('/users/:username', userAuth, verifyAdmin, (req, res) => {
       res.status(400).send(err)
     } else {
       if (!Object.keys(name).length) {
-        res.sendStatus(400)
+        res.sendStatus(204)
       } else {
         res.send(name)
       }
