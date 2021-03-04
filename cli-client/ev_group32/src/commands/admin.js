@@ -1,3 +1,4 @@
+/* eslint-disable node/no-missing-require */
 /* eslint-disable node/no-extraneous-require */
 /* eslint-disable no-negated-condition */
 /* eslint-disable no-unused-vars */
