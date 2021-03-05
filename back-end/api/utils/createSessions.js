@@ -4,18 +4,29 @@ const pointModel = require('../models/Point')
 const vehicleModel = require('../models/Vehicle')
 const userModel = require('../models/User')
 const stationModel = require('../models/Station')
+const config = require('config')
+const ObjectsToCsv = require('objects-to-csv')
 
 const paymentType = ['Bank Card', 'PayPal']
 let startDate = randomDate(new Date(2018, 0, 1), new Date(2020, 0, 1))
 let startKilometers = 100
-
 module.exports = async (req, res) => {
+  const saveToCSV = (req.params.dest === 'csv')
   try {
+    const sessions = []
+
     for (let i = 0; i < 500; i++) {
       startDate = addDays(startDate, 1)
       startKilometers += 100
-      await createSessions(startDate, startKilometers)
+      await createSessions(startDate, startKilometers, saveToCSV, sessions)
     }
+
+    if (saveToCSV) {
+      console.log(sessions)
+      const csv = new ObjectsToCsv(sessions)
+      await csv.toDisk('./sessions.csv')
+    }
+
     res.send({ status: 'OK' })
   } catch (err) {
     console.log(err)
@@ -24,9 +35,9 @@ module.exports = async (req, res) => {
   }
 }
 
-async function createSessions (date, kilometers) {
-  const random = getRandomInt(70)
-  const random1 = getRandomInt(100)
+async function createSessions (date, kilometers, saveToCSV, sessions) {
+  const random = getRandomInt(config.dummyVehicleOwnersCount)
+  const random1 = getRandomInt(config.dummyMinPoints * config.dummyStationOwnersCount)
   const randVehicle = await vehicleModel.findOne({}, '_id').skip(random)
   const randPoint = await pointModel.findOne({}, '_id').skip(random1)
   const randStation = await stationModel.findOne({ points: randPoint._id }, 'energy_provider')
@@ -48,12 +59,18 @@ async function createSessions (date, kilometers) {
     point: mongoose.Types.ObjectId(randPoint._id),
     energy_provider_used: mongoose.Types.ObjectId(randUser._id)
   }
-
-  const res = await sessionModel.create(newSession)
-  const sessionID = res._id
-  await pointModel.findByIdAndUpdate(randPoint._id, { $push: { sessions: mongoose.Types.ObjectId(sessionID) } })
-  await vehicleModel.findByIdAndUpdate(randVehicle._id, { $push: { sessions: mongoose.Types.ObjectId(sessionID) } })
-  await userModel.findByIdAndUpdate(randUser._id, { $push: { electricalCompanyOperatorSessions: mongoose.Types.ObjectId(sessionID) } })
+  if (!saveToCSV) {
+    const res = await sessionModel.create(newSession)
+    const sessionID = res._id
+    await pointModel.findByIdAndUpdate(randPoint._id, { $push: { sessions: mongoose.Types.ObjectId(sessionID) } })
+    await vehicleModel.findByIdAndUpdate(randVehicle._id, { $push: { sessions: mongoose.Types.ObjectId(sessionID) } })
+    await userModel.findByIdAndUpdate(randUser._id, { $push: { electricalCompanyOperatorSessions: mongoose.Types.ObjectId(sessionID) } })
+  } else {
+    newSession.car = newSession.car.toString()
+    newSession.point = newSession.point.toString()
+    newSession.energy_provider_used = newSession.energy_provider_used.toString()
+    sessions.push(newSession)
+  }
 }
 
 function getRndFloat (min, max) {

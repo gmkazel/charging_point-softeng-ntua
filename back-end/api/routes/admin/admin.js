@@ -17,7 +17,7 @@ const createUsers = require('../../utils/createUsersEndpoint')
 router.post('/createUsers', createUsers)
 
 const createSessions = require('../../utils/createSessions')
-router.post('/createSessions/', createSessions)
+router.post('/createSessions/:dest?', createSessions)
 
 const healthcheck = require('../../services/healthcheck')
 router.get('/healthcheck', healthcheck)
