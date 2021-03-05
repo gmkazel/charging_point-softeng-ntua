@@ -1,5 +1,5 @@
 /* eslint-disable node/no-unsupported-features/node-builtins */
-const {expect, test} = require('@oclif/test')
+const {expect} = require('@oclif/test')
 const __homedir = require('os').homedir()
 const fs = require('fs')
 const {exec} = require('child_process')
@@ -29,30 +29,39 @@ async function runShellCommand(command) {
 }
 
 describe('login', () => {
-  test
-  .stdout()
-  .command(['login', '--username', 'admin', '--passw', 'petrol4ever'])
-  .do(output => expect(output.stdout).to.equal('Successful login!\n'))
-  .it()
+  it('should login as admin', async () => {
+    const res = await runShellCommand(`ev_group32 login --username ${config.DEFAULT_USER_NAME} --passw ${config.DEFAULT_USER_PASSWORD}`)
+    expect(res.stdout).to.equal('Successful login!\n')
+  })
+  it('should not login user - no password', async () => {
+    const res = await runShellCommand(`ev_group32 login --username ${config.DEFAULT_USER_NAME} --passw`)
+    expect(res.stdout).to.equal('')
+    expect(res.stderr).to.contain('Error: Flag --passw expects a value\n')
+  })
+  it('should not login user - no username', async () => {
+    const res = await runShellCommand(`ev_group32 login --passw ${config.DEFAULT_USER_PASSWORD} --username`)
+    expect(res.stdout).to.equal('')
+    expect(res.stderr).to.contain('Error: Flag --username expects a value\n')
+  })
+  it('should not login user - empty parameters', async () => {
+    const res = await runShellCommand('ev_group32 login --username --passw')
+    expect(res.stdout).to.equal('')
+    expect(res.stderr).to.equal('Error: Missing required flag:\n --passw PASSW  Your password\nSee more help with --help\n')
+  })
 })
 
 describe('healthCheck', () => {
-  test
-  .stdout()
-  .command(['healthcheck'])
-  .do(output => {
-    let log = '{ "status": "OK" }'
-    expect(output.stdout).to.contain(JSON.parse(log))
+  it('simple test', async () => {
+    const res = await runShellCommand('ev_group32 healthcheck')
+    expect(res.stdout).to.equal('{ status: \'OK\' }\n')
   })
-  .it()
 })
 
 describe('resetsessions', () => {
-  test
-  .stdout()
-  .command(['resetsessions'])
-  .do(output => expect(output.stdout).to.equal('Reset Successful\n'))
-  .it()
+  it('it resets all sessions', async () => {
+    const res = await runShellCommand('ev_group32 resetsessions')
+    expect(res.stdout).to.equal('Reset Successful\n')
+  })
 })
 
 describe('admin',  () => {
@@ -68,13 +77,13 @@ describe('admin',  () => {
     expect(res.stdout).to.equal('Changed user password\n')
   })
 
-  it('admin: find user', async () => {
+  it('it finds a user', async () => {
     const res = await runShellCommand(`ev_group32 admin --users --username ${usrnm} --apikey ${fs.readFileSync(__homedir + '/softeng20bAPI.token',
       {encoding: 'utf8', flag: 'r'})}`)
-    expect(res.stdout).to.contain('username:')
+    expect(res.stdout).to.contain(`username: '${usrnm}'`)
   })
 
-  it('upload csv', async () => {
+  it('it uploads a csv', async () => {
     const res = await runShellCommand(`ev_group32 admin --sessionsupd --source ${__homedir + '/softeng20bAPI.token'} --apikey ${fs.readFileSync(__homedir + '/softeng20bAPI.token',
       {encoding: 'utf8', flag: 'r'})}`)
 
@@ -83,7 +92,7 @@ describe('admin',  () => {
 })
 
 describe('logout', () => {
-  it('test', () => {
+  it('logout for current user', () => {
     exec(`ev_group32 logout --apikey ${fs.readFileSync(__homedir + '/softeng20bAPI.token',
       {encoding: 'utf8', flag: 'r'})}`, (error, stdout) => {
       expect(stdout).to.equal('Successful logout!\n')
