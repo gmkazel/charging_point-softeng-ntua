@@ -69,4 +69,17 @@ router.get('/KilometersDriven/:Session1ID/:Session2ID', async (req, res, next) =
   }
 })
 
+router.get('/PeriodicBill/:vehicleID/:yyyymmdd_from/:yyyymmdd_to', async (req, res, next) => {
+  try {
+    const vehicleId = req.params.vehicleID
+    const startDate = req.params.yyyymmdd_from
+    const endDate = req.params.yyyymmdd_to
+
+    const result = await myService.getBill(vehicleId, startDate, endDate)
+    res.send({ result })
+  } catch (err) {
+    console.log(err)
+  }
+})
+
 module.exports = router

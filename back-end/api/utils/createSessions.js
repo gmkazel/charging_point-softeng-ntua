@@ -32,12 +32,14 @@ async function createSessions (date, kilometers) {
   const randStation = await stationModel.findOne({ points: randPoint._id }, 'energy_provider')
   const randUser = randStation.energy_provider
 
+  const costPerMinute = getRndFloat(0.03, 0.07)
+  const sessionDuration = getRndInteger(2, 8)
   const newSession = {
     cost_per_kwh: getRndFloat(0.2, 0.5),
-    session_cost: getRndFloat(5, 10),
+    session_cost: (costPerMinute * sessionDuration * 60).toFixed(2),
     payment: paymentType[getRandomInt(0, 1)],
     start_date: date,
-    end_date: addHours(date, getRndInteger(2, 8)),
+    end_date: addHours(date, sessionDuration),
     current_kilometers: kilometers,
     energy_delivered: getRndFloat(25, 35),
     protocol: 'OCPP2.0',
@@ -76,7 +78,7 @@ function addHours (date, hours) {
   return copy
 }
 
-function addDays(date, days) {
+function addDays (date, days) {
   const copy = new Date(Number(date))
   copy.setDate(date.getDate() + days)
   return copy

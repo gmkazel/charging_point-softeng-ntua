@@ -262,4 +262,39 @@ module.exports = class SessionService {
     const result = km2.current_kilometers - km1.current_kilometers
     return result
   }
+
+  // ----------------------------------------------------------------------------------------------------------------------------
+
+  async getBill (vehicle, date1, date2) {
+    const car = vehicle
+    const dateFrom = dayjs(date1).format('YYYY-MM-DD HH:mm:ss')
+    const dateTo = dayjs(date2).format('YYYY-MM-DD HH:mm:ss')
+
+    const sessionsDone = await Vehicle.findById(car, 'sessions')
+    const actual = []
+
+    for (let i = 0; i < sessionsDone.sessions.length; i++) {
+      actual.push(await Session.find(
+        {
+          _id: sessionsDone.sessions[i],
+          start_date: {
+            $gte: dateFrom,
+            $lte: dateTo
+          },
+          end_date: {
+            $gte: dateFrom,
+            $lte: dateTo
+          }
+        }).exec())
+    }
+
+    let sum = 0
+    for (let i = 0; i < actual.length; i++) {
+      if (actual[i].length === 0) {
+        continue
+      }
+      sum += actual[i][0].session_cost
+    }
+    return sum.toFixed(2)
+  }
 }
