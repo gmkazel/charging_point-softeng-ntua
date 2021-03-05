@@ -57,4 +57,16 @@ router.get('/SessionsPerProvider/:providerID/:yyyymmdd_from/:yyyymmdd_to', async
   }
 })
 
+router.get('/KilometersDriven/:Session1ID/:Session2ID', async (req, res, next) => {
+  try{
+    const session1 = req.params.Session1ID
+    const session2 = req.params.Session2ID
+
+    const result = await myService.getKilometers(session1, session2)
+    res.send({result})
+  } catch (err) {
+    console.log(err)
+  }
+})
+
 module.exports = router

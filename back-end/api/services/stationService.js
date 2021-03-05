@@ -67,7 +67,7 @@ module.exports = class {
       date: Joi.date().required(),
       by: Joi.objectId().required(),
       rating: Joi.number().min(1).max(5).required(),
-      comment: Joi.string().required()
+      comment: Joi.string()
     })
 
     const { error, value } = await schema.validate(candidateReview)
