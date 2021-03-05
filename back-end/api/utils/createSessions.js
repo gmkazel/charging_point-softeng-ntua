@@ -6,11 +6,16 @@ const userModel = require('../models/User')
 const stationModel = require('../models/Station')
 
 const paymentType = ['Bank Card', 'PayPal']
+let startDate = randomDate(new Date(2018, 0, 1), new Date(2020, 0, 1))
+let startKilometers = 100
 
 module.exports = async (req, res) => {
   try {
-    for (let i = 0; i < 500; i++) { await createSessions() }
-    console.log('Sessions Done')
+    for (let i = 0; i < 500; i++) {
+      startDate = addDays(startDate, 1)
+      startKilometers += 100
+      await createSessions(startDate, startKilometers)
+    }
     res.send({ status: 'OK' })
   } catch (err) {
     console.log(err)
@@ -19,7 +24,7 @@ module.exports = async (req, res) => {
   }
 }
 
-async function createSessions () {
+async function createSessions (date, kilometers) {
   const random = getRandomInt(70)
   const random1 = getRandomInt(100)
   const randVehicle = await vehicleModel.findOne({}, '_id').skip(random)
@@ -27,14 +32,13 @@ async function createSessions () {
   const randStation = await stationModel.findOne({ points: randPoint._id }, 'energy_provider')
   const randUser = randStation.energy_provider
 
-  const startDate = randomDate(new Date(2019, 0, 1), new Date(2020, 0, 1))
   const newSession = {
     cost_per_kwh: getRndFloat(0.2, 0.5),
     session_cost: getRndFloat(5, 10),
     payment: paymentType[getRandomInt(0, 1)],
-    start_date: startDate,
-    end_date: addHours(startDate, getRndInteger(2, 8)),
-    current_kilometers: getRndInteger(0, 100000),
+    start_date: date,
+    end_date: addHours(date, getRndInteger(2, 8)),
+    current_kilometers: kilometers,
     energy_delivered: getRndFloat(25, 35),
     protocol: 'OCPP2.0',
     price_policy_ref: '18 cents per kilowatt hour(kWh)',
@@ -69,5 +73,11 @@ function randomDate (start, end) {
 function addHours (date, hours) {
   const copy = new Date(Number(date))
   copy.setHours(date.getHours() + hours)
+  return copy
+}
+
+function addDays(date, days) {
+  const copy = new Date(Number(date))
+  copy.setDate(date.getDate() + days)
   return copy
 }

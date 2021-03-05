@@ -132,7 +132,7 @@ module.exports = class SessionService {
   // ----------------------------------------------------------------------------------------------------------------------------
 
   async getSessionsPerEV (carID, fromDate, toDate) {
-    
+
     const dateFrom = dayjs(fromDate).format('YYYY-MM-DD HH:mm:ss')
     const dateTo = dayjs(toDate).format('YYYY-MM-DD HH:mm:ss')
 
@@ -142,7 +142,7 @@ module.exports = class SessionService {
     output.RequestTimestamp = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
     output.PeriodFrom = dateFrom
     output.PeriodTo = dateTo
-    
+
     const TotalEnergyConsumed = await Session.aggregate(
       [
         // { $match: { car: carID } },
@@ -168,7 +168,7 @@ module.exports = class SessionService {
         if (err) console.log(err)
       })
 
-    output.NumberOfVisitedPoints = await Session.distinct('point', 
+    output.NumberOfVisitedPoints = await Session.distinct('point',
     {
       start_date: {
         $gte: dateFrom,
@@ -178,7 +178,7 @@ module.exports = class SessionService {
     }, (err) => {
       if (err) console.log(err)
     }).countDocuments()
-    
+
     output.NumberOfVehicleChargingSessions = mySessions.length
 
     const myList = [] // the list we want to show
@@ -250,6 +250,16 @@ module.exports = class SessionService {
     result.myList = myList
 
     console.log(result)
+    return result
+  }
+
+  // ----------------------------------------------------------------------------------------------------------------------------
+
+  async getKilometers (session1, session2){
+    const km1 = await Session.findOne({_id: session1}, 'current_kilometers')
+    const km2 = await Session.findOne({_id: session2}, 'current_kilometers')
+
+    const result = km2.current_kilometers - km1.current_kilometers
     return result
   }
 }
