@@ -5,7 +5,7 @@ const fsLibrary = require('fs')
 const UserService = require('../services/userService')
 const CreateVehicles = require('./createVehicles')
 const createStation = require('./createStation')
-
+const config = require('config')
 const createVehicles = new CreateVehicles()
 const dict = {}
 const user = new UserService()
@@ -13,14 +13,11 @@ const user = new UserService()
 module.exports = async () => {
   await createVehicles.createDataset('./electric_vehicles_data.json')
 
-  for (let i = 0; i < 20; i++) { await createElectricalOperators() }
-  // console.log('Electrical Operators Done')
-  for (let i = 0; i < 3; i++) { await createAdmin() }
-  // console.log('Admins Done')
-  for (let i = 0; i < 70; i++) { await createVehicleOwner() }
-  // console.log('Vehicle Owners Done')
-  for (let i = 0; i < 20; i++) { await createStationOwner() }
-  // console.log('Station Owners Done')
+  for (let i = 0; i < config.dummyElectricalOperatorsCount; i++) { await createElectricalOperators() }
+  for (let i = 0; i < config.dummyAdminsCount; i++) { await createAdmin() }
+  for (let i = 0; i < config.dummyVehicleOwnersCount; i++) { await createVehicleOwner() }
+  for (let i = 0; i < config.dummyStationOwnersCount; i++) { await createStationOwner() }
+
   const json = JSON.stringify(dict)
   fsLibrary.writeFile('./user_passwords.json', json, 'utf8', (error) => {
     if (error) console.log('Error producing password txt file\n')
@@ -29,7 +26,7 @@ module.exports = async () => {
 }
 
 async function createVehicleOwner () {
-  const carInstance = await createVehicles.createVehicle(getRndInteger(1, 3))
+  const carInstance = await createVehicles.createVehicle(getRndInteger(1, config.dummyMaxVehicles))
   const cars = []
   carInstance.forEach((c) => {
     cars.push({
@@ -85,7 +82,7 @@ async function createElectricalOperators () {
 }
 
 async function createStationOwner () {
-  const station = await createStation(20)
+  const station = await createStation()
   const usrnm = faker.fake('{{name.lastName}}_{{name.firstName}}')
   const psw = faker.internet.password()
   dict[usrnm] = psw

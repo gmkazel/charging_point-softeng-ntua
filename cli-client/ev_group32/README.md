@@ -13,7 +13,8 @@ The cli-client of Charging Point
 # Usage
 <!-- usage -->
 ```sh-session
-$ npm install -g ev_group32
+cd to dir ./cli-client/ev_group32 and run: 
+$ sudo npm link
 $ ev_group32 COMMAND
 running command...
 $ ev_group32 (-v|--version|version)

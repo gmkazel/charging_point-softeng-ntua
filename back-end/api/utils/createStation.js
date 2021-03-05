@@ -3,10 +3,11 @@ const faker = require('faker')
 const userModel = require('../models/User')
 const stationModel = require('../models/Station')
 const CreatePoints = require('./createPoints')
-
+const config = require('config')
 const createPoints = new CreatePoints()
 
-module.exports = async (userCount) => {
+module.exports = async () => {
+  const userCount = config.dummyElectricalOperatorsCount
   const random = getRandomInt(userCount)
   const randUser = await userModel.findOne({ account_type: 'electricalCompanyOperator' }, 'username _id').skip(random)
   const newStation = {
@@ -23,7 +24,7 @@ module.exports = async (userCount) => {
 
   const res = await stationModel.create(newStation)
   const stationID = res._id
-  const pointInstance = await createPoints.createPoints(getRndInteger(5, 10), stationID)
+  const pointInstance = await createPoints.createPoints(getRndInteger(config.dummyMinPoints, config.dummyMaxPoints), stationID)
   const pointsList = []
 
   pointInstance.forEach((c) => {

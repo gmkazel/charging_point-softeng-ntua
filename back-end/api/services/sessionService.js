@@ -132,7 +132,7 @@ module.exports = class SessionService {
   // ----------------------------------------------------------------------------------------------------------------------------
 
   async getSessionsPerEV (carID, fromDate, toDate) {
-    
+
     const dateFrom = dayjs(fromDate).format('YYYY-MM-DD HH:mm:ss')
     const dateTo = dayjs(toDate).format('YYYY-MM-DD HH:mm:ss')
 
@@ -142,7 +142,7 @@ module.exports = class SessionService {
     output.RequestTimestamp = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
     output.PeriodFrom = dateFrom
     output.PeriodTo = dateTo
-    
+
     const TotalEnergyConsumed = await Session.aggregate(
       [
         // { $match: { car: carID } },
@@ -168,7 +168,7 @@ module.exports = class SessionService {
         if (err) console.log(err)
       })
 
-    output.NumberOfVisitedPoints = await Session.distinct('point', 
+    output.NumberOfVisitedPoints = await Session.distinct('point',
     {
       start_date: {
         $gte: dateFrom,
@@ -178,7 +178,7 @@ module.exports = class SessionService {
     }, (err) => {
       if (err) console.log(err)
     }).countDocuments()
-    
+
     output.NumberOfVehicleChargingSessions = mySessions.length
 
     const myList = [] // the list we want to show
@@ -251,5 +251,86 @@ module.exports = class SessionService {
 
     console.log(result)
     return result
+  }
+
+  // ----------------------------------------------------------------------------------------------------------------------------
+
+  async getKilometers (session1, session2){
+    const km1 = await Session.findOne({_id: session1}, 'current_kilometers')
+    const km2 = await Session.findOne({_id: session2}, 'current_kilometers')
+
+    const result = km2.current_kilometers - km1.current_kilometers
+    return result
+  }
+
+  // ----------------------------------------------------------------------------------------------------------------------------
+
+  async getBill (vehicle, date1, date2) {
+    const car = vehicle
+    const dateFrom = dayjs(date1).format('YYYY-MM-DD HH:mm:ss')
+    const dateTo = dayjs(date2).format('YYYY-MM-DD HH:mm:ss')
+
+    const sessionsDone = await Vehicle.findById(car, 'sessions')
+    const actual = []
+
+    for (let i = 0; i < sessionsDone.sessions.length; i++) {
+      actual.push(await Session.find(
+        {
+          _id: sessionsDone.sessions[i],
+          start_date: {
+            $gte: dateFrom,
+            $lte: dateTo
+          },
+          end_date: {
+            $gte: dateFrom,
+            $lte: dateTo
+          }
+        }).exec())
+    }
+
+    let sum = 0
+    for (let i = 0; i < actual.length; i++) {
+      if (actual[i].length === 0) {
+        continue
+      }
+      sum += actual[i][0].session_cost
+    }
+    return sum.toFixed(2)
+  }
+
+  // ----------------------------------------------------------------------------------------------------------------------------
+
+  async getEstimatedTime (vehicle, capacity) {
+    const car = vehicle
+    const currentCapacity = capacity
+
+    const usableCapacity = await Vehicle.findById(car, 'usable_battery_size')
+    let obj = {}
+
+    if (currentCapacity > usableCapacity.usable_battery_size) {
+      obj = {
+        result: 'Invalid capacity'
+      }
+      return obj
+    } else if (parseFloat(currentCapacity) === parseFloat(usableCapacity.usable_battery_size)) {
+      obj = {
+        result: 'Already full!'
+      }
+      return obj
+    }
+
+    const leftToFill = usableCapacity.usable_battery_size - currentCapacity
+
+    const result = leftToFill / 7.5
+
+    const rhours = Math.floor(result)
+    const minutes = (result - rhours) * 60
+    const rminutes = Math.round(minutes)
+
+    obj = {
+      result: rhours + ' hour(s) and ' + rminutes + ' minute(s).'
+    }
+
+    return obj
   }
 }

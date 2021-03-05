@@ -57,4 +57,41 @@ router.get('/SessionsPerProvider/:providerID/:yyyymmdd_from/:yyyymmdd_to', async
   }
 })
 
+router.get('/KilometersDriven/:Session1ID/:Session2ID', async (req, res, next) => {
+  try{
+    const session1 = req.params.Session1ID
+    const session2 = req.params.Session2ID
+
+    const result = await myService.getKilometers(session1, session2)
+    res.send({result})
+  } catch (err) {
+    console.log(err)
+  }
+})
+
+router.get('/PeriodicBill/:vehicleID/:yyyymmdd_from/:yyyymmdd_to', async (req, res, next) => {
+  try {
+    const vehicleId = req.params.vehicleID
+    const startDate = req.params.yyyymmdd_from
+    const endDate = req.params.yyyymmdd_to
+
+    const result = await myService.getBill(vehicleId, startDate, endDate)
+    res.send({ result })
+  } catch (err) {
+    console.log(err)
+  }
+})
+
+router.get('/EstimatedTime/:vehicleID/:current_capacity', async (req, res, next) => {
+  try {
+    const vehicleId = req.params.vehicleID
+    const currentCapacity = req.params.current_capacity
+
+    const result = await myService.getEstimatedTime(vehicleId, currentCapacity)
+    res.send(result)
+  } catch (err) {
+    console.log(err)
+  }
+})
+
 module.exports = router

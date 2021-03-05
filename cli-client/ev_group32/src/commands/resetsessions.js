@@ -6,7 +6,7 @@ const {Command, flags} = require('@oclif/command')
 const https = require('https')
 const axios = require('axios')
 const chalk = require('chalk')
-const config = require('../../config/config.json')
+const config = require('config')
 axios.defaults.httpsAgent = new https.Agent()
 
 class resetSessions extends Command {

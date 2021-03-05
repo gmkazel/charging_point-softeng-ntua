@@ -1,16 +1,13 @@
 /* eslint-disable node/no-missing-require */
-/* eslint-disable node/no-extraneous-require */
 /* eslint-disable no-negated-condition */
-/* eslint-disable no-unused-vars */
 /* eslint-disable no-console */
-/* eslint-disable node/no-unpublished-require */
 const {Command, flags} = require('@oclif/command')
 
 const https = require('https')
 const axios = require('axios')
 const chalk = require('chalk')
 const fs = require('fs')
-const config = require('../../config/config.json')
+const config = require('config')
 const FormData = require('form-data')
 axios.defaults.httpsAgent = new https.Agent()
 
