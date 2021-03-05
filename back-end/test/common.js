@@ -37,14 +37,20 @@ async function pickRandomStation () {
 
 async function pickRandomStationOwner () {
   const random = getRndInteger(1, config.dummyStationOwnersCount)
-  const station = await User.findOne({ account_type: 'stationOwner' }).skip(random)
-  return station
+  const stationOwner = await User.findOne({ account_type: 'stationOwner' }).skip(random)
+  return stationOwner
 }
 
 async function pickRandomElectricalCompanyOperator () {
-  const random = getRndInteger(1, config.dummyStationOwnersCount)
-  const station = await User.findOne({ account_type: 'stationOwner' }).skip(random)
-  return station
+  const random = getRndInteger(1, config.dummyElectricalCompanyOperator)
+  const electricalCompanyOperator = await User.findOne({ account_type: 'electricalCompanyOperator' }).skip(random)
+  return electricalCompanyOperator
+}
+
+async function pickRandomVehicleOwner () {
+  const random = getRndInteger(1, config.dummyVehicleOwner)
+  const vehicleOwner = await User.findOne({ account_type: 'vehicleOwner' }).skip(random)
+  return vehicleOwner
 }
 
 function getRndInteger (min, max) {
@@ -90,5 +96,6 @@ exports.deleteDatabase = deleteDatabase
 exports.pickRandomStation = pickRandomStation
 exports.pickRandomStationOwner = pickRandomStationOwner
 exports.pickRandomElectricalCompanyOperator = pickRandomElectricalCompanyOperator
+exports.pickRandomVehicleOwner = pickRandomVehicleOwner
 exports.createAdminAndLogin = createAdminAndLogin
 exports.createUsers = createUsers
