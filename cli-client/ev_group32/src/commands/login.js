@@ -7,7 +7,7 @@ const fs = require('fs')
 const https = require('https')
 const axios = require('axios')
 const chalk = require('chalk')
-const config = require('../../config/config.json')
+const config = require('config')
 const __homedir = require('os').homedir()
 
 axios.defaults.httpsAgent = new https.Agent()

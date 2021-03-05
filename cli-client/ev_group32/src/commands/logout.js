@@ -5,7 +5,7 @@ const {Command, flags} = require('@oclif/command')
 const https = require('https')
 const axios = require('axios')
 const chalk = require('chalk')
-const config = require('../../config/config.json')
+const config = require('config')
 const fs = require('fs')
 const __homedir = require('os').homedir()
 

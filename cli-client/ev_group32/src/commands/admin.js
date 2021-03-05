@@ -10,7 +10,7 @@ const https = require('https')
 const axios = require('axios')
 const chalk = require('chalk')
 const fs = require('fs')
-const config = require('../../config/config.json')
+const config = require('config')
 const FormData = require('form-data')
 axios.defaults.httpsAgent = new https.Agent()
 
