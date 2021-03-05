@@ -18,7 +18,6 @@ const upload = async (req, res) => {
         } else {
           // change linked data
           for (let i = 0; i < jsonArrayObj.length; i++) {
-            console.log(jsonArrayObj[i])
             pointModel.findByIdAndUpdate(jsonArrayObj[i].point, { $push: { sessions: mongoose.Types.ObjectId(jsonArrayObj[i]._id) } }, (err) => {
               if (err) console.log(err)
             })

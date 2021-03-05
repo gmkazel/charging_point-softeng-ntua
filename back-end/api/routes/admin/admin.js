@@ -9,7 +9,6 @@ const verifyAdmin = require('../../services/verifyAdmin')
 
 const upload = require('../../services/csvService')
 const multiparty = require('multiparty')
-const form = new multiparty.Form()
 
 const resetsessions = require('../../services/resetSessions')
 router.post('/resetsessions', resetsessions)
@@ -51,6 +50,7 @@ router.post('/usermod/:username/:password', userAuth, verifyAdmin, async (req, r
 })
 
 router.post('/system/sessionsupd', (req, res) => {
+  const form = new multiparty.Form()
   form.parse(req, function (err, fields, files) {
     if (err) {
       res.sendStatus(400)
