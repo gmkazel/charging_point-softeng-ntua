@@ -8,7 +8,8 @@ import {
     // NavLink
 } from "react-router-dom";
 
-import MainPage from '../pages/mainpage';
+import MainPage from './mainpage';
+import NotFoundPage from './404';
 //ParkingOwnerPages
 import ParkingOwnerAnalytics from '../components/ParkingOwnerAnalytics';
 import ParkingOwnerFullHistory from '../components/ParkingOwnerFullHistory';
@@ -17,21 +18,34 @@ import AddStation from '../components/AddStation';
 import ParkingOwnerReview from '../components/ParkingOwnerReview';
 
 const ParkingOwnerPage = () => {
-  return (
-    <div>
-      <Router>
-        <Switch>
-          <Route exact path="/" component={MainPage}/>
-          <Route exact path="/parkingowner/analytics" component={ParkingOwnerAnalytics}/>
-          <Route exact path="/parkingowner/analytics/history" component={ParkingOwnerFullHistory}/>
-          <Route exact path="/parkingowner/manage" component={ParkingOwnerManage}/>
-          <Route exact path="/parkingowner/manage/add" component={AddStation}/>
-          <Route exact path="/parkingowner/review" component={ParkingOwnerReview}/>
-          <Redirect to="/parkingowner/analytics"/>
-        </Switch>
-      </Router>
-    </div>
-  );
+  if (JSON.parse(localStorage.getItem('login')) != null)
+    return(
+      <div>
+        <Router>
+          <Switch>
+            <Route exact path="/" component={MainPage}/>
+            <Route exact path="/parkingowner/analytics" component={ParkingOwnerAnalytics}/>
+            <Route exact path="/parkingowner/analytics/history" component={ParkingOwnerFullHistory}/>
+            <Route exact path="/parkingowner/manage" component={ParkingOwnerManage}/>
+            <Route exact path="/parkingowner/manage/add" component={AddStation}/>
+            <Route exact path="/parkingowner/review" component={ParkingOwnerReview}/>
+            <Redirect to="/parkingowner/analytics"/>
+          </Switch>
+        </Router>
+      </div>
+    )
+  else
+    return(
+      <div>
+        <Router>
+          <Switch>
+            <Route exact path="/" component={MainPage}/>
+            <Route exact path="/404" component={NotFoundPage}/>
+            <Redirect to="/404"/>
+          </Switch>
+        </Router>
+      </div>
+    )
 };
 
 export default ParkingOwnerPage;
