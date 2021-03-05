@@ -22,7 +22,6 @@ module.exports = async (req, res) => {
     }
 
     if (saveToCSV) {
-      console.log(sessions)
       const csv = new ObjectsToCsv(sessions)
       await csv.toDisk('./sessions.csv')
     }
