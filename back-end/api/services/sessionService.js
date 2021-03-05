@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const Session = require('../models/Session')
 const Station = require('../models/Station')
 const Vehicle = require('../models/Vehicle')
@@ -22,10 +23,10 @@ module.exports = class SessionService {
   async getSessionsPerPoint (pointId, startDate, endDate) {
     let result = {}
 
-    const myStation = Session.find({ point: pointId }).select({ station: 1 }).exec(function (err, data) {
+    const myStation = await Session.find({ point: pointId }).select({ station: 1 }).exec(function (err, data) {
       if (err) console.log(err)
     })
-    const myPointOperator = Station.find({ _id: myStation }).select({ operator: 1 }).exec(function (err, data) {
+    const myPointOperator = await Station.find({ _id: myStation }).select({ operator: 1 }).exec(function (err, data) {
       if (err) console.log(err)
     })
 
@@ -69,6 +70,7 @@ module.exports = class SessionService {
         }
       })
     }
+    console.log(myList)
     result = {
       Point: pointId,
       PointOperator: myPointOperator,
@@ -91,6 +93,7 @@ module.exports = class SessionService {
     const myOperator = await Station.find({ _id: stationId }, 'operator', (err) => {
       if (err) console.log(err)
     })
+    console.log(myOperator)
     result.Operator = myOperator[0].operator
 
     // Finding date and time of call
@@ -132,7 +135,6 @@ module.exports = class SessionService {
   // ----------------------------------------------------------------------------------------------------------------------------
 
   async getSessionsPerEV (carID, fromDate, toDate) {
-
     const dateFrom = dayjs(fromDate).format('YYYY-MM-DD HH:mm:ss')
     const dateTo = dayjs(toDate).format('YYYY-MM-DD HH:mm:ss')
 
@@ -146,7 +148,7 @@ module.exports = class SessionService {
     const TotalEnergyConsumed = await Session.aggregate(
       [
         // { $match: { car: carID } },
-        { $group: { _id: "$car", sum: { $sum: "$energy_delivered" } } }
+        { $group: { _id: '$car', sum: { $sum: '$energy_delivered' } } }
       ], (err) => {
         if (err) console.log(err)
       })
@@ -169,15 +171,15 @@ module.exports = class SessionService {
       })
 
     output.NumberOfVisitedPoints = await Session.distinct('point',
-    {
-      start_date: {
-        $gte: dateFrom,
-        $lte: dateTo
-      },
-      car: carID
-    }, (err) => {
-      if (err) console.log(err)
-    }).countDocuments()
+      {
+        start_date: {
+          $gte: dateFrom,
+          $lte: dateTo
+        },
+        car: carID
+      }, (err) => {
+        if (err) console.log(err)
+      }).countDocuments()
 
     output.NumberOfVehicleChargingSessions = mySessions.length
 
@@ -187,7 +189,7 @@ module.exports = class SessionService {
     for (const counter in data) {
       const sessionObject = {}
 
-      sessionObject.SessionIndex = (toInteger(counter)+1)
+      sessionObject.SessionIndex = (toInteger(counter) + 1)
       sessionObject.SessionID = data[counter]._id
       sessionObject.EnergyProvider = data[counter].energy_provider_used
       sessionObject.StartedOn = dayjs(data[counter].start_date).format('YYYY-MM-DD HH:mm:ss')
@@ -249,15 +251,14 @@ module.exports = class SessionService {
     }
     result.myList = myList
 
-    console.log(result)
     return result
   }
 
   // ----------------------------------------------------------------------------------------------------------------------------
 
-  async getKilometers (session1, session2){
-    const km1 = await Session.findOne({_id: session1}, 'current_kilometers')
-    const km2 = await Session.findOne({_id: session2}, 'current_kilometers')
+  async getKilometers (session1, session2) {
+    const km1 = await Session.findOne({ _id: session1 }, 'current_kilometers')
+    const km2 = await Session.findOne({ _id: session2 }, 'current_kilometers')
 
     const result = km2.current_kilometers - km1.current_kilometers
     return result
