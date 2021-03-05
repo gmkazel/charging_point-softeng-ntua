@@ -11,6 +11,23 @@ const params = new URLSearchParams()
 params.append('username', config.DEFAULT_USER_NAME)
 params.append('password', config.DEFAULT_USER_PASSWORD)
 
+const util = require('util')
+
+const execProm = util.promisify(exec)
+
+async function runShellCommand(command) {
+  let result
+  try {
+    result = await execProm(command)
+  } catch (error) {
+    result = error
+  }
+  if (Error[Symbol.hasInstance](result))
+    return
+
+  return result
+}
+
 describe('login', () => {
   test
   .stdout()
@@ -38,41 +55,30 @@ describe('resetsessions', () => {
   .it()
 })
 
-describe('admin', () => {
-  it('admin: add new user', () => {
-    exec(`ev_group32 admin --usermod --username ${usrnm} --passw pasok --apikey ${fs.readFileSync(__homedir + '/softeng20bAPI.token',
-      {encoding: 'utf8', flag: 'r'})}`, (error, stdout) => {
-      expect(stdout).to.equal('[object Object]\n')
-    })
+describe('admin',  () => {
+  it('it adds a new user', async () => {
+    const res = await runShellCommand(`ev_group32 admin --usermod --username ${usrnm} --passw pasok --apikey ${fs.readFileSync(__homedir + '/softeng20bAPI.token',
+      {encoding: 'utf8', flag: 'r'})}`)
+    expect(res.stdout).to.contain('token')
   })
-})
 
-describe('admin', () => {
-  it('admin: modify existing user', () => {
-    exec(`ev_group32 admin --usermod --username ${usrnm} --passw PASOK --apikey ${fs.readFileSync(__homedir + '/softeng20bAPI.token',
-      {encoding: 'utf8', flag: 'r'})}`, (error, stdout) => {
-      expect(stdout).to.equal('Changed user passwordfsdafsd\n')
-    })
+  it('it modifies an existing user', async  () => {
+    const res = await runShellCommand(`ev_group32 admin --usermod --username ${usrnm} --passw PASOK --apikey ${fs.readFileSync(__homedir + '/softeng20bAPI.token',
+      {encoding: 'utf8', flag: 'r'})}`)
+    expect(res.stdout).to.equal('Changed user password\n')
   })
-})
 
-describe('admin', () => {
-  it('admin: find user', () => {
-    const log = `{ "username": "${usrnm}" }`
-    exec(`ev_group32 admin --users --username ${usrnm} --apikey ${fs.readFileSync(__homedir + '/softeng20bAPI.token',
-      {encoding: 'utf8', flag: 'r'})}`, (error, stdout) => {
-      expect(stdout).to.contain(JSON.parse(log))
-    })
+  it('admin: find user', async () => {
+    const res = await runShellCommand(`ev_group32 admin --users --username ${usrnm} --apikey ${fs.readFileSync(__homedir + '/softeng20bAPI.token',
+      {encoding: 'utf8', flag: 'r'})}`)
+    expect(res.stdout).to.contain('username:')
   })
-})
 
-describe('admin', () => {
-  it('upload csv', () => {
-    const log = '{ "SessionsInUploadedFile": "Int", "SessionsImported": "Int", "TotalSessionsInDatabase": "Int" }'
-    exec(`ev_group32 admin --sessionsupd --source ${__homedir + '/softeng20bAPI.token'} --apikey ${fs.readFileSync(__homedir + '/softeng20bAPI.token',
-      {encoding: 'utf8', flag: 'r'})}`, (error, stdout) => {
-      expect(stdout).to.contain(JSON.parse(log))
-    })
+  it('upload csv', async () => {
+    const res = await runShellCommand(`ev_group32 admin --sessionsupd --source ${__homedir + '/softeng20bAPI.token'} --apikey ${fs.readFileSync(__homedir + '/softeng20bAPI.token',
+      {encoding: 'utf8', flag: 'r'})}`)
+
+    expect(res.stdout).to.contain('SessionsInUploadedFile')
   })
 })
 
