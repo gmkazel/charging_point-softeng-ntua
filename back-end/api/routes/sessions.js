@@ -14,6 +14,7 @@ router.get('/SessionsPerPoint/:pointID/:yyyymmdd_from/:yyyymmdd_to', async (req,
 
     res.send(result)
   } catch (err) {
+    res.sendStatus(400)
     console.log(err)
   }
 })
@@ -27,6 +28,7 @@ router.get('/SessionsPerStation/:stationID/:yyyymmdd_from/:yyyymmdd_to', async (
     const result = await myService.getSessionsPerStation(stationId, startDate, endDate)
     res.send(result)
   } catch (err) {
+    res.sendStatus(400)
     console.log(err)
   }
 })
@@ -40,6 +42,7 @@ router.get('/SessionsPerEV/:vehicleID/:yyyymmdd_from/:yyyymmdd_to', async (req, 
     const result = await myService.getSessionsPerEV(vehicleId, startDate, endDate)
     res.send(result)
   } catch (err) {
+    res.sendStatus(400)
     console.log(err)
   }
 })
@@ -53,18 +56,20 @@ router.get('/SessionsPerProvider/:providerID/:yyyymmdd_from/:yyyymmdd_to', async
     const result = await myService.getSessionsPerProvider(providerId, startDate, endDate)
     res.send(result)
   } catch (err) {
+    res.sendStatus(400)
     console.log(err)
   }
 })
 
 router.get('/KilometersDriven/:Session1ID/:Session2ID', async (req, res, next) => {
-  try{
+  try {
     const session1 = req.params.Session1ID
     const session2 = req.params.Session2ID
 
     const result = await myService.getKilometers(session1, session2)
-    res.send({result})
+    res.send({ result })
   } catch (err) {
+    res.sendStatus(400)
     console.log(err)
   }
 })
@@ -78,6 +83,7 @@ router.get('/PeriodicBill/:vehicleID/:yyyymmdd_from/:yyyymmdd_to', async (req, r
     const result = await myService.getBill(vehicleId, startDate, endDate)
     res.send({ result })
   } catch (err) {
+    res.sendStatus(400)
     console.log(err)
   }
 })
@@ -90,6 +96,7 @@ router.get('/EstimatedTime/:vehicleID/:current_capacity', async (req, res, next)
     const result = await myService.getEstimatedTime(vehicleId, currentCapacity)
     res.send(result)
   } catch (err) {
+    res.sendStatus(400)
     console.log(err)
   }
 })
