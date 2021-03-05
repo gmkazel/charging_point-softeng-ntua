@@ -37,6 +37,9 @@ class UserAnalytics extends Component {
             ]
         }
 
+        console.log('test')
+        console.log(localStorage.getItem('login'))
+
         this.clickHandler = this.clickHandler.bind(this)
         this.changeHandler2 = this.changeHandler2.bind(this)
     }
