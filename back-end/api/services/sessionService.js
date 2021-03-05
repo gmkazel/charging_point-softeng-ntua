@@ -297,4 +297,40 @@ module.exports = class SessionService {
     }
     return sum.toFixed(2)
   }
+
+  // ----------------------------------------------------------------------------------------------------------------------------
+
+  async getEstimatedTime (vehicle, capacity) {
+    const car = vehicle
+    const currentCapacity = capacity
+
+    const usableCapacity = await Vehicle.findById(car, 'usable_battery_size')
+    let obj = {}
+
+    if (currentCapacity > usableCapacity.usable_battery_size) {
+      obj = {
+        result: 'Invalid capacity'
+      }
+      return obj
+    } else if (parseFloat(currentCapacity) === parseFloat(usableCapacity.usable_battery_size)) {
+      obj = {
+        result: 'Already full!'
+      }
+      return obj
+    }
+
+    const leftToFill = usableCapacity.usable_battery_size - currentCapacity
+
+    const result = leftToFill / 7.5
+
+    const rhours = Math.floor(result)
+    const minutes = (result - rhours) * 60
+    const rminutes = Math.round(minutes)
+
+    obj = {
+      result: rhours + ' hour(s) and ' + rminutes + ' minute(s).'
+    }
+
+    return obj
+  }
 }

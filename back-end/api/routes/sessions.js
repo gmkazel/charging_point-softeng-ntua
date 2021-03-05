@@ -82,4 +82,16 @@ router.get('/PeriodicBill/:vehicleID/:yyyymmdd_from/:yyyymmdd_to', async (req, r
   }
 })
 
+router.get('/EstimatedTime/:vehicleID/:current_capacity', async (req, res, next) => {
+  try {
+    const vehicleId = req.params.vehicleID
+    const currentCapacity = req.params.current_capacity
+
+    const result = await myService.getEstimatedTime(vehicleId, currentCapacity)
+    res.send(result)
+  } catch (err) {
+    console.log(err)
+  }
+})
+
 module.exports = router
