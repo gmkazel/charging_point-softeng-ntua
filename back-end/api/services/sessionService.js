@@ -338,8 +338,8 @@ module.exports = class SessionService {
       if (err) console.log(err)
     })
 
-    if (currentCapacity > usableCapacity.usable_battery_size) {
-      throw Object.assign(new Error('Capacity given is greater than the actual capacity of the car'))
+    if(currentCapacity < 0 || currentCapacity > usableCapacity.usable_battery_size){
+      throw Object.assign(new Error('Capacity given is negative or is greater than the actual capacity of the car'))
     }
 
     const leftToFill = usableCapacity.usable_battery_size - currentCapacity
@@ -352,6 +352,28 @@ module.exports = class SessionService {
 
     const obj = {
       result: rhours + ' hour(s) and ' + rminutes + ' minute(s).'
+    }
+
+    return obj
+  }
+
+  // ----------------------------------------------------------------------------------------------------------------------------
+
+  async getChargingPercentage (vehicle, capacity) {
+    const car = vehicle
+    const currentCapacity = capacity
+
+    const usableCapacity = await Vehicle.findById(car, 'usable_battery_size', (err) => {
+      if (err) console.log(err)
+    })
+
+    if(currentCapacity < 0 || currentCapacity > usableCapacity.usable_battery_size){
+      throw Object.assign(new Error('Capacity given is negative or is greater than the actual capacity of the car'))
+    }
+
+    let result
+    const obj = {
+      result: ((currentCapacity / usableCapacity.usable_battery_size) * 100).toFixed(2) + '%'
     }
 
     return obj
