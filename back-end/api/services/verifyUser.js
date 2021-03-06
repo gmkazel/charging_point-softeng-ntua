@@ -11,18 +11,18 @@ module.exports = async function (req, res, next) {
     const apiKey = await getAPIKey(verified._id).catch((err) => {
       console.log(err)
       res.status(400)
-      res.send()
+      res.send('Error retrieving user')
       return next('route')
     })
 
     if (apiKey === null) {
       res.status(400)
-      res.send()
+      res.send('Add token')
       return next('route')
     }
     if (apiKey.api_key !== token) {
       res.status(401)
-      res.send()
+      res.send('Wrong token')
       return next('route')
     }
 
