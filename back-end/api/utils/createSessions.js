@@ -4,18 +4,30 @@ const pointModel = require('../models/Point')
 const vehicleModel = require('../models/Vehicle')
 const userModel = require('../models/User')
 const stationModel = require('../models/Station')
-const config = require('config')
 const ObjectsToCsv = require('objects-to-csv')
+const config = require('config')
 
 const paymentType = ['Bank Card', 'PayPal']
 let startDate = randomDate(new Date(2018, 0, 1), new Date(2020, 0, 1))
 let startKilometers = 100
+let pointsCount
+let vehiclesCount
+
 module.exports = async (req, res) => {
+  pointsCount = await pointModel.countDocuments()
+  vehiclesCount = await vehicleModel.countDocuments()
+
+  if (pointsCount === 0) {
+    res.status(204)
+    res.send({ status: 'failed' })
+  }
   const saveToCSV = (req.params.dest === 'csv')
   try {
     const sessions = []
-
-    for (let i = 0; i < 500; i++) {
+    const currentDate = new Date(Date.now())
+    const finalRandomDate = addDays(currentDate, -(1 + pointsCount * config.dummyAverageSessionsPerPoint))
+    startDate = randomDate(addDays(finalRandomDate, -365), finalRandomDate)
+    for (let i = 0; i < pointsCount * config.dummyAverageSessionsPerPoint; i++) {
       startDate = addDays(startDate, 1)
       startKilometers += 100
       await createSessions(startDate, startKilometers, saveToCSV, sessions)
@@ -35,8 +47,8 @@ module.exports = async (req, res) => {
 }
 
 async function createSessions (date, kilometers, saveToCSV, sessions) {
-  const random = getRandomInt(config.dummyVehicleOwnersCount)
-  const random1 = getRandomInt(config.dummyMinPoints * config.dummyStationOwnersCount)
+  const random = getRandomInt(vehiclesCount)
+  const random1 = getRandomInt(pointsCount)
   const randVehicle = await vehicleModel.findOne({}, '_id').skip(random)
   const randPoint = await pointModel.findOne({}, '_id').skip(random1)
   const randStation = await stationModel.findOne({ points: randPoint._id }, 'energy_provider')

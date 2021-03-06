@@ -5,5 +5,13 @@
     "DEFAULT_USER_PASSWORD": "password",
     "PORT": 8765,
     "SALTROUNDS": 9,
-    "TOKEN_SECRET": "password"
+    "TOKEN_SECRET": "password",
+    "dummyAdminsCount": 3,
+    "dummyAverageSessionsPerPoint": 8,
+    "dummyElectricalOperatorsCount": 20,
+    "dummyMaxPoints": 10,
+    "dummyMaxVehicles": 3,
+    "dummyMinPoints": 5,
+    "dummyStationOwnersCount": 20,
+    "dummyVehicleOwnersCount": 70
 }
