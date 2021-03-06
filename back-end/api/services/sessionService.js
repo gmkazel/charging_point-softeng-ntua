@@ -258,11 +258,28 @@ module.exports = class SessionService {
 
   // ----------------------------------------------------------------------------------------------------------------------------
 
-  async getKilometers (session1, session2) {
-    const km1 = await Session.findOne({ _id: session1 }, 'current_kilometers')
-    const km2 = await Session.findOne({ _id: session2 }, 'current_kilometers')
+  async getKilometers (car, session1, session2) {
+    const verifyCar = await Vehicle.find({ _id: car, $and: [{ sessions: session1 }, { sessions: session2 }] }, 'sessions', (err) => {
+      if (err) console.log(err)
+    }).exec()
+
+    if (verifyCar.length === 0) {
+      throw Object.assign(new Error('The given sessions don\'t belong to the specified vehicle'))
+    }
+
+    const km1 = await Session.findOne({ _id: session1 }, 'current_kilometers', (err) => {
+      if (err) console.log(err)
+    })
+    const km2 = await Session.findOne({ _id: session2 }, 'current_kilometers', (err) => {
+      if (err) console.log(err)
+    })
+
+    if (km1.current_kilometers >= km2.current_kilometers) {
+      throw Object.assign(new Error('Invalid chronological order of the given sessions'))
+    }
 
     const result = km2.current_kilometers - km1.current_kilometers
+
     return result
   }
 
@@ -270,10 +287,18 @@ module.exports = class SessionService {
 
   async getBill (vehicle, date1, date2) {
     const car = vehicle
+
+    if (date1 >= date2) {
+      throw Object.assign(new Error('Invalid chronological order of the given dates'))
+    }
+
     const dateFrom = dayjs(date1).format('YYYY-MM-DD HH:mm:ss')
     const dateTo = dayjs(date2).format('YYYY-MM-DD HH:mm:ss')
 
-    const sessionsDone = await Vehicle.findById(car, 'sessions')
+    const sessionsDone = await Vehicle.findById(car, 'sessions', (err) => {
+      if (err) console.log(err)
+    })
+
     const actual = []
 
     for (let i = 0; i < sessionsDone.sessions.length; i++) {
@@ -288,6 +313,8 @@ module.exports = class SessionService {
             $gte: dateFrom,
             $lte: dateTo
           }
+        }, (err) => {
+          if (err) console.log(err)
         }).exec())
     }
 
@@ -307,19 +334,12 @@ module.exports = class SessionService {
     const car = vehicle
     const currentCapacity = capacity
 
-    const usableCapacity = await Vehicle.findById(car, 'usable_battery_size')
-    let obj = {}
+    const usableCapacity = await Vehicle.findById(car, 'usable_battery_size', (err) => {
+      if (err) console.log(err)
+    })
 
     if (currentCapacity > usableCapacity.usable_battery_size) {
-      obj = {
-        result: 'Invalid capacity'
-      }
-      return obj
-    } else if (parseFloat(currentCapacity) === parseFloat(usableCapacity.usable_battery_size)) {
-      obj = {
-        result: 'Already full!'
-      }
-      return obj
+      throw Object.assign(new Error('Capacity given is greater than the actual capacity of the car'))
     }
 
     const leftToFill = usableCapacity.usable_battery_size - currentCapacity
@@ -330,7 +350,7 @@ module.exports = class SessionService {
     const minutes = (result - rhours) * 60
     const rminutes = Math.round(minutes)
 
-    obj = {
+    const obj = {
       result: rhours + ' hour(s) and ' + rminutes + ' minute(s).'
     }
 
