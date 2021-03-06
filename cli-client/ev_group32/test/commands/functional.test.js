@@ -1,4 +1,6 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable node/no-unsupported-features/node-builtins */
+
 const {expect} = require('@oclif/test')
 const __homedir = require('os').homedir()
 const fs = require('fs')
@@ -28,6 +30,20 @@ async function runShellCommand(command) {
   return result
 }
 
+describe('healthCheck', () => {
+  it('simple test', async () => {
+    const res = await runShellCommand('ev_group32 healthcheck')
+    expect(res.stdout).to.equal('{ status: \'OK\' }\n')
+  })
+})
+
+describe('resetsessions', () => {
+  it('it resets all sessions', async () => {
+    const res = await runShellCommand('ev_group32 resetsessions')
+    expect(res.stdout).to.equal('Reset Successful\n')
+  })
+})
+
 describe('login', () => {
   it('should login as admin', async () => {
     const res = await runShellCommand(`ev_group32 login --username ${config.DEFAULT_USER_NAME} --passw ${config.DEFAULT_USER_PASSWORD}`)
@@ -47,20 +63,6 @@ describe('login', () => {
     const res = await runShellCommand('ev_group32 login --username --passw')
     expect(res.stdout).to.equal('')
     expect(res.stderr).to.equal('Error: Missing required flag:\n --passw PASSW  Your password\nSee more help with --help\n')
-  })
-})
-
-describe('healthCheck', () => {
-  it('simple test', async () => {
-    const res = await runShellCommand('ev_group32 healthcheck')
-    expect(res.stdout).to.equal('{ status: \'OK\' }\n')
-  })
-})
-
-describe('resetsessions', () => {
-  it('it resets all sessions', async () => {
-    const res = await runShellCommand('ev_group32 resetsessions')
-    expect(res.stdout).to.equal('Reset Successful\n')
   })
 })
 
@@ -88,6 +90,14 @@ describe('admin',  () => {
       {encoding: 'utf8', flag: 'r'})}`)
 
     expect(res.stdout).to.contain('SessionsInUploadedFile')
+  })
+})
+
+describe('sessionsPerEV',  () => {
+  it('it finds a car in the db', async () => {
+    const res = await runShellCommand(`ev_group32 sessionsPerEV --ev 6042291dd1625f851ae79ee5 --datefrom 20180101 --dateto 20200101 --apikey ${fs.readFileSync(__homedir + '/softeng20bAPI.token',
+      {encoding: 'utf8', flag: 'r'})}`)
+    expect(res.stdout).to.contain('VehicleID')
   })
 })
 
