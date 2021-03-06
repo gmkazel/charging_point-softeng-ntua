@@ -1,25 +1,25 @@
 const express = require('express')
 const router = express.Router()
 
-const User = require('../../services/userService')
+const User = require('../services/userService')
 const user = new User()
 
-const userAuth = require('../../services/verifyUser')
-const verifyAdmin = require('../../services/verifyAdmin')
+const userAuth = require('../services/verifyUser')
+const verifyAdmin = require('../services/verifyAdmin')
 
-const upload = require('../../services/csvService')
+const upload = require('../services/csvService')
 const multiparty = require('multiparty')
 
-const resetsessions = require('../../services/resetSessions')
+const resetsessions = require('../services/resetSessions')
 router.post('/resetsessions', resetsessions)
 
-const createUsers = require('../../utils/createUsersEndpoint')
+const createUsers = require('../utils/createUsersEndpoint')
 router.post('/createUsers', createUsers)
 
-const createSessions = require('../../utils/createSessions')
+const createSessions = require('../utils/createSessions')
 router.post('/createSessions/:dest?', createSessions)
 
-const healthcheck = require('../../services/healthcheck')
+const healthcheck = require('../services/healthcheck')
 router.get('/healthcheck', healthcheck)
 
 router.get('/users/:username', userAuth, verifyAdmin, (req, res) => {

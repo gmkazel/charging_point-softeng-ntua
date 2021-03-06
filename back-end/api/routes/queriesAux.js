@@ -5,7 +5,7 @@ const User = require('../models/User')
 const Session = require('../models/Session')
 const Point = require('../models/Point')
 const Station = require('../models/Station')
-const SessionService = require('../services/SessionService')
+const SessionService = require('../services/sessionService')
 
 const myService = new SessionService()
 
