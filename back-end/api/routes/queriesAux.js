@@ -76,7 +76,7 @@ router.get('/stationsVisited/:userID', async (req, res, next) => {
 
     for (const i in myStations) {
       if (stationsToBeDiscovered === 0) break
-      if (!DiscoveredStationsList.some(element => element.stationId === myStations[i].stationId)) {
+      if (!DiscoveredStationsList.some(element => JSON.stringify(element.stationId) === JSON.stringify(myStations[i].stationId))) {
         DiscoveredStationsList.push(myStations[i])
         stationsToBeDiscovered--
       }
