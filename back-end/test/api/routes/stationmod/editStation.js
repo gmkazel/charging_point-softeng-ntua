@@ -6,6 +6,8 @@ const config = common.config
 const deleteDatabase = common.deleteDatabase
 const createUsers = common.createUsers
 const Station = common.Station
+const PickRandom = common.pickRandom
+const pickRandom = new PickRandom()
 
 let token
 let randStationOwner
@@ -16,8 +18,8 @@ before(async () => {
   await deleteDatabase()
   await createUsers()
   token = await common.createAdminAndLogin()
-  randElectricalCompanyOperator = await common.pickRandomElectricalCompanyOperator()
-  randStationOwner = await common.pickRandomStationOwner()
+  randElectricalCompanyOperator = await pickRandom.electricalCompanyOperator()
+  randStationOwner = await pickRandom.stationOwner()
   randStation = randStationOwner.stations[0].info
   randStation = await Station.findById(randStation)
 })
@@ -42,7 +44,7 @@ it('it should edit the name of a station', async () => {
 
 it('it should not edit the name of a station- not right owner', async () => {
   try {
-    const newrandStationOwner = await common.pickRandomStationOwner()
+    const newrandStationOwner = await pickRandom.stationOwner()
     randStation.name = 'randomStation'
     randStation.operator = 'randomOperator'
     randStation.energy_provider = randElectricalCompanyOperator._id

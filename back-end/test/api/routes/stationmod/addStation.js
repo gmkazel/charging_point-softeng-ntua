@@ -7,6 +7,8 @@ const deleteDatabase = common.deleteDatabase
 const createUsers = common.createUsers
 const Station = common.Station
 const createAdminAndLogin = common.createAdminAndLogin
+const PickRandom = common.pickRandom
+const pickRandom = new PickRandom()
 
 let token
 const station = { name: 'MYSTATION', operator: 'someOperator' }
@@ -17,7 +19,7 @@ before(async () => {
   await deleteDatabase()
   await createUsers()
   token = await createAdminAndLogin()
-  randUser = await common.pickRandomElectricalCompanyOperator()
+  randUser = await pickRandom.electricalCompanyOperator()
   station.energy_provider = randUser._id
 })
 
