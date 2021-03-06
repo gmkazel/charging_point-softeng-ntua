@@ -8,7 +8,7 @@ router.post('/login', userLogin)
 const userLogout = require('../services/userLogout')
 router.post('/logout', userAuth, userLogout)
 
-const admin = require('./admin/admin')
+const admin = require('./admin')
 router.use('/admin', admin)
 
 const stationmod = require('./stationmod.js')
