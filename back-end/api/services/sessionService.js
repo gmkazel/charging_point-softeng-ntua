@@ -26,7 +26,6 @@ module.exports = class SessionService {
     const myStation = await Point.find({ _id: pointId }, 'station', (err) => {
       if (err) console.log(err)
     })
-    console.log(myStation)
     const myPointOperatorAux = await Station.find({ _id: myStation[0].station }, 'operator', (err) => {
       if (err) console.log(err)
     })
@@ -94,7 +93,6 @@ module.exports = class SessionService {
     const myOperator = await Station.find({ _id: stationId }, 'operator', (err) => {
       if (err) console.log(err)
     })
-    console.log(myOperator)
     result.Operator = myOperator[0].operator
 
     // Finding date and time of call
@@ -378,5 +376,27 @@ module.exports = class SessionService {
     }
 
     return obj
+  }
+
+  // ----------------------------------------------------------------------------------------------------------------------------
+
+  async getCostPerStation (station, date1, date2){
+    if (date1 >= date2) {
+      throw Object.assign(new Error('Invalid chronological order of the given dates'))
+    }
+
+    const energyDelivered = await this.getSessionsPerStation(station, date1, date2)
+
+    const provider = await Station.findById(station, 'energy_provider', (err) => {
+      if (err) console.log(err)
+    })
+
+    const providerCost = await User.findById(provider.energy_provider, 'cost_per_kwh', (err) => {
+      if (err) console.log(err)
+    })
+
+    const result = (energyDelivered.TotalEnergyDelivered * providerCost.cost_per_kwh).toFixed(2)
+
+    return result
   }
 }
