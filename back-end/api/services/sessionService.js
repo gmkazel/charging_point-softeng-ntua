@@ -23,12 +23,14 @@ module.exports = class SessionService {
   async getSessionsPerPoint (pointId, startDate, endDate) {
     let result = {}
 
-    const myStation = await Session.find({ point: pointId }).select({ station: 1 }).exec(function (err, data) {
+    const myStation = await Point.find({ _id: pointId }, 'station', (err) => {
       if (err) console.log(err)
     })
-    const myPointOperator = await Station.find({ _id: myStation }).select({ operator: 1 }).exec(function (err, data) {
+    console.log(myStation)
+    const myPointOperatorAux = await Station.find({ _id: myStation[0].station }, 'operator', (err) => {
       if (err) console.log(err)
     })
+    const myPointOperator = myPointOperatorAux[0].operator
 
     // Finding date and time of call
     const myRequestTimestamp = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
@@ -70,7 +72,6 @@ module.exports = class SessionService {
         }
       })
     }
-    console.log(myList)
     result = {
       Point: pointId,
       PointOperator: myPointOperator,
