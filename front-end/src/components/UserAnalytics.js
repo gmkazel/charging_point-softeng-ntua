@@ -185,7 +185,9 @@ class UserAnalytics extends Component {
 
                 <div className="container-fluid">
                     <div className="row justify-content-around align-items-center no-gutters">
-                        <select id="cars" name="cars" value={carsData.value} className="dropdownmargin">
+                        <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span> {/* what if we used 100% of our brains */}
+
+                        <select id="cars" name="cars" value={carsData.value}>
                             {carsData.map((e, key) => {return <option key={key} value={e.value}>{e.value}</option>;})}
                         </select>
 
@@ -197,7 +199,9 @@ class UserAnalytics extends Component {
                             <option value="lastyear">Last Year</option>
                         </select>
 
-                        <button className="btn btn-primary buttonmargin" onClick={this.clickHandler}>Apply</button>
+                        <button className="btn btn-primary" onClick={this.clickHandler}>Apply</button>
+
+                        <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span> {/* what if we used 100% of our brains */}
                     </div>
                 </div>
                 <br/>
