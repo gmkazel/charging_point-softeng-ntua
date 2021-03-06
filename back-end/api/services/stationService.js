@@ -1,13 +1,18 @@
 const stationModel = require('../models/Station')
 const userModel = require('../models/User')
 const Joi = require('joi-oid')
-const mongoose = require('mongoose')
 
+const check = (variable) => {
+  return (typeof (variable) !== 'undefined' && variable !== null)
+}
 module.exports = class {
-  async ownedBy (userId, stationId) {
-    const res = await userModel.findOne({ _id: userId, account_type: 'stationOwner', 'stations.info': mongoose.Types.ObjectId(stationId) })
-    if (res) return true
-    else return false
+  async canAccess (userId, stationId) {
+    const user = await userModel.findOne({ _id: userId })
+    console.log(user)
+    if (!check(user)) return false
+    if (user.account_type === 'admin') return true
+    if (user.account_type === 'stationOwner' && user.stations.some(station => station.info.toString() === stationId)) return true
+    return false
   }
 
   async add (userId, candidateStation) {
@@ -54,7 +59,7 @@ module.exports = class {
       { $pull: { stations: { info: stationId } } })
 
     if (stationRes && userRes) return true
-    else return false
+    else { }
   }
 
   async addReview (candidateReview, stationId) {
@@ -68,8 +73,11 @@ module.exports = class {
     const { error, value } = await schema.validate(candidateReview)
     if (error) { throw (error) }
 
-    const res = await stationModel.findByIdAndUpdate(stationId,
+    await stationModel.findByIdAndUpdate(stationId,
       { $push: { reviews: value } })
+
+    const res = stationModel.findById(stationId)
+
     return res
   }
 }
