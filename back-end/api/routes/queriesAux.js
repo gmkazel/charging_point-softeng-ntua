@@ -71,9 +71,18 @@ router.get('/stationsVisited/:userID', async (req, res, next) => {
     }
     myStations.sort((a, b) => b.date - a.date)
 
-    // can be input as a parameter from the api call
-    const requestedLength = 5
-    res.send(myStations.slice(0, requestedLength))
+    let stationsToBeDiscovered = 5
+    const DiscoveredStationsList = []
+
+    for (const i in myStations) {
+      if (stationsToBeDiscovered === 0) break
+      if (!DiscoveredStationsList.some(element => element.stationId === myStations[i].stationId)) {
+        DiscoveredStationsList.push(myStations[i])
+        stationsToBeDiscovered--
+      }
+    }
+
+    res.send(DiscoveredStationsList)
   } catch (err) {
     res.sendStatus(400)
     console.log(err)
@@ -225,6 +234,17 @@ router.get('/getStationsAndReviews/:userID', async (req, res, next) => {
       result.push(myElement)
     }
     res.send(result)
+  } catch (err) {
+    res.sendStatus(400)
+    console.log(err)
+  }
+})
+
+router.get('/userStations/:userID', async (req, res, next) => {
+  try {
+    const userId = req.params.userID
+
+    const myStations = await User.find({ _id: userId })
   } catch (err) {
     res.sendStatus(400)
     console.log(err)

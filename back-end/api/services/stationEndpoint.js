@@ -107,7 +107,7 @@ module.exports = class stationEndpoint {
 
     if (!(check(req.body) && check(stationId) && check(userId))) {
       res.status(400)
-      res.send()
+      res.send('Parameters required not found')
       return next('route')
     }
 
@@ -124,7 +124,7 @@ module.exports = class stationEndpoint {
     } catch (err) {
       console.log(err)
       res.status(400)
-      res.send()
+      res.send(err)
       return next('route')
     }
     next()

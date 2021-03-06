@@ -10,9 +10,18 @@ const config = require('config')
 
 const Station = require('../api/models/Station')
 const User = require('../api/models/User')
+const Point = require('../api/models/Point')
 
 const { exec } = require('child_process')
 const suppressLogs = require('mocha-suppress-logs')
+
+const UserService = require('../api/services/userService')
+const userService = new UserService()
+
+const defaultUser = {
+  username: config.DEFAULT_USER_NAME,
+  password: config.DEFAULT_USER_PASSWORD
+}
 
 chai.use(chaiHttp)
 suppressLogs()
@@ -29,40 +38,9 @@ async function deleteDatabase () {
   })
 }
 
-async function pickRandomStation () {
-  const random = getRndInteger(1, config.dummyStationOwnersCount)
-  const station = await Station.findOne({}).skip(random)
-  return station
-}
-
-async function pickRandomStationOwner () {
-  const random = getRndInteger(1, config.dummyStationOwnersCount)
-  const stationOwner = await User.findOne({ account_type: 'stationOwner' }).skip(random)
-  return stationOwner
-}
-
-async function pickRandomElectricalCompanyOperator () {
-  const random = getRndInteger(1, config.dummyElectricalCompanyOperator)
-  const electricalCompanyOperator = await User.findOne({ account_type: 'electricalCompanyOperator' }).skip(random)
-  return electricalCompanyOperator
-}
-
-async function pickRandomVehicleOwner () {
-  const random = getRndInteger(1, config.dummyVehicleOwner)
-  const vehicleOwner = await User.findOne({ account_type: 'vehicleOwner' }).skip(random)
-  return vehicleOwner
-}
-
-function getRndInteger (min, max) {
-  return Math.floor(Math.random() * (max - min)) + min
-}
-
-const UserService = require('../api/services/userService')
-const userService = new UserService()
-
-const user = {
-  username: config.DEFAULT_USER_NAME,
-  password: config.DEFAULT_USER_PASSWORD
+async function createSessions () {
+  await chai.request(server)
+    .post(config.BASE_URL + '/admin/createSessions')
 }
 
 async function createAdminAndLogin () {
@@ -75,8 +53,44 @@ async function createAdminAndLogin () {
   const login = await chai.request(server)
     .post(config.BASE_URL + '/login')
     .set('content-type', 'application/x-www-form-urlencoded')
-    .send(user)
+    .send(defaultUser)
   return login.body.token
+}
+
+class pickRandom {
+  async station () {
+    const random = getRndInteger(1, config.dummyStationOwnersCount)
+    const station = await Station.findOne({}).skip(random)
+    return station
+  }
+
+  async stationOwner () {
+    const random = getRndInteger(1, config.dummyStationOwnersCount)
+    const stationOwner = await User.findOne({ account_type: 'stationOwner' }).skip(random)
+    return stationOwner
+  }
+
+  async electricalCompanyOperator () {
+    const random = getRndInteger(1, config.dummyElectricalCompanyOperator)
+    const electricalCompanyOperator = await User.findOne({ account_type: 'electricalCompanyOperator' }).skip(random)
+    return electricalCompanyOperator
+  }
+
+  async vehicleOwner () {
+    const random = getRndInteger(1, config.dummyVehicleOwner)
+    const vehicleOwner = await User.findOne({ account_type: 'vehicleOwner' }).skip(random)
+    return vehicleOwner
+  }
+
+  async point () {
+    const random = getRndInteger(1, config.dummyMinPoints * config.dummyStationOwnersCount)
+    const point = await Point.findOne({ }).skip(random)
+    return point
+  }
+}
+
+function getRndInteger (min, max) {
+  return Math.floor(Math.random() * (max - min)) + min
 }
 
 const createUsers = require('../api/utils/createUsers')
@@ -93,9 +107,7 @@ exports.Station = Station
 exports.User = User
 
 exports.deleteDatabase = deleteDatabase
-exports.pickRandomStation = pickRandomStation
-exports.pickRandomStationOwner = pickRandomStationOwner
-exports.pickRandomElectricalCompanyOperator = pickRandomElectricalCompanyOperator
-exports.pickRandomVehicleOwner = pickRandomVehicleOwner
+exports.pickRandom = pickRandom
 exports.createAdminAndLogin = createAdminAndLogin
 exports.createUsers = createUsers
+exports.createSessions = createSessions

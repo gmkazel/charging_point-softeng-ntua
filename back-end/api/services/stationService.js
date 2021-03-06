@@ -22,13 +22,13 @@ module.exports = class {
       },
       operator: Joi.string()
     })
-    const { err, value } = schema.validate(candidateStation)
-    if (err) throw err
+    schema.validate(candidateStation)
 
     const res = await stationModel.create(candidateStation)
 
-    const userRes = await userModel.findByIdAndUpdate(userId,
+    await userModel.findByIdAndUpdate(userId,
       { $push: { stations: { name: candidateStation.name, info: res._id } } })
+
     return (res)
   }
 
@@ -45,12 +45,7 @@ module.exports = class {
       operator: Joi.string()
     })
 
-    const { err, value } = schema.validate(candidateStation)
-    if (err) throw err
-    const res = await stationModel.findByIdAndUpdate(stationId, candidateStation)
-    if (res === null) throw err
-    const newres = await stationModel.findById(stationId)
-    return (newres)
+    schema.validate(candidateStation)
   }
 
   async delete (userId, stationId) {
@@ -67,14 +62,14 @@ module.exports = class {
       date: Joi.date().required(),
       by: Joi.objectId().required(),
       rating: Joi.number().min(1).max(5).required(),
-      comment: Joi.string()
+      comment: Joi.string().required()
     })
 
     const { error, value } = await schema.validate(candidateReview)
     if (error) { throw (error) }
 
     const res = await stationModel.findByIdAndUpdate(stationId,
-      { $push: { comments: value } })
+      { $push: { reviews: value } })
     return res
   }
 }
