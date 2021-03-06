@@ -5,6 +5,8 @@ const server = common.server
 const config = common.config
 const deleteDatabase = common.deleteDatabase
 const createUsers = common.createUsers
+const PickRandom = common.pickRandom
+const pickRandom = new PickRandom()
 
 let token
 let randVehicleOwner
@@ -14,8 +16,8 @@ before(async () => {
   await deleteDatabase()
   await createUsers()
   token = await common.createAdminAndLogin()
-  randVehicleOwner = await common.pickRandomVehicleOwner()
-  randStation = await common.pickRandomStation()
+  randVehicleOwner = await pickRandom.vehicleOwner()
+  randStation = await pickRandom.station()
 })
 
 it('it should add a review to a station', async () => {

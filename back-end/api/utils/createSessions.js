@@ -9,7 +9,7 @@ const config = require('config')
 
 const paymentType = ['Bank Card', 'PayPal']
 let startDate = randomDate(new Date(2018, 0, 1), new Date(2020, 0, 1))
-let startKilometers = 100
+let startKilometers = 20
 let pointsCount
 let vehiclesCount
 
@@ -29,7 +29,7 @@ module.exports = async (req, res) => {
     startDate = randomDate(addDays(finalRandomDate, -365), finalRandomDate)
     for (let i = 0; i < pointsCount * config.dummyAverageSessionsPerPoint; i++) {
       startDate = addDays(startDate, 1)
-      startKilometers += 100
+      startKilometers += 20
       await createSessions(startDate, startKilometers, saveToCSV, sessions)
     }
 

@@ -45,7 +45,7 @@ module.exports = class stationEndpoint {
       return next('route')
     }
 
-    if (!stationService.ownedBy(userId, stationId)) {
+    if (!stationService.canAccess(userId, stationId)) {
       res.status(401)
       res.send()
       return res.next('routes')
@@ -79,7 +79,7 @@ module.exports = class stationEndpoint {
       return next('route')
     }
 
-    if (!await stationService.ownedBy(userId, stationId)) {
+    if (!await stationService.canAccess(userId, stationId)) {
       res.status(401)
       res.send()
       return next('routes')

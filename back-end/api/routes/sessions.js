@@ -61,15 +61,16 @@ router.get('/SessionsPerProvider/:providerID/:yyyymmdd_from/:yyyymmdd_to', async
   }
 })
 
-router.get('/KilometersDriven/:Session1ID/:Session2ID', async (req, res, next) => {
+router.get('/KilometersDriven/:vehicleID/:Session1ID/:Session2ID', async (req, res, next) => {
   try {
+    const car = req.params.vehicleID
     const session1 = req.params.Session1ID
     const session2 = req.params.Session2ID
 
-    const result = await myService.getKilometers(session1, session2)
+    const result = await myService.getKilometers(car, session1, session2)
     res.send({ result })
   } catch (err) {
-    res.sendStatus(400)
+    res.status(400).send('Invalid Input')
     console.log(err)
   }
 })
@@ -83,7 +84,7 @@ router.get('/PeriodicBill/:vehicleID/:yyyymmdd_from/:yyyymmdd_to', async (req, r
     const result = await myService.getBill(vehicleId, startDate, endDate)
     res.send({ result })
   } catch (err) {
-    res.sendStatus(400)
+    res.status(400).send('Invalid Input')
     console.log(err)
   }
 })
@@ -96,7 +97,20 @@ router.get('/EstimatedTime/:vehicleID/:current_capacity', async (req, res, next)
     const result = await myService.getEstimatedTime(vehicleId, currentCapacity)
     res.send(result)
   } catch (err) {
-    res.sendStatus(400)
+    res.status(400).send('Invalid Input')
+    console.log(err)
+  }
+})
+
+router.get('/ChargingPercentage/:vehicleID/:current_capacity', async (req, res, next) => {
+  try {
+    const vehicleId = req.params.vehicleID
+    const currentCapacity = req.params.current_capacity
+
+    const result = await myService.getChargingPercentage(vehicleId, currentCapacity)
+    res.send(result)
+  } catch (err) {
+    res.status(400).send('Invalid Input')
     console.log(err)
   }
 })
