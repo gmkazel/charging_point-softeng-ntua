@@ -198,6 +198,8 @@ module.exports = class SessionService {
       sessionObject.PricePolicyRef = data[counter].price_policy_ref
       sessionObject.CostPerKWh = data[counter].cost_per_kwh
       sessionObject.SessionCost = data[counter].session_cost
+      // this helps if it's allowed
+      sessionObject.KmCompleted = data[counter].current_kilometers
 
       myList.push(sessionObject)
     }

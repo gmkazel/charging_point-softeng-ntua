@@ -48,15 +48,22 @@ router.get('/stationsVisited/:userID', async (req, res, next) => {
       if (err) console.log(err)
     })
 
-    let carSessions, myElement, currStation
+    let carSessions, myElement, currStation, currStationInfo
     for (const i in myCars[0].cars) {
       carSessions = await Session.find({ car: myCars[0].cars[i].info }, 'point start_date', (err) => {
         if (err) console.log(err)
       })
       for (const j in carSessions) {
-        currStation = await Point.find({ _id: carSessions[j].point }, 'station')
+        currStation = await Point.find({ _id: carSessions[j].point }, 'station', (err) => {
+          if (err) console.log(err)
+        })
+        currStationInfo = await Station.find({ _id: currStation[0].station }, 'name address', (err) => {
+          if (err) console.log(err)
+        })
         myElement = {
-          station: currStation[0].station,
+          stationId: currStation[0].station,
+          name: currStationInfo[0].name,
+          address: currStationInfo[0].address,
           date: carSessions[j].start_date
         }
         myStations.push(myElement)
@@ -108,10 +115,27 @@ router.get('/userCars/analytics/:userID/:carID/:startDate/:endDate', async (req,
           _id: myCars[0].cars[i].info,
           sessions: carSessions.VehicleChargingSessionsList
         }
+
+        for (const j in myElement.sessions) {
+          if (j != myElement.sessions.length - 1) {
+            myElement.sessions[j].KmUntilNextSession = myElement.sessions[parseInt(j) + 1].KmCompleted - myElement.sessions[j].KmCompleted
+          } else {
+            myElement.sessions[j].KmUntilNextSession = 0
+          }
+        }
+
         result.push(myElement)
       }
     } else {
       const carSessions = await myService.getSessionsPerEV(carId, startDate, endDate)
+
+      for (const j in carSessions.VehicleChargingSessionsList) {
+        if (j != carSessions.VehicleChargingSessionsList.length - 1) {
+          carSessions.VehicleChargingSessionsList[j].KmUntilNextSession = carSessions.VehicleChargingSessionsList[parseInt(j) + 1].KmCompleted - carSessions.VehicleChargingSessionsList[j].KmCompleted
+        } else {
+          carSessions.VehicleChargingSessionsList[j].KmUntilNextSession = 0
+        }
+      }
 
       result.push({
         _id: carId,
@@ -201,6 +225,15 @@ router.get('/getStationsAndReviews/:userID', async (req, res, next) => {
       result.push(myElement)
     }
     res.send(result)
+  } catch (err) {
+    res.sendStatus(400)
+    console.log(err)
+  }
+})
+
+router.get('/userStations/analytics/:userID/:stationID/:startDate/:endDate', async (req, res, next) => {
+  try {
+
   } catch (err) {
     res.sendStatus(400)
     console.log(err)
