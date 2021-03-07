@@ -4,7 +4,6 @@ ev_group32
 The cli-client of Charging Point
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![License](https://img.shields.io/npm/l/ev_group32.svg)](https://github.com/ntua/TL20-32/blob/development/LICENSE)
 
 <!-- toc -->
 * [Usage](#usage)
@@ -13,8 +12,7 @@ The cli-client of Charging Point
 # Usage
 <!-- usage -->
 ```sh-session
-cd to dir ./cli-client/ev_group32 and run: 
-$ sudo npm link
+$ npm install -g ev_group32
 $ ev_group32 COMMAND
 running command...
 $ ev_group32 (-v|--version|version)
@@ -27,12 +25,63 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
+* [`ev_group32 addReview`](#ev_group32-addreview)
+* [`ev_group32 addStation`](#ev_group32-addstation)
 * [`ev_group32 admin`](#ev_group32-admin)
+* [`ev_group32 deleteStation`](#ev_group32-deletestation)
+* [`ev_group32 editStation`](#ev_group32-editstation)
+* [`ev_group32 estimatedTime`](#ev_group32-estimatedtime)
 * [`ev_group32 healthcheck`](#ev_group32-healthcheck)
 * [`ev_group32 help [COMMAND]`](#ev_group32-help-command)
+* [`ev_group32 kilometersDriver`](#ev_group32-kilometersdriver)
 * [`ev_group32 login`](#ev_group32-login)
 * [`ev_group32 logout`](#ev_group32-logout)
+* [`ev_group32 periodicBill`](#ev_group32-periodicbill)
 * [`ev_group32 resetsessions`](#ev_group32-resetsessions)
+* [`ev_group32 sessionsPerEV`](#ev_group32-sessionsperev)
+* [`ev_group32 sessionsPerPoint`](#ev_group32-sessionsperpoint)
+* [`ev_group32 sessionsPerProvider`](#ev_group32-sessionsperprovider)
+* [`ev_group32 sessionsPerStation`](#ev_group32-sessionsperstation)
+
+## `ev_group32 addReview`
+
+add a review to a station
+
+```
+USAGE
+  $ ev_group32 addReview
+
+OPTIONS
+  --apikey=apikey    (required) the api key used for authorization
+  --comment=comment  (required) extra comments for the review
+  --date=date        (required) the date that the review has been made
+  --format=json|csv  (required) [default: json]
+  --rating=rating    (required) the rating for the station
+  --station=station  (required) the station to add the review to
+  --user=user        (required) the user that writes the review
+```
+
+_See code: [src/commands/addReview.js](https://github.com/ntua/TL20-32/blob/v1.0.0/src/commands/addReview.js)_
+
+## `ev_group32 addStation`
+
+add a new station
+
+```
+USAGE
+  $ ev_group32 addStation
+
+OPTIONS
+  --address=address                (required) the address of the station to be added
+  --apikey=apikey                  the api key used for authorization
+  --energyProvider=energyProvider  (required) the energy provider for the station to be adde
+  --format=json|csv                (required) [default: json]
+  --operator=operator              (required) the operator of the station to be added
+  --stationName=stationName        (required) the name of the station to be added
+  --user=user                      (required) the user that has the station
+```
+
+_See code: [src/commands/addStation.js](https://github.com/ntua/TL20-32/blob/v1.0.0/src/commands/addStation.js)_
 
 ## `ev_group32 admin`
 
@@ -43,22 +92,77 @@ USAGE
   $ ev_group32 admin
 
 OPTIONS
-  --apikey=apikey           the api key used for authorization
-  --format=json|csv         [default: json] the file type for the data to be returned
-  --healthcheck             tests live server for errors
-  --passw=passw             Your password
-  --resetsessions           reset evcharge data and insert default admin to the db
-  --sessionsupd             upload charging session data to the database. should be used with --source
-  --source=source           the file to upload to the server. it can only be a csv file
-  --usermod                 insert a new user to the database or change an existing user's password. should be used with   --username --passw
-  --username=username       Your username
-  --users                   get details for a specific user. should be used with --username
+  --apikey=apikey      the api key used for authorization
+  --format=json|csv    [default: json]
+  --healthcheck        tests live server for errors
+  --passw=passw        Your password
+  --resetsessions      reset evcharge data and insert default admin to the db
+  --sessionsupd        upload charging session data to the database. should be used with --source
+  --source=source      the file to upload to the server. it can only be a csv file
 
-DESCRIPTION
-  The system calls should be used with the api-key, which authenticates that the account as an adminstrator. The only exceptions are the resetsessions and healthcheck commands, that are provided seperately as well and are for testing purposes.
+  --usermod            insert a new user to the database or change an existing user's password. should be used with
+                       --username --passw
+
+  --username=username  Your username
+
+  --users              get details for a specific user. should be used with --username
 ```
 
-_See code: [src/commands/admin.js](https://github.com/ntua/TL20-32/tree/development/cli-client/ev_group32/src/commands/admin.js)_
+_See code: [src/commands/admin.js](https://github.com/ntua/TL20-32/blob/v1.0.0/src/commands/admin.js)_
+
+## `ev_group32 deleteStation`
+
+add a new station
+
+```
+USAGE
+  $ ev_group32 deleteStation
+
+OPTIONS
+  --apikey=apikey    the api key used for authorization
+  --format=json|csv  (required) [default: json]
+  --station=station  (required) the id of the station to be modified
+  --user=user        (required) the id of user that has the station
+```
+
+_See code: [src/commands/deleteStation.js](https://github.com/ntua/TL20-32/blob/v1.0.0/src/commands/deleteStation.js)_
+
+## `ev_group32 editStation`
+
+add a new station
+
+```
+USAGE
+  $ ev_group32 editStation
+
+OPTIONS
+  --address=address                (required) the address of the station to be added
+  --apikey=apikey                  the api key used for authorization
+  --energyProvider=energyProvider  (required) the energy provider for the station to be adde
+  --format=json|csv                (required) [default: json]
+  --operator=operator              (required) the operator of the station to be added
+  --station=station                (required) the id of the station to be modified
+  --stationName=stationName        (required) the name of the station to be added
+  --user=user                      (required) the id of user that has the station
+```
+
+_See code: [src/commands/editStation.js](https://github.com/ntua/TL20-32/blob/v1.0.0/src/commands/editStation.js)_
+
+## `ev_group32 estimatedTime`
+
+return the estimated time for the car to charge
+
+```
+USAGE
+  $ ev_group32 estimatedTime
+
+OPTIONS
+  --capacity=capacity  (required) the current capacity of the car
+  --ev=ev              (required) the id of the car to search
+  --format=json|csv    (required) [default: json]
+```
+
+_See code: [src/commands/estimatedTime.js](https://github.com/ntua/TL20-32/blob/v1.0.0/src/commands/estimatedTime.js)_
 
 ## `ev_group32 healthcheck`
 
@@ -69,11 +173,10 @@ USAGE
   $ ev_group32 healthcheck
 
 OPTIONS
-  --format=json|csv         [default: json] the file type for the data to be returned
+  --format=json|csv  (required) [default: json]
 ```
 
-_See code: [src/commands/healthcheck.js](https://github.com/ntua/TL20-32/tree/development/cli-client/ev_group32/src/commands/healthcheck.js)_
-
+_See code: [src/commands/healthcheck.js](https://github.com/ntua/TL20-32/blob/v1.0.0/src/commands/healthcheck.js)_
 
 ## `ev_group32 help [COMMAND]`
 
@@ -92,44 +195,68 @@ OPTIONS
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.2/src/commands/help.ts)_
 
+## `ev_group32 kilometersDriver`
+
+get kilometers driver between two sessions
+
+```
+USAGE
+  $ ev_group32 kilometersDriver
+
+OPTIONS
+  --format=json|csv            (required) [default: json]
+  --sessionEnd=sessionEnd      (required) the last session
+  --sessionStart=sessionStart  (required) the starting session
+```
+
+_See code: [src/commands/kilometersDriver.js](https://github.com/ntua/TL20-32/blob/v1.0.0/src/commands/kilometersDriver.js)_
+
 ## `ev_group32 login`
 
-login to the server to get your api-key
+login to the server to get your api-key. On successful response, the api-key is saved on {home}/softeng20bAPI.token/
 
 ```
 USAGE
   $ ev_group32 login
 
 OPTIONS
-  --passw=passw             (required) Your password
-  --username=username       (required) Your username
- 
-DESCRIPTION
-  On successful login, the api-key is saved on {home}/softeng20bAPI.token/
-
+  --passw=passw        (required) Your password
+  --username=username  (required) Your username
 ```
 
-_See code: [src/commands/login.js](https://github.com/ntua/TL20-32/tree/development/cli-client/ev_group32/src/commands/login.js)_
+_See code: [src/commands/login.js](https://github.com/ntua/TL20-32/blob/v1.0.0/src/commands/login.js)_
 
 ## `ev_group32 logout`
 
-logout of the current session
+logout of the current session using your api-key. The file 'softeng20bAPI.token' is deleted
 
 ```
 USAGE
   $ ev_group32 logout
 
 OPTIONS
-  --apikey=apikey           (required) the api key used for authorization
-  --format=json|csv         (required) [default: json] the file type for the data to be returned
-
- 
-DESCRIPTION
-  On successful logout, the api-key is deleted from {home}/softeng20bAPI.token/
-
+  --apikey=apikey    (required) the api key used for authorization
+  --format=json|csv  (required) [default: json]
 ```
 
-_See code: [src/commands/logout.js](https://github.com/ntua/TL20-32/tree/development/cli-client/ev_group32/src/commands/logout.js)_
+_See code: [src/commands/logout.js](https://github.com/ntua/TL20-32/blob/v1.0.0/src/commands/logout.js)_
+
+## `ev_group32 periodicBill`
+
+return total bill for all charging sessions in a certain period
+
+```
+USAGE
+  $ ev_group32 periodicBill
+
+OPTIONS
+  --datefrom=datefrom  (required)
+  --dateto=dateto      (required)
+  --ev=ev              (required) the id of the car to search
+  --format=json|csv    (required) [default: json]
+```
+
+_See code: [src/commands/periodicBill.js](https://github.com/ntua/TL20-32/blob/v1.0.0/src/commands/periodicBill.js)_
 
 ## `ev_group32 resetsessions`
 
@@ -140,10 +267,80 @@ USAGE
   $ ev_group32 resetsessions
 
 OPTIONS
-  --format=json|csv         (required) [default: json] the file type for the data to be returned
-
+  --format=json|csv  (required) [default: json]
 ```
 
-_See code: [src/commands/resetsessions.js](https://github.com/ntua/TL20-32/tree/development/cli-client/ev_group32/src/commands/resetsessions.js)_
+_See code: [src/commands/resetsessions.js](https://github.com/ntua/TL20-32/blob/v1.0.0/src/commands/resetsessions.js)_
 
+## `ev_group32 sessionsPerEV`
+
+return all charging sessions that an electric vehicle has done
+
+```
+USAGE
+  $ ev_group32 sessionsPerEV
+
+OPTIONS
+  --apikey=apikey      (required) the api key used for authorization
+  --datefrom=datefrom  (required)
+  --dateto=dateto      (required)
+  --ev=ev              (required) the id of the car to search
+  --format=json|csv    (required) [default: json]
+```
+
+_See code: [src/commands/sessionsPerEV.js](https://github.com/ntua/TL20-32/blob/v1.0.0/src/commands/sessionsPerEV.js)_
+
+## `ev_group32 sessionsPerPoint`
+
+return all charging sessions on a certain point
+
+```
+USAGE
+  $ ev_group32 sessionsPerPoint
+
+OPTIONS
+  --apikey=apikey      (required) the api key used for authorization
+  --datefrom=datefrom  (required)
+  --dateto=dateto      (required)
+  --format=json|csv    (required) [default: json]
+  --point=point        (required) the id of the point to search
+```
+
+_See code: [src/commands/sessionsPerPoint.js](https://github.com/ntua/TL20-32/blob/v1.0.0/src/commands/sessionsPerPoint.js)_
+
+## `ev_group32 sessionsPerProvider`
+
+return all charging sessions that a provider has
+
+```
+USAGE
+  $ ev_group32 sessionsPerProvider
+
+OPTIONS
+  --apikey=apikey      (required) the api key used for authorization
+  --datefrom=datefrom  (required)
+  --dateto=dateto      (required)
+  --format=json|csv    (required) [default: json]
+  --provider=provider  (required) the id of the provider to search
+```
+
+_See code: [src/commands/sessionsPerProvider.js](https://github.com/ntua/TL20-32/blob/v1.0.0/src/commands/sessionsPerProvider.js)_
+
+## `ev_group32 sessionsPerStation`
+
+return all charging sessions on a certain station
+
+```
+USAGE
+  $ ev_group32 sessionsPerStation
+
+OPTIONS
+  --apikey=apikey      (required) the api key used for authorization
+  --datefrom=datefrom  (required)
+  --dateto=dateto      (required)
+  --format=json|csv    (required) [default: json]
+  --station=station    (required) the id of the station to search
+```
+
+_See code: [src/commands/sessionsPerStation.js](https://github.com/ntua/TL20-32/blob/v1.0.0/src/commands/sessionsPerStation.js)_
 <!-- commandsstop -->
