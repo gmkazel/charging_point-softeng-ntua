@@ -41,9 +41,10 @@ class UserAnalytics extends Component {
         try {
             let res = await axios.get('http://localhost:8765/evcharge/api/queries/userCars/' + userID);
             // console.log(res);
+
             let temp = ['All Cars'];
             for (let i = 0; i < res.data.length; i++) {
-                temp.push(res.data[i].model);
+                temp.push(res.data[i].brand + ' ' + res.data[i].model);
             }
             this.setState({carNames: temp});
             temp = ['all'];

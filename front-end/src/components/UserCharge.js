@@ -28,7 +28,7 @@ class UserCharge extends Component {
 
         try {
             let res = await axios.get('http://localhost:8765/evcharge/api/queries/userCars/' + userID);
-            console.log(res);
+            // console.log(res);
 
             this.setState({
                 charge: res.data,
@@ -52,9 +52,9 @@ class UserCharge extends Component {
                 rows.push(
                     <div className="row justify-content-around align-items-center" key={i}>
                         <div className="reviewstation">
-                            <h3>{this.state.charge[i].model}</h3>
-                            <p>Total battery capacity: {}</p>
-                            <p>Current battery capacity: 4.217</p>
+                            <h3>{this.state.charge[i].brand + ' ' + this.state.charge[i].model}</h3>
+                            <p>Total battery capacity: {this.state.charge[i].usable_battery_size}</p>
+                            <p>Current battery capacity: 4.2</p>
                             <fieldset>
                                 <span>Normal </span>
                                 <input type="radio" id="normal" name={i} value="normal" defaultChecked/>
