@@ -62,9 +62,7 @@ class PaymentMethods extends Component {
                 <UserLinks/>
 
                 <div className="container-fluid">
-                    <div className="row justify-content-around align-items-center">
-                        {this.state.render}
-                    </div>
+                    {this.state.render}
 
                     <div className="row justify-content-around align-items-center">
                         <Link to="/user/paymentmethods/add"><button className="btn btn-primary">+ Add a new payment method</button></Link>

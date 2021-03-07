@@ -5,138 +5,359 @@ import { Line } from 'react-chartjs-2';
 import UserLinks from './UserLinks';
 import { Link } from 'react-router-dom';
 import React, { Component } from 'react';
+import jwt from 'jsonwebtoken';
 import axios from 'axios';
-
-let carsData = [
-    { value: 'All Cars' },
-    { value: 'Tesla' },
-    { value: 'Mercedes' }
-];
-
-let label_km='Kilometers (in thousands) done';
-let label_kW='kWatts consumed';
-let label_money='Money spent';
+import dayjs from 'dayjs';
 
 class UserAnalytics extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            data1: [5, 2, 1, 3, 3, 6, 9],
-            data2: [56, 13, 6, 19, 29, 19, 12],
-            data3: [63, 10, 8, 31, 15, 42, 17],
-            selectValue2: 'lastweek',
-            xaxis: [
-                'Mon',
-                'Tue',
-                'Wed',
-                'Thu',
-                'Fri',
-                'Sat',
-                'Sun'
-            ]
+            carNames: ['All Cars'],
+            carIDs: ['all'],
+            carData: [],
+            carValue: '0',
+            timeValue: 'lastmonth',
+            km: [],
+            kW: [],
+            money: [],
+            xaxis: [],
+            months: []
         }
 
-        console.log('test')
-        console.log(localStorage.getItem('login'))
-
+        this.carHandler = this.carHandler.bind(this)
+        this.timeHandler = this.timeHandler.bind(this)
         this.clickHandler = this.clickHandler.bind(this)
-        this.changeHandler2 = this.changeHandler2.bind(this)
     }
 
     componentDidMount() {
-        axios.get('http://localhost:8765/evcharge/api/SessionsPerPoint/6041303d0bd42e0dc486c62e/20190112/20191020')
-        .then(res => {
-            console.log(res.data.ChargingSessionsList);
-        })
+        this.Loader();
     }
 
-    /*async*/ clickHandler() {
-        if (this.state.selectValue2 === 'lastweek') {
-            this.setState({
-                xaxis: [
-                    'Day 1',
-                    'Day 2',
-                    'Day 3',
-                    'Day 4',
-                    'Day 5',
-                    'Day 6',
-                    'Day 7'
-                ]
-            })
-        }
-        else if (this.state.selectValue2 === 'lastmonth') {
-            this.setState({
-                xaxis: [
-                    'Week 1',
-                    'Week 2',
-                    'Week 3',
-                    'Week 4'
-                ]
-            })
-        }
-        else if (this.state.selectValue2 === 'last3months') {
-            this.setState({
-                xaxis: [
-                    'Week 1',
-                    'Week 2',
-                    'Week 3',
-                    'Week 4',
-                    'Week 5',
-                    'Week 6',
-                    'Week 7',
-                    'Week 8',
-                    'Week 9',
-                    'Week 10',
-                    'Week 11',
-                    'Week 12'
-                ]
-            })
-        }
-        else if (this.state.selectValue2 === 'last6months') {
-            this.setState({
-                xaxis: [
-                    'Month 1',
-                    'Month 2',
-                    'Month 3',
-                    'Month 4',
-                    'Month 5',
-                    'Month 6'
-                ]
-            })
-        }
-        else if (this.state.selectValue2 === 'lastyear') {
-            this.setState({
-                xaxis: [
-                    'Month 1',
-                    'Month 2',
-                    'Month 3',
-                    'Month 4',
-                    'Month 5',
-                    'Month 6',
-                    'Month 7',
-                    'Month 8',
-                    'Month 9',
-                    'Month 10',
-                    'Month 11',
-                    'Month 12'
-                ]
-            })
-        }
+    async Loader() {
+        let userID = jwt.decode(JSON.parse(localStorage.getItem('login')).token)._id;
 
-        this.setState({
-            data1: [
-                42,
-                42,
-                42,
-                42,
-                42,
-                42,
-                42
-            ]
-        })
-        // await setTimeout(() => {}, 1)
-        // console.log(this.state)
+        try {
+            let res = await axios.get('http://localhost:8765/evcharge/api/queries/userCars/' + userID);
+            // console.log(res);
+            let temp = ['All Cars'];
+            for (let i = 0; i < res.data.length; i++) {
+                temp.push(res.data[i].model);
+            }
+            this.setState({carNames: temp});
+            temp = ['all'];
+            for (let i = 0; i < res.data.length; i++) {
+                temp.push(res.data[i].info);
+            }
+            this.setState({carIDs: temp});
+
+            this.clickHandler();
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+
+    getMonth(intEndMonth, monthstime) {
+        let startMonth = intEndMonth - monthstime;
+
+        if (startMonth === 1 || startMonth === -11)
+            return '01';
+        else if (startMonth === 2 || startMonth === -10)
+            return '02';
+        else if (startMonth === 3 || startMonth === -9)
+            return '03';
+        else if (startMonth === 4 || startMonth === -8)
+            return '04';
+        else if (startMonth === 5 || startMonth === -7)
+            return '05';
+        else if (startMonth === 6 || startMonth === -6)
+            return '06';
+        else if (startMonth === 7 || startMonth === -5)
+            return '07';
+        else if (startMonth === 8 || startMonth === -4)
+            return '08';
+        else if (startMonth === 9 || startMonth === -3)
+            return '09';
+        else if (startMonth === 10 || startMonth === -2)
+            return '10';
+        else if (startMonth === 11 || startMonth === -1)
+            return '11';
+        else if (startMonth === 12 || startMonth === 0)
+            return '12';
+    }
+
+    getStartDate(endDate, monthstime) {
+        let endMonth = parseInt(endDate.slice(4, 6));
+        let startMonth = endMonth - monthstime;
+        let result = '01';
+
+        if (startMonth === 1 || startMonth === -11)
+            result = '01' + result;
+        else if (startMonth === 2 || startMonth === -10)
+            result = '02' + result;
+        else if (startMonth === 3 || startMonth === -9)
+            result = '03' + result;
+        else if (startMonth === 4 || startMonth === -8)
+            result = '04' + result;
+        else if (startMonth === 5 || startMonth === -7)
+            result = '05' + result;
+        else if (startMonth === 6 || startMonth === -6)
+            result = '06' + result;
+        else if (startMonth === 7 || startMonth === -5)
+            result = '07' + result;
+        else if (startMonth === 8 || startMonth === -4)
+            result = '08' + result;
+        else if (startMonth === 9 || startMonth === -3)
+            result = '09' + result;
+        else if (startMonth === 10 || startMonth === -2)
+            result = '10' + result;
+        else if (startMonth === 11 || startMonth === -1)
+            result = '11' + result;
+        else if (startMonth === 12 || startMonth === 0)
+            result = '12' + result;
+
+        let endYear = endDate.slice(0, 4);
+        if (startMonth <= 0)
+            result = JSON.stringify(parseInt(endYear)-1) + result;
+        else
+            result = endYear + result;
+
+        return result;
+    }
+
+    async clickHandler() {
+        let userID = jwt.decode(JSON.parse(localStorage.getItem('login')).token)._id;
+        let carID = this.state.carIDs[this.state.carValue];
+
+        let startDate = null;
+        let endDate = dayjs(new Date()).format('YYYYMMDD');
+        endDate = endDate.slice(0, 6) + '01';
+
+        if (this.state.timeValue === 'lastmonth') {
+            let current = new Date();
+            current.setMonth(current.getMonth() - 1);
+            let previousMonth = current.toLocaleString('default', { month: 'long' });
+
+            let endMonth = endDate.slice(4, 6);
+            let month = this.getMonth(parseInt(endMonth), 1);
+
+            this.setState({
+                xaxis: ['1st week of ' + previousMonth, '2nd week of ' + previousMonth, '3rd week of ' + previousMonth, '4th week of ' + previousMonth]
+            });
+
+            startDate = this.getStartDate(endDate, 1);
+
+            try {
+                let res = await axios.get('http://localhost:8765/evcharge/api/queries/userCars/analytics/' + userID + '/' + carID + '/' + startDate + '/' + endDate);
+                // console.log(res);
+
+                let kmtemp = [0, 0, 0, 0];
+                let kWtemp = [0, 0, 0, 0];
+                let moneytemp = [0, 0, 0, 0];
+                for (let i = 0; i < res.data.length; i++) {
+                    for (let j = 0; j < res.data[i].sessions.length; j++) {
+                        if (res.data[i].sessions[j].StartedOn.slice(5, 7) === month) {
+                            let day = res.data[i].sessions[j].StartedOn.slice(8, 10);
+                            if (day >= '01' && day < '08') {
+                                kmtemp[0] += res.data[i].sessions[j].KmCompleted/1000;
+                                kWtemp[0] += res.data[i].sessions[j].EnergyDelivered;
+                                moneytemp[0] += res.data[i].sessions[j].SessionCost;
+                            }
+                            else if (day >= '08' && day < '15') {
+                                kmtemp[1] += res.data[i].sessions[j].KmCompleted/1000;
+                                kWtemp[1] += res.data[i].sessions[j].EnergyDelivered;
+                                moneytemp[1] += res.data[i].sessions[j].SessionCost;
+                            }
+                            else if (day >= '15' && day < '22') {
+                                kmtemp[2] += res.data[i].sessions[j].KmCompleted/1000;
+                                kWtemp[2] += res.data[i].sessions[j].EnergyDelivered;
+                                moneytemp[2] += res.data[i].sessions[j].SessionCost;
+                            }
+                            else if (day >= '22') {
+                                kmtemp[3] += res.data[i].sessions[j].KmCompleted/1000;
+                                kWtemp[3] += res.data[i].sessions[j].EnergyDelivered;
+                                moneytemp[3] += res.data[i].sessions[j].SessionCost;
+                            }
+                        }
+                    }
+                }
+                this.setState({
+                    km: kmtemp,
+                    kW: kWtemp,
+                    money: moneytemp
+                });
+            }
+            catch (err) {
+                console.log(err);
+            }
+        }
+        else if (this.state.timeValue === 'last3months') {
+            let current = new Date();
+            current.setMonth(current.getMonth() - 1);
+            let previousMonth3 = current.toLocaleString('default', { month: 'short' });
+            current.setMonth(current.getMonth() - 1);
+            let previousMonth2 = current.toLocaleString('default', { month: 'short' });
+            current.setMonth(current.getMonth() - 1);
+            let previousMonth1 = current.toLocaleString('default', { month: 'short' });
+
+            let endMonth = endDate.slice(4, 6);
+            let month1 = this.getMonth(parseInt(endMonth), 3);
+            let month2 = this.getMonth(parseInt(endMonth), 2);
+            let month3 = this.getMonth(parseInt(endMonth), 1);
+
+            this.setState({
+                xaxis: [
+                    '1st week of ' + previousMonth1, '2nd week of ' + previousMonth1, '3rd week of ' + previousMonth1, '4th week of ' + previousMonth1,
+                    '1st week of ' + previousMonth2, '2nd week of ' + previousMonth2, '3rd week of ' + previousMonth2, '4th week of ' + previousMonth2,
+                    '1st week of ' + previousMonth3, '2nd week of ' + previousMonth3, '3rd week of ' + previousMonth3, '4th week of ' + previousMonth3
+                ],
+                months: [month1, month2, month3]
+            });
+
+            startDate = this.getStartDate(endDate, 1);
+
+            try {
+                let res = await axios.get('http://localhost:8765/evcharge/api/queries/userCars/analytics/' + userID + '/' + carID + '/' + startDate + '/' + endDate);
+                // console.log(res);
+
+                let kmtemp = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+                let kWtemp = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+                let moneytemp = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+                for (let i = 0; i < res.data.length; i++) {
+                    for (let j = 0; j < res.data[i].sessions.length; j++) {
+                        for (let k = 0; k < this.state.months.length; k++) {
+                            if (res.data[i].sessions[j].StartedOn.slice(5, 7) === this.state.months[k]) {
+                                let day = res.data[i].sessions[j].StartedOn.slice(8, 10);
+                                if (day >= '01' && day < '08') {
+                                    kmtemp[4*k] += res.data[i].sessions[j].KmCompleted/1000;
+                                    kWtemp[4*k] += res.data[i].sessions[j].EnergyDelivered;
+                                    moneytemp[4*k] += res.data[i].sessions[j].SessionCost;
+                                }
+                                else if (day >= '08' && day < '15') {
+                                    kmtemp[4*k+1] += res.data[i].sessions[j].KmCompleted/1000;
+                                    kWtemp[4*k+1] += res.data[i].sessions[j].EnergyDelivered;
+                                    moneytemp[4*k+1] += res.data[i].sessions[j].SessionCost;
+                                }
+                                else if (day >= '15' && day < '22') {
+                                    kmtemp[4*k+2] += res.data[i].sessions[j].KmCompleted/1000;
+                                    kWtemp[4*k+2] += res.data[i].sessions[j].EnergyDelivered;
+                                    moneytemp[4*k+2] += res.data[i].sessions[j].SessionCost;
+                                }
+                                else if (day >= '22') {
+                                    kmtemp[4*k+3] += res.data[i].sessions[j].KmCompleted/1000;
+                                    kWtemp[4*k+3] += res.data[i].sessions[j].EnergyDelivered;
+                                    moneytemp[4*k+3] += res.data[i].sessions[j].SessionCost;
+                                }
+                            }
+                        }
+                    }
+                }
+                this.setState({
+                    km: kmtemp,
+                    kW: kWtemp,
+                    money: moneytemp
+                });
+            }
+            catch (err) {
+                console.log(err);
+            }
+        }
+        else if (this.state.timeValue === 'last6months') {
+            let current = new Date();
+            let previousMonth = null;
+            let temp = [];
+            let temp2 = [];
+            let endMonth = endDate.slice(4, 6);
+            for (let i = 0; i < 6; i++) {
+                current.setMonth(current.getMonth() - 1);
+                previousMonth = current.toLocaleString('default', { month: 'long' });
+                temp.unshift(previousMonth);
+                temp2.unshift(this.getMonth(parseInt(endMonth), i+1));
+            }
+            this.setState({
+                xaxis: temp,
+                months: temp2
+            });
+
+            startDate = this.getStartDate(endDate, 6);
+
+            try {
+                let res = await axios.get('http://localhost:8765/evcharge/api/queries/userCars/analytics/' + userID + '/' + carID + '/' + startDate + '/' + endDate);
+                // console.log(res);
+
+                let kmtemp = [0, 0, 0, 0, 0, 0];
+                let kWtemp = [0, 0, 0, 0, 0, 0];
+                let moneytemp = [0, 0, 0, 0, 0, 0];
+                for (let i = 0; i < res.data.length; i++) {
+                    for (let j = 0; j < res.data[i].sessions.length; j++) {
+                        for (let k = 0; k < this.state.months.length; k++) {
+                            if (res.data[i].sessions[j].StartedOn.slice(5, 7) === this.state.months[k]) {
+                                kmtemp[k] += res.data[i].sessions[j].KmCompleted/1000;
+                                kWtemp[k] += res.data[i].sessions[j].EnergyDelivered;
+                                moneytemp[k] += res.data[i].sessions[j].SessionCost;
+                            }
+                        }
+                    }
+                }
+                this.setState({
+                    km: kmtemp,
+                    kW: kWtemp,
+                    money: moneytemp
+                });
+            }
+            catch (err) {
+                console.log(err);
+            }
+        }
+        else if (this.state.timeValue === 'lastyear') {
+            let current = new Date();
+            let previousMonth = null;
+            let temp = [];
+            let temp2 = [];
+            let endMonth = endDate.slice(4, 6);
+            for (let i = 0; i < 12; i++) {
+                current.setMonth(current.getMonth() - 1);
+                previousMonth = current.toLocaleString('default', { month: 'long' });
+                temp.unshift(previousMonth);
+                temp2.unshift(this.getMonth(parseInt(endMonth), i+1));
+            }
+            this.setState({
+                xaxis: temp,
+                months: temp2
+            });
+
+            startDate = this.getStartDate(endDate, 12);
+
+            try {
+                let res = await axios.get('http://localhost:8765/evcharge/api/queries/userCars/analytics/' + userID + '/' + carID + '/' + startDate + '/' + endDate);
+                // console.log(res);
+
+                let kmtemp = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+                let kWtemp = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+                let moneytemp = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+                for (let i = 0; i < res.data.length; i++) {
+                    for (let j = 0; j < res.data[i].sessions.length; j++) {
+                        for (let k = 0; k < this.state.months.length; k++) {
+                            if (res.data[i].sessions[j].StartedOn.slice(5, 7) === this.state.months[k]) {
+                                kmtemp[k] += res.data[i].sessions[j].KmCompleted/1000;
+                                kWtemp[k] += res.data[i].sessions[j].EnergyDelivered;
+                                moneytemp[k] += res.data[i].sessions[j].SessionCost;
+                            }
+                        }
+                    }
+                }
+                this.setState({
+                    km: kmtemp,
+                    kW: kWtemp,
+                    money: moneytemp
+                });
+            }
+            catch (err) {
+                console.log(err);
+            }
+        }
     }
 
     LineChart() {
@@ -145,35 +366,41 @@ class UserAnalytics extends Component {
                 {labels: this.state.xaxis,
                 datasets: [
                     {
-                        label: label_km,
-                        data: this.state.data1,
-                        backgroundColor: 'rgba(255, 69, 0, 0.6)',
-                        borderColor: 'rgba(0, 0, 139)',
-                        pointBackgroundColor: 'rgba(0, 0, 139)'
+                        label: 'Kilometers between sessions',
+                        data: this.state.km,
+                        backgroundColor: 'rgba(230, 0, 0, 0.4)',
+                        borderColor: 'rgba(0, 0, 140)',
+                        pointBackgroundColor: 'rgba(0, 0, 140)'
                     },
                     {
-                        label: label_kW,
-                        data: this.state.data2,
-                        backgroundColor: 'rgba(255, 69, 0, 0.6)',
-                        borderColor: 'rgba(0, 0, 139)',
-                        pointBackgroundColor: 'rgba(0, 0, 139)'
+                        label: 'kWatts consumed',
+                        data: this.state.kW,
+                        backgroundColor: 'rgba(255, 70, 0, 0.4)',
+                        borderColor: 'rgba(0, 0, 140)',
+                        pointBackgroundColor: 'rgba(0, 0, 140)'
                     },
                     {
-                        label: label_money,
-                        data: this.state.data3,
-                        backgroundColor: 'rgba(255, 69, 0, 0.6)',
-                        borderColor: 'rgba(0, 0, 139)',
-                        pointBackgroundColor: 'rgba(0, 0, 139)'
+                        label: 'Money spent',
+                        data: this.state.money,
+                        backgroundColor: 'rgba(60, 150, 60, 0.4)',
+                        borderColor: 'rgba(0, 0, 140)',
+                        pointBackgroundColor: 'rgba(0, 0, 140)'
                     }
                 ]}
             }/>
         )
     }
 
-    changeHandler2(e) {
+    carHandler(e) {
         this.setState({
-            selectValue2: e.target.value
-        })
+            carValue: e.target.value
+        });
+    }
+
+    timeHandler(e) {
+        this.setState({
+            timeValue: e.target.value
+        });
     }
 
     render() {
@@ -187,12 +414,11 @@ class UserAnalytics extends Component {
                     <div className="row justify-content-around align-items-center no-gutters">
                         <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span> {/* what if we used 100% of our brains */}
 
-                        <select id="cars" name="cars" value={carsData.value}>
-                            {carsData.map((e, key) => {return <option key={key} value={e.value}>{e.value}</option>;})}
+                        <select id="cars" name="cars" onChange={this.carHandler}>
+                            {this.state.carNames.map((i, key) => {return <option key={key} value={key}>{i}</option>;})}
                         </select>
 
-                        <select id="timeperiod" name="timeperiod" onChange={this.changeHandler2}>
-                            <option value="lastweek">Last Week</option>
+                        <select id="timeperiod" name="timeperiod" onChange={this.timeHandler}>
                             <option value="lastmonth">Last Month</option>
                             <option value="last3months">Last 3 Months</option>
                             <option value="last6months">Last 6 Months</option>
