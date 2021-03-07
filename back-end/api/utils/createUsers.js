@@ -82,7 +82,14 @@ async function createElectricalOperators () {
 }
 
 async function createStationOwner () {
-  const station = await createStation()
+  const stationInstance = await createStation(getRndInteger(1, config.dummyMaxStations))
+  const stations = []
+  stationInstance.forEach((c) => {
+    stations.push({
+      name: c.name,
+      info: mongoose.Types.ObjectId(c._id)
+    })
+  })
   const usrnm = faker.fake('{{name.lastName}}_{{name.firstName}}')
   const psw = faker.internet.password()
   dict[usrnm] = psw
@@ -97,10 +104,7 @@ async function createStationOwner () {
       },
     address: faker.fake('{{address.streetAddress}}, {{address.city}}'),
     account_type: 'stationOwner',
-    stations: [{
-      name: station.name,
-      info: mongoose.Types.ObjectId(station._id)
-    }]
+    stations: stations
   }
 
   const someUser = await user.createUserF(newuser)
