@@ -16,7 +16,6 @@ class UserAnalytics extends Component {
         this.state = {
             carNames: ['All Cars'],
             carIDs: ['all'],
-            carData: [],
             carValue: '0',
             timeValue: 'lastmonth',
             km: [],

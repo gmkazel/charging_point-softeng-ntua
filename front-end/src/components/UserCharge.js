@@ -31,7 +31,7 @@ class UserCharge extends Component {
             // console.log(res);
 
             temp = this.state.cost;
-            temp[i] = res.data.cost;
+            temp[i] = res.data.cost + '€';
             temp = this.state.time;
             temp[i] = res.data.time;
 
