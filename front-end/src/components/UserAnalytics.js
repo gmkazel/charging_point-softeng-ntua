@@ -216,7 +216,7 @@ class UserAnalytics extends Component {
                 months: [month1, month2, month3]
             });
 
-            startDate = this.getStartDate(endDate, 1);
+            startDate = this.getStartDate(endDate, 3);
 
             try {
                 let res = await axios.get('http://localhost:8765/evcharge/api/queries/userCars/analytics/' + userID + '/' + carID + '/' + startDate + '/' + endDate);

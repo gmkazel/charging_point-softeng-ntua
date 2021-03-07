@@ -41,14 +41,14 @@ class ParkingOwnerAnalytics extends Component {
             let res = await axios.get('http://localhost:8765/evcharge/api/queries/userStations/' + userID);
             console.log(res);
 
-            let temp = ['All Cars'];
+            let temp = ['All Stations'];
             for (let i = 0; i < res.data.length; i++) {
-                temp.push(res.data[i].brand + ' ' + res.data[i].model);
+                temp.push(res.data[i].name);
             }
             this.setState({stationNames: temp});
             temp = ['all'];
             for (let i = 0; i < res.data.length; i++) {
-                temp.push(res.data[i].info);
+                temp.push(res.data[i]._id);
             }
             this.setState({stationIDs: temp});
 
@@ -129,7 +129,7 @@ class ParkingOwnerAnalytics extends Component {
 
     async clickHandler() {
         let userID = jwt.decode(JSON.parse(localStorage.getItem('login')).token)._id;
-        let carID = this.state.stationIDs[this.state.stationValue];
+        let stationID = this.state.stationIDs[this.state.stationValue];
 
         let startDate = null;
         let endDate = dayjs(new Date()).format('YYYYMMDD');
@@ -150,10 +150,10 @@ class ParkingOwnerAnalytics extends Component {
             startDate = this.getStartDate(endDate, 1);
 
             try {
-                let res = await axios.get('http://localhost:8765/evcharge/api/queries/userCars/analytics/' + userID + '/' + carID + '/' + startDate + '/' + endDate);
+                let res = await axios.get('http://localhost:8765/evcharge/api/queries/userStations/analytics/' + userID + '/' + stationID + '/' + startDate + '/' + endDate);
                 // console.log(res);
 
-                let kmtemp = [0, 0, 0, 0];
+                let totalSessionstemp = [0, 0, 0, 0];
                 let kWtemp = [0, 0, 0, 0];
                 let moneytemp = [0, 0, 0, 0];
                 for (let i = 0; i < res.data.length; i++) {
@@ -161,22 +161,22 @@ class ParkingOwnerAnalytics extends Component {
                         if (res.data[i].sessions[j].StartedOn.slice(5, 7) === month) {
                             let day = res.data[i].sessions[j].StartedOn.slice(8, 10);
                             if (day >= '01' && day < '08') {
-                                kmtemp[0] += res.data[i].sessions[j].KmCompleted/1000;
+                                totalSessionstemp[0]++;
                                 kWtemp[0] += res.data[i].sessions[j].EnergyDelivered;
                                 moneytemp[0] += res.data[i].sessions[j].SessionCost;
                             }
                             else if (day >= '08' && day < '15') {
-                                kmtemp[1] += res.data[i].sessions[j].KmCompleted/1000;
+                                totalSessionstemp[1]++;
                                 kWtemp[1] += res.data[i].sessions[j].EnergyDelivered;
                                 moneytemp[1] += res.data[i].sessions[j].SessionCost;
                             }
                             else if (day >= '15' && day < '22') {
-                                kmtemp[2] += res.data[i].sessions[j].KmCompleted/1000;
+                                totalSessionstemp[2]++;
                                 kWtemp[2] += res.data[i].sessions[j].EnergyDelivered;
                                 moneytemp[2] += res.data[i].sessions[j].SessionCost;
                             }
                             else if (day >= '22') {
-                                kmtemp[3] += res.data[i].sessions[j].KmCompleted/1000;
+                                totalSessionstemp[3]++;
                                 kWtemp[3] += res.data[i].sessions[j].EnergyDelivered;
                                 moneytemp[3] += res.data[i].sessions[j].SessionCost;
                             }
@@ -184,7 +184,7 @@ class ParkingOwnerAnalytics extends Component {
                     }
                 }
                 this.setState({
-                    totalSessions: kmtemp,
+                    totalSessions: totalSessionstemp,
                     kW: kWtemp,
                     money: moneytemp
                 });
@@ -216,13 +216,13 @@ class ParkingOwnerAnalytics extends Component {
                 months: [month1, month2, month3]
             });
 
-            startDate = this.getStartDate(endDate, 1);
+            startDate = this.getStartDate(endDate, 3);
 
             try {
-                let res = await axios.get('http://localhost:8765/evcharge/api/queries/userCars/analytics/' + userID + '/' + carID + '/' + startDate + '/' + endDate);
+                let res = await axios.get('http://localhost:8765/evcharge/api/queries/userStations/analytics/' + userID + '/' + stationID + '/' + startDate + '/' + endDate);
                 // console.log(res);
 
-                let kmtemp = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+                let totalSessionstemp = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
                 let kWtemp = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
                 let moneytemp = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
                 for (let i = 0; i < res.data.length; i++) {
@@ -231,22 +231,22 @@ class ParkingOwnerAnalytics extends Component {
                             if (res.data[i].sessions[j].StartedOn.slice(5, 7) === this.state.months[k]) {
                                 let day = res.data[i].sessions[j].StartedOn.slice(8, 10);
                                 if (day >= '01' && day < '08') {
-                                    kmtemp[4*k] += res.data[i].sessions[j].KmCompleted/1000;
+                                    totalSessionstemp[4*k]++;
                                     kWtemp[4*k] += res.data[i].sessions[j].EnergyDelivered;
                                     moneytemp[4*k] += res.data[i].sessions[j].SessionCost;
                                 }
                                 else if (day >= '08' && day < '15') {
-                                    kmtemp[4*k+1] += res.data[i].sessions[j].KmCompleted/1000;
+                                    totalSessionstemp[4*k+1]++;
                                     kWtemp[4*k+1] += res.data[i].sessions[j].EnergyDelivered;
                                     moneytemp[4*k+1] += res.data[i].sessions[j].SessionCost;
                                 }
                                 else if (day >= '15' && day < '22') {
-                                    kmtemp[4*k+2] += res.data[i].sessions[j].KmCompleted/1000;
+                                    totalSessionstemp[4*k+2]++;
                                     kWtemp[4*k+2] += res.data[i].sessions[j].EnergyDelivered;
                                     moneytemp[4*k+2] += res.data[i].sessions[j].SessionCost;
                                 }
                                 else if (day >= '22') {
-                                    kmtemp[4*k+3] += res.data[i].sessions[j].KmCompleted/1000;
+                                    totalSessionstemp[4*k+3]++;
                                     kWtemp[4*k+3] += res.data[i].sessions[j].EnergyDelivered;
                                     moneytemp[4*k+3] += res.data[i].sessions[j].SessionCost;
                                 }
@@ -255,7 +255,7 @@ class ParkingOwnerAnalytics extends Component {
                     }
                 }
                 this.setState({
-                    totalSessions: kmtemp,
+                    totalSessions: totalSessionstemp,
                     kW: kWtemp,
                     money: moneytemp
                 });
@@ -282,19 +282,19 @@ class ParkingOwnerAnalytics extends Component {
             });
 
             startDate = this.getStartDate(endDate, 6);
-
+            console.log(userID, stationID, startDate, endDate);
             try {
-                let res = await axios.get('http://localhost:8765/evcharge/api/queries/userCars/analytics/' + userID + '/' + carID + '/' + startDate + '/' + endDate);
-                // console.log(res);
+                let res = await axios.get('http://localhost:8765/evcharge/api/queries/userStations/analytics/' + userID + '/' + stationID + '/' + startDate + '/' + endDate);
+                console.log(res);
 
-                let kmtemp = [0, 0, 0, 0, 0, 0];
+                let totalSessionstemp = [0, 0, 0, 0, 0, 0];
                 let kWtemp = [0, 0, 0, 0, 0, 0];
                 let moneytemp = [0, 0, 0, 0, 0, 0];
                 for (let i = 0; i < res.data.length; i++) {
                     for (let j = 0; j < res.data[i].sessions.length; j++) {
                         for (let k = 0; k < this.state.months.length; k++) {
                             if (res.data[i].sessions[j].StartedOn.slice(5, 7) === this.state.months[k]) {
-                                kmtemp[k] += res.data[i].sessions[j].KmCompleted/1000;
+                                totalSessionstemp[k]++;
                                 kWtemp[k] += res.data[i].sessions[j].EnergyDelivered;
                                 moneytemp[k] += res.data[i].sessions[j].SessionCost;
                             }
@@ -302,7 +302,7 @@ class ParkingOwnerAnalytics extends Component {
                     }
                 }
                 this.setState({
-                    totalSessions: kmtemp,
+                    totalSessions: totalSessionstemp,
                     kW: kWtemp,
                     money: moneytemp
                 });
@@ -331,17 +331,17 @@ class ParkingOwnerAnalytics extends Component {
             startDate = this.getStartDate(endDate, 12);
 
             try {
-                let res = await axios.get('http://localhost:8765/evcharge/api/queries/userCars/analytics/' + userID + '/' + carID + '/' + startDate + '/' + endDate);
+                let res = await axios.get('http://localhost:8765/evcharge/api/queries/userStations/analytics/' + userID + '/' + stationID + '/' + startDate + '/' + endDate);
                 // console.log(res);
 
-                let kmtemp = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+                let totalSessionstemp = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
                 let kWtemp = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
                 let moneytemp = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
                 for (let i = 0; i < res.data.length; i++) {
                     for (let j = 0; j < res.data[i].sessions.length; j++) {
                         for (let k = 0; k < this.state.months.length; k++) {
                             if (res.data[i].sessions[j].StartedOn.slice(5, 7) === this.state.months[k]) {
-                                kmtemp[k] += res.data[i].sessions[j].KmCompleted/1000;
+                                totalSessionstemp[k]++;
                                 kWtemp[k] += res.data[i].sessions[j].EnergyDelivered;
                                 moneytemp[k] += res.data[i].sessions[j].SessionCost;
                             }
@@ -349,7 +349,7 @@ class ParkingOwnerAnalytics extends Component {
                     }
                 }
                 this.setState({
-                    totalSessions: kmtemp,
+                    totalSessions: totalSessionstemp,
                     kW: kWtemp,
                     money: moneytemp
                 });
