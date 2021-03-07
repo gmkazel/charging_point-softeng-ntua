@@ -89,12 +89,13 @@ router.get('/PeriodicBill/:vehicleID/:yyyymmdd_from/:yyyymmdd_to', async (req, r
   }
 })
 
-router.get('/EstimatedTime/:vehicleID/:current_capacity', async (req, res, next) => {
+router.get('/EstimatedTimeAndCost/:vehicleID/:current_capacity/:mode', async (req, res, next) => {
   try {
     const vehicleId = req.params.vehicleID
     const currentCapacity = req.params.current_capacity
+    const chargeMode = req.params.mode
 
-    const result = await myService.getEstimatedTime(vehicleId, currentCapacity)
+    const result = await myService.getEstimatedTimeAndCost(vehicleId, currentCapacity, chargeMode)
     res.send(result)
   } catch (err) {
     res.status(400).send('Invalid Input')
