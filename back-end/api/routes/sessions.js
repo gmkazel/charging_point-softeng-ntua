@@ -102,4 +102,31 @@ router.get('/EstimatedTime/:vehicleID/:current_capacity', async (req, res, next)
   }
 })
 
+router.get('/ChargingPercentage/:vehicleID/:current_capacity', async (req, res, next) => {
+  try {
+    const vehicleId = req.params.vehicleID
+    const currentCapacity = req.params.current_capacity
+
+    const result = await myService.getChargingPercentage(vehicleId, currentCapacity)
+    res.send(result)
+  } catch (err) {
+    res.status(400).send('Invalid Input')
+    console.log(err)
+  }
+})
+
+router.get('/CostPerStation/:stationID/:yyyymmdd_from/:yyyymmdd_to', async (req, res, next) => {
+  try {
+    const stationId = req.params.stationID
+    const startDate = req.params.yyyymmdd_from
+    const endDate = req.params.yyyymmdd_to
+
+    const result = await myService.getCostPerStation(stationId, startDate, endDate)
+    res.send({ result })
+  } catch (err) {
+    res.status(400).send('Invalid Input')
+    console.log(err)
+  }
+})
+
 module.exports = router

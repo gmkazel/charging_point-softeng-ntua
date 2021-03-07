@@ -23,12 +23,13 @@ module.exports = class SessionService {
   async getSessionsPerPoint (pointId, startDate, endDate) {
     let result = {}
 
-    const myStation = await Session.find({ point: pointId }).select({ station: 1 }).exec(function (err, data) {
+    const myStation = await Point.find({ _id: pointId }, 'station', (err) => {
       if (err) console.log(err)
     })
-    const myPointOperator = await Station.find({ _id: myStation }).select({ operator: 1 }).exec(function (err, data) {
+    const myPointOperatorAux = await Station.find({ _id: myStation[0].station }, 'operator', (err) => {
       if (err) console.log(err)
     })
+    const myPointOperator = myPointOperatorAux[0].operator
 
     // Finding date and time of call
     const myRequestTimestamp = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
@@ -70,7 +71,6 @@ module.exports = class SessionService {
         }
       })
     }
-    console.log(myList)
     result = {
       Point: pointId,
       PointOperator: myPointOperator,
@@ -93,7 +93,6 @@ module.exports = class SessionService {
     const myOperator = await Station.find({ _id: stationId }, 'operator', (err) => {
       if (err) console.log(err)
     })
-    console.log(myOperator)
     result.Operator = myOperator[0].operator
 
     // Finding date and time of call
@@ -338,8 +337,8 @@ module.exports = class SessionService {
       if (err) console.log(err)
     })
 
-    if (currentCapacity > usableCapacity.usable_battery_size) {
-      throw Object.assign(new Error('Capacity given is greater than the actual capacity of the car'))
+    if(currentCapacity < 0 || currentCapacity > usableCapacity.usable_battery_size){
+      throw Object.assign(new Error('Capacity given is negative or is greater than the actual capacity of the car'))
     }
 
     const leftToFill = usableCapacity.usable_battery_size - currentCapacity
@@ -355,5 +354,49 @@ module.exports = class SessionService {
     }
 
     return obj
+  }
+
+  // ----------------------------------------------------------------------------------------------------------------------------
+
+  async getChargingPercentage (vehicle, capacity) {
+    const car = vehicle
+    const currentCapacity = capacity
+
+    const usableCapacity = await Vehicle.findById(car, 'usable_battery_size', (err) => {
+      if (err) console.log(err)
+    })
+
+    if(currentCapacity < 0 || currentCapacity > usableCapacity.usable_battery_size){
+      throw Object.assign(new Error('Capacity given is negative or is greater than the actual capacity of the car'))
+    }
+
+    let result
+    const obj = {
+      result: ((currentCapacity / usableCapacity.usable_battery_size) * 100).toFixed(2) + '%'
+    }
+
+    return obj
+  }
+
+  // ----------------------------------------------------------------------------------------------------------------------------
+
+  async getCostPerStation (station, date1, date2){
+    if (date1 >= date2) {
+      throw Object.assign(new Error('Invalid chronological order of the given dates'))
+    }
+
+    const energyDelivered = await this.getSessionsPerStation(station, date1, date2)
+
+    const provider = await Station.findById(station, 'energy_provider', (err) => {
+      if (err) console.log(err)
+    })
+
+    const providerCost = await User.findById(provider.energy_provider, 'cost_per_kwh', (err) => {
+      if (err) console.log(err)
+    })
+
+    const result = (energyDelivered.TotalEnergyDelivered * providerCost.cost_per_kwh).toFixed(2)
+
+    return result
   }
 }
