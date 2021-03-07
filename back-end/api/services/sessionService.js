@@ -64,7 +64,8 @@ module.exports = class SessionService {
             Protocol: sessions[counter].protocol,
             EnergyDelivered: sessions[counter].energy_delivered,
             Payment: sessions[counter].payment,
-            VehicleType: car.type
+            VehicleType: car.type,
+            SessionCost: sessions[counter].session_cost
           }
           myList.push(myElement)
           totalEnergyDelivered += myElement.EnergyDelivered

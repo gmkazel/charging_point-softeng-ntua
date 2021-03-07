@@ -298,7 +298,7 @@ router.get('/userStations/analytics/:userID/:stationID/:startDate/:endDate', asy
     const startDate = req.params.startDate
     const endDate = req.params.endDate
 
-    const result = []
+    let result
     let myElement
 
     const myStationsAux = await User.find({ _id: userId }, 'stations', (err) => {
@@ -307,13 +307,85 @@ router.get('/userStations/analytics/:userID/:stationID/:startDate/:endDate', asy
     const myStations = myStationsAux[0].stations
 
     if (stationId === 'all') {
+      result = []
       for (const i in myStations) {
-        const stationSessions = myService.getSessionsPerStation(myStations[i].info, startDate, endDate)
-        // do stuff
+        const stationPointsAux = await Station.find({ _id: myStations[i].info }, 'points', (err) => {
+          if (err) console.log(err)
+        })
+        const stationPoints = stationPointsAux[0].points
+        let sessionList = []
+
+        for (const j in stationPoints) {
+          const pointSessions = await myService.getSessionsPerPoint(stationPoints[j], startDate, endDate)
+          sessionList = sessionList.concat(pointSessions.ChargingSessionsList)
+        }
+        myElement = {
+          _id: myStations[i].info,
+          sessions: sessionList
+        }
+        result.push(myElement)
       }
     } else {
+      const stationPointsAux = await Station.find({ _id: stationId }, 'points', (err) => {
+        if (err) console.log(err)
+      })
+      const stationPoints = stationPointsAux[0].points
+      let sessionList = []
 
+      for (const j in stationPoints) {
+        const pointSessions = await myService.getSessionsPerPoint(stationPoints[j], startDate, endDate)
+        sessionList = sessionList.concat(pointSessions.ChargingSessionsList)
+      }
+      result = {
+        _id: stationId,
+        sessions: sessionList
+      }
     }
+    res.send(result)
+  } catch (err) {
+    res.sendStatus(400)
+    console.log(err)
+  }
+})
+
+router.get('/getAllSessionsForStationOwner/:userID', async (req, res, next) => {
+  try {
+    const userId = req.params.userID
+
+    const result = []
+    let myElement
+
+    const myStationsAux = await User.find({ _id: userId }, 'stations', (err) => {
+      if (err) console.log(err)
+    })
+    const myStations = myStationsAux[0].stations
+
+    for (const i in myStations) {
+      const stationPointsAux = await Station.find({ _id: myStations[i].info }, 'points operator contact_info', (err) => {
+        if (err) console.log(err)
+      })
+      const stationPoints = stationPointsAux[0].points
+
+      for (const j in stationPoints) {
+        const pointSessionsAux = await Point.find({ _id: stationPoints[j] }, 'sessions', (err) => {
+          if (err) console.log(err)
+        })
+        const pointSessions = pointSessionsAux[0].sessions
+
+        for (const k in pointSessions) {
+          const sessionInfoAux = await Session.find({ _id: pointSessions[k] }, (err) => {
+            if (err) console.log(err)
+          })
+          const sessionInfo = sessionInfoAux[0]
+
+          myElement = sessionInfo.toJSON()
+          myElement.StationOperator = stationPointsAux[0].operator
+          myElement.StationInfo = stationPointsAux[0].contact_info
+          result.push(myElement)
+        }
+      }
+    }
+    res.send(result)
   } catch (err) {
     res.sendStatus(400)
     console.log(err)
