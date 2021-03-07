@@ -25,11 +25,12 @@ class UserFullHistory extends Component {
 
         try {
             let res = await axios.get('http://localhost:8765/evcharge/api/queries/getAllSessions/' + userID);
+            // console.log(res);
+
             this.setState({
                 session: res.data,
                 length: res.data.length
             });
-            console.log(this.state);
 
             var rows = [];
             for (var i = 0; i < this.state.length; i++) {
@@ -39,9 +40,9 @@ class UserFullHistory extends Component {
                             <h4 className="state">Session completed</h4>
                             <p>Date: {this.state.session[i].start_date.slice(0, 10)}</p>
                             <p>Time: {this.state.session[i].start_date.slice(11, 16)}-{this.state.session[i].end_date.slice(11, 16)}</p>
-                            <p>Car: {this.state.session[i].car}</p>
+                            <p>Car: {this.state.session[i].carBrand + ' ' + this.state.session[i].carModel}</p>
                             <p>Total kW: {this.state.session[i].energy_delivered}</p>
-                            <span>Money: {this.state.session[i].session_cost}€</span>
+                            <span>Cost: {this.state.session[i].session_cost}€</span>
                         </div>
                     </div>
                 );

@@ -330,9 +330,10 @@ module.exports = class SessionService {
 
   // ----------------------------------------------------------------------------------------------------------------------------
 
-  async getEstimatedTime (vehicle, capacity) {
+  async getEstimatedTimeAndCost (vehicle, capacity, mode) {
     const car = vehicle
     const currentCapacity = capacity
+    const selectedMode = mode
 
     const usableCapacity = await Vehicle.findById(car, 'usable_battery_size', (err) => {
       if (err) console.log(err)
@@ -342,16 +343,32 @@ module.exports = class SessionService {
       throw Object.assign(new Error('Capacity given is negative or is greater than the actual capacity of the car'))
     }
 
+    if (selectedMode !== 'normal' && selectedMode !== 'fast') {
+      throw Object.assign(new Error('Mode given is invalid'))
+    }
+
     const leftToFill = usableCapacity.usable_battery_size - currentCapacity
 
-    const result = leftToFill / 7.5
+    let time
+    let cost
 
-    const rhours = Math.floor(result)
-    const minutes = (result - rhours) * 60
+    if (selectedMode === 'normal') {
+      time = leftToFill / 7.5
+      cost = leftToFill * 0.5
+    }
+
+    if (selectedMode === 'fast') {
+      time = leftToFill / 11.25
+      cost = leftToFill
+    }
+
+    const rhours = Math.floor(time)
+    const minutes = (time - rhours) * 60
     const rminutes = Math.round(minutes)
 
     const obj = {
-      result: rhours + ' hour(s) and ' + rminutes + ' minute(s).'
+      time: 'Estimated Time: ' + rhours + ' hour(s) and ' + rminutes + ' minute(s)',
+      cost: 'Estimated Cost: ' + cost
     }
 
     return obj

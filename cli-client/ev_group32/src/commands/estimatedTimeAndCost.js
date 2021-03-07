@@ -10,11 +10,11 @@ const config = require('config')
 
 axios.defaults.httpsAgent = new https.Agent()
 
-class estimatedTime extends Command {
+class estimatedTimeAndCost extends Command {
   async run() {
     try {
-      const {flags} = this.parse(estimatedTime)
-      const status = await axios.get(`${config.BASE_URL}/estimatedTime/${flags.ev}/${flags.capacity}`)
+      const {flags} = this.parse(estimatedTimeAndCost)
+      const status = await axios.get(`${config.BASE_URL}/estimatedTimeAndCost/${flags.ev}/${flags.capacity}/${flags.mode}`)
       console.log(status.data)
     } catch (error) {
       console.error(chalk.red(error))
@@ -22,7 +22,7 @@ class estimatedTime extends Command {
   }
 }
 
-estimatedTime.flags = {
+estimatedTimeAndCost.flags = {
   format: flags.string({
     options: ['json', 'csv'],
     required: true,
@@ -36,8 +36,12 @@ estimatedTime.flags = {
     required: true,
     description: 'the current capacity of the car',
   }),
+  mode: flags.string({
+    required: true,
+    description: 'the charge mode',
+  }),
 }
 
-estimatedTime.description = 'return the estimated time for the car to charge'
+estimatedTimeAndCost.description = 'return the estimated time for the car to charge'
 
-module.exports = estimatedTime
+module.exports = estimatedTimeAndCost
