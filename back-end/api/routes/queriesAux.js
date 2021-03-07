@@ -299,7 +299,7 @@ router.get('/userStations/analytics/:userID/:stationID/:startDate/:endDate', asy
     const startDate = req.params.startDate
     const endDate = req.params.endDate
 
-    let result
+    const result = []
     let myElement
 
     const myStationsAux = await User.find({ _id: userId }, 'stations', (err) => {
@@ -308,7 +308,6 @@ router.get('/userStations/analytics/:userID/:stationID/:startDate/:endDate', asy
     const myStations = myStationsAux[0].stations
 
     if (stationId === 'all') {
-      result = []
       for (const i in myStations) {
         const stationPointsAux = await Station.find({ _id: myStations[i].info }, 'points', (err) => {
           if (err) console.log(err)
@@ -337,10 +336,11 @@ router.get('/userStations/analytics/:userID/:stationID/:startDate/:endDate', asy
         const pointSessions = await myService.getSessionsPerPoint(stationPoints[j], startDate, endDate)
         sessionList = sessionList.concat(pointSessions.ChargingSessionsList)
       }
-      result = {
+      const resultAux = {
         _id: stationId,
         sessions: sessionList
       }
+      result.push(resultAux)
     }
     res.send(result)
   } catch (err) {
