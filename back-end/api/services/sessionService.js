@@ -250,7 +250,7 @@ module.exports = class SessionService {
 
       myList.push(myElement)
     }
-    result.myList = myList
+    result.SessionsSummaryList = myList
 
     return result
   }
@@ -337,7 +337,7 @@ module.exports = class SessionService {
       if (err) console.log(err)
     })
 
-    if(currentCapacity < 0 || currentCapacity > usableCapacity.usable_battery_size){
+    if (currentCapacity < 0 || currentCapacity > usableCapacity.usable_battery_size) {
       throw Object.assign(new Error('Capacity given is negative or is greater than the actual capacity of the car'))
     }
 
@@ -366,7 +366,7 @@ module.exports = class SessionService {
       if (err) console.log(err)
     })
 
-    if(currentCapacity < 0 || currentCapacity > usableCapacity.usable_battery_size){
+    if (currentCapacity < 0 || currentCapacity > usableCapacity.usable_battery_size) {
       throw Object.assign(new Error('Capacity given is negative or is greater than the actual capacity of the car'))
     }
 
@@ -380,7 +380,7 @@ module.exports = class SessionService {
 
   // ----------------------------------------------------------------------------------------------------------------------------
 
-  async getCostPerStation (station, date1, date2){
+  async getCostPerStation (station, date1, date2) {
     if (date1 >= date2) {
       throw Object.assign(new Error('Invalid chronological order of the given dates'))
     }

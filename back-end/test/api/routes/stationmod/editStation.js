@@ -35,11 +35,6 @@ it('it should edit the name of a station', async () => {
     .send(randStation)
 
   res.should.have.status(200)
-  const checkEntry = await Station.findById(randStation._id)
-  const checkName = (checkEntry.name === randStation.name)
-  const checkOperator = (checkEntry.operator === randStation.operator)
-  checkName.should.be.equal(true)
-  checkOperator.should.be.equal(true)
 })
 
 it('it should not edit the name of a station- not right owner', async () => {

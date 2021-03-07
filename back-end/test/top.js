@@ -17,3 +17,10 @@ describe('stationmod', function () {
   importTest('POST /stationmod/deleteStation', './api/routes/stationmod/deleteStation.js')
   importTest('POST /stationmod/addReview', './api/routes/stationmod/addReview.js')
 })
+
+describe('sessions', function () {
+  importTest('GET /SessionsPerPoint/:pointID/:yyyymmdd_from/:yyyymmdd_to', './api/routes/sessions/sessionsPerPoint.js')
+  importTest('GET /SessionsPerStation/:stationID/:yyyymmdd_from/:yyyymmdd_to', './api/routes/sessions/sessionsPerStation.js')
+  importTest('GET /SessionsPerEV/:vehicleID/:yyyymmdd_from/:yyyymmdd_to', './api/routes/sessions/sessionsPerEV.js')
+  importTest('GET /SessionsPerProvider/:providerID/:yyyymmdd_from/:yyyymmdd_to', './api/routes/sessions/sessionsPerProvider')
+})

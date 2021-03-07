@@ -8,9 +8,13 @@ const should = chai.should()
 const server = require('../server')
 const config = require('config')
 
+const dayjs = require('dayjs')
+
 const Station = require('../api/models/Station')
 const User = require('../api/models/User')
 const Point = require('../api/models/Point')
+const Session = require('../api/models/Session')
+const Vehicle = require('../api/models/Vehicle')
 
 const { exec } = require('child_process')
 const suppressLogs = require('mocha-suppress-logs')
@@ -82,6 +86,12 @@ class pickRandom {
     return vehicleOwner
   }
 
+  async vehicle () {
+    const random = getRndInteger(1, config.dummyVehicleOwner)
+    const vehicle = await Vehicle.findOne().skip(random)
+    return vehicle
+  }
+
   async point () {
     const random = getRndInteger(1, config.dummyMinPoints * config.dummyStationOwnersCount)
     const point = await Point.findOne({ }).skip(random)
@@ -102,9 +112,11 @@ exports.chai = chai
 exports.assert = chai.assert
 exports.importTest = importTest
 exports.mongoose = mongoose
+exports.dayjs = dayjs
 
 exports.Station = Station
 exports.User = User
+exports.Session = Session
 
 exports.deleteDatabase = deleteDatabase
 exports.pickRandom = pickRandom
