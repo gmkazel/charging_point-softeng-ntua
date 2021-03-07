@@ -347,14 +347,14 @@ module.exports = class SessionService {
       throw Object.assign(new Error('Mode given is invalid'))
     }
 
-    const leftToFill = usableCapacity.usable_battery_size - currentCapacity
+    const leftToFill = (usableCapacity.usable_battery_size - currentCapacity).toFixed(2)
 
     let time
     let cost
 
     if (selectedMode === 'normal') {
       time = leftToFill / 7.5
-      cost = leftToFill * 0.5
+      cost = (leftToFill * 0.5).toFixed(2)
     }
 
     if (selectedMode === 'fast') {
