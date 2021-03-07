@@ -27,6 +27,7 @@ class PaymentMethods extends Component {
 
         try {
             let res = await axios.get('http://localhost:8765/evcharge/api/queries/userCards/' + userID);
+            // console.log(res);
             this.setState({
                 payment_card: res.data[0].payment_card,
                 length: res.data[0].payment_card.length

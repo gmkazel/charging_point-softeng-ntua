@@ -56,61 +56,51 @@ class UserReview extends Component {
                                         <input type="radio" id="1" name={i} value="1" onChange={() => {
                                             let temp = this.state.rating;
                                             temp[i] = '1';
-                                            this.setState({rating: temp});
                                             }}/>
                                         <small> </small>
                                         <input type="radio" id="2" name={i} value="2" onChange={() => {
                                             let temp = this.state.rating;
                                             temp[i] = '2';
-                                            this.setState({rating: temp});
                                             }}/>
                                         <small> </small>
                                         <input type="radio" id="3" name={i} value="3" onChange={() => {
                                             let temp = this.state.rating;
                                             temp[i] = '3';
-                                            this.setState({rating: temp});
                                             }}/>
                                         <small> </small>
                                         <input type="radio" id="4" name={i} value="4" onChange={() => {
                                             let temp = this.state.rating;
                                             temp[i] = '4';
-                                            this.setState({rating: temp});
                                             }}/>
                                         <small> </small>
                                         <input type="radio" id="5" name={i} value="5" onChange={() => {
                                             let temp = this.state.rating;
                                             temp[i] = '5';
-                                            this.setState({rating: temp});
                                             }}/>
                                         <small> </small>
                                         <input type="radio" id="6" name={i} value="6" onChange={() => {
                                             let temp = this.state.rating;
                                             temp[i] = '6';
-                                            this.setState({rating: temp});
                                             }}/>
                                         <small> </small>
                                         <input type="radio" id="7" name={i} value="7" onChange={() => {
                                             let temp = this.state.rating;
                                             temp[i] = '7';
-                                            this.setState({rating: temp});
                                             }}/>
                                         <small> </small>
                                         <input type="radio" id="8" name={i} value="8" onChange={() => {
                                             let temp = this.state.rating;
                                             temp[i] = '8';
-                                            this.setState({rating: temp});
                                             }}/>
                                         <small> </small>
                                         <input type="radio" id="9" name={i} value="9" onChange={() => {
                                             let temp = this.state.rating;
                                             temp[i] = '9';
-                                            this.setState({rating: temp});
                                             }}/>
                                         <small> </small>
                                         <input type="radio" id="10" name={i} value="10" onChange={() => {
                                             let temp = this.state.rating;
                                             temp[i] = '10';
-                                            this.setState({rating: temp});
                                             }}/>
                                         <span> -10</span>
                                     </fieldset>
@@ -121,7 +111,6 @@ class UserReview extends Component {
                                 <textarea className="form-control" name={i} onChange={(e) => {
                                     let temp = this.state.comment;
                                     temp[i] = e.target.value;
-                                    this.setState({comment: temp});
                                     }}></textarea>
                             </div>
                             <br/>
