@@ -53,24 +53,42 @@ module.exports = class SessionService {
     for (const counter in sessions) {
       const myVehicle = sessions[counter].car
 
-      await Vehicle.findById(myVehicle, (err, car) => {
+      // await Vehicle.findById(myVehicle, (err, car) => {
+      //   if (err) console.log(err)
+      //   else {
+      //     const myElement = {
+      //       SessionIndex: (toInteger(counter) + 1),
+      //       SessionID: sessions[counter]._id,
+      //       StartedOn: dayjs(sessions[counter].start_date).format('YYYY-MM-DD HH:mm:ss'),
+      //       FinishedOn: dayjs(sessions[counter].end_date).format('YYYY-MM-DD HH:mm:ss'),
+      //       Protocol: sessions[counter].protocol,
+      //       EnergyDelivered: sessions[counter].energy_delivered,
+      //       Payment: sessions[counter].payment,
+      //       VehicleType: car.type,
+      //       SessionCost: sessions[counter].session_cost
+      //     }
+      //     myList.push(myElement)
+      //     totalEnergyDelivered += myElement.EnergyDelivered
+      //   }
+      // })
+
+      const myCarType = await Vehicle.find({ _id: myVehicle }, 'type', (err) => {
         if (err) console.log(err)
-        else {
-          const myElement = {
-            SessionIndex: (toInteger(counter) + 1),
-            SessionID: sessions[counter]._id,
-            StartedOn: dayjs(sessions[counter].start_date).format('YYYY-MM-DD HH:mm:ss'),
-            FinishedOn: dayjs(sessions[counter].end_date).format('YYYY-MM-DD HH:mm:ss'),
-            Protocol: sessions[counter].protocol,
-            EnergyDelivered: sessions[counter].energy_delivered,
-            Payment: sessions[counter].payment,
-            VehicleType: car.type,
-            SessionCost: sessions[counter].session_cost
-          }
-          myList.push(myElement)
-          totalEnergyDelivered += myElement.EnergyDelivered
-        }
       })
+
+      const myElement = {
+        SessionIndex: (toInteger(counter) + 1),
+        SessionID: sessions[counter]._id,
+        StartedOn: dayjs(sessions[counter].start_date).format('YYYY-MM-DD HH:mm:ss'),
+        FinishedOn: dayjs(sessions[counter].end_date).format('YYYY-MM-DD HH:mm:ss'),
+        Protocol: sessions[counter].protocol,
+        EnergyDelivered: sessions[counter].energy_delivered,
+        Payment: sessions[counter].payment,
+        VehicleType: myCarType[0].type,
+        SessionCost: sessions[counter].session_cost
+      }
+      myList.push(myElement)
+      totalEnergyDelivered += myElement.EnergyDelivered
     }
     result = {
       Point: pointId,

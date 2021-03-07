@@ -443,4 +443,22 @@ router.get('/energyProviderInfo/:userID', async (req, res, next) => {
   }
 })
 
+router.get('/energyProviderInfo/analytics/:userID/:stationID/:startDate/:endDate', async (req, res, next) => {
+  try {
+    const userId = req.params.userID
+    const stationId = req.params.stationID
+    const startDate = req.params.startDate
+    const endDate = req.params.endDate
+
+    if (stationId === 'all') {
+      const myStationsAux = User.find({ _id: userId }, '')
+    } else {
+
+    }
+  } catch (err) {
+    res.sendStatus(400)
+    console.log(err)
+  }
+})
+
 module.exports = router
