@@ -196,6 +196,7 @@ router.get('/getAllSessions/:userID', async (req, res, next) => {
         someSession = carSessions[j].toJSON()
         someSession.carModel = carInfo[0].model
         someSession.carBrand = carInfo[0].brand
+        result = result.concat(someSession)
       }
       result = result.concat(someSession)
     }
@@ -208,62 +209,62 @@ router.get('/getAllSessions/:userID', async (req, res, next) => {
   }
 })
 
-router.get('/getStationsAndPoints/:userID', async (req, res, next) => {
-  try {
-    const userId = req.params.userID
+// router.get('/getStationsAndPoints/:userID', async (req, res, next) => {
+//   try {
+//     const userId = req.params.userID
 
-    const result = []
+//     const result = []
 
-    const myStationsAux = await User.find({ _id: userId }, 'stations', (err) => {
-      if (err) console.log(err)
-    })
-    const myStations = myStationsAux[0].stations
+//     const myStationsAux = await User.find({ _id: userId }, 'stations', (err) => {
+//       if (err) console.log(err)
+//     })
+//     const myStations = myStationsAux[0].stations
 
-    for (const i in myStations) {
-      const StationPoints = await Station.find({ _id: myStations[i].info }, 'address points', (err) => {
-        if (err) console.log(err)
-      })
-      const myElement = {
-        _id: myStations[i].info,
-        name: myStations[i].name,
-        points: StationPoints[0].points
-      }
-      result.push(myElement)
-    }
-    res.send(result)
-  } catch (err) {
-    res.sendStatus(400)
-    console.log(err)
-  }
-})
+//     for (const i in myStations) {
+//       const StationPoints = await Station.find({ _id: myStations[i].info }, 'address points', (err) => {
+//         if (err) console.log(err)
+//       })
+//       const myElement = {
+//         _id: myStations[i].info,
+//         name: myStations[i].name,
+//         points: StationPoints[0].points
+//       }
+//       result.push(myElement)
+//     }
+//     res.send(result)
+//   } catch (err) {
+//     res.sendStatus(400)
+//     console.log(err)
+//   }
+// })
 
-router.get('/getStationsAndReviews/:userID', async (req, res, next) => {
-  try {
-    const userId = req.params.userID
+// router.get('/getStationsAndReviews/:userID', async (req, res, next) => {
+//   try {
+//     const userId = req.params.userID
 
-    const result = []
+//     const result = []
 
-    const myStationsAux = await User.find({ _id: userId }, 'stations', (err) => {
-      if (err) console.log(err)
-    })
-    const myStations = myStationsAux[0].stations
+//     const myStationsAux = await User.find({ _id: userId }, 'stations', (err) => {
+//       if (err) console.log(err)
+//     })
+//     const myStations = myStationsAux[0].stations
 
-    for (const i in myStations) {
-      const StationReviews = await Station.find({ _id: myStations[i].info }, 'reviews', (err) => {
-        if (err) console.log(err)
-      })
-      const myElement = {
-        _id: myStations[i].info,
-        reviews: StationReviews[0].reviews
-      }
-      result.push(myElement)
-    }
-    res.send(result)
-  } catch (err) {
-    res.sendStatus(400)
-    console.log(err)
-  }
-})
+//     for (const i in myStations) {
+//       const StationReviews = await Station.find({ _id: myStations[i].info }, 'reviews', (err) => {
+//         if (err) console.log(err)
+//       })
+//       const myElement = {
+//         _id: myStations[i].info,
+//         reviews: StationReviews[0].reviews
+//       }
+//       result.push(myElement)
+//     }
+//     res.send(result)
+//   } catch (err) {
+//     res.sendStatus(400)
+//     console.log(err)
+//   }
+// })
 
 router.get('/userStations/:userID', async (req, res, next) => {
   try {
@@ -385,6 +386,56 @@ router.get('/getAllSessionsForStationOwner/:userID', async (req, res, next) => {
         }
       }
     }
+    result.sort((a, b) => b.start_date - a.start_date)
+    res.send(result)
+  } catch (err) {
+    res.sendStatus(400)
+    console.log(err)
+  }
+})
+
+router.get('/energyProviderInfo/:userID', async (req, res, next) => {
+  try {
+    const userId = req.params.userID
+
+    const result = {}
+    const stations = []
+    let myElement = {}
+
+    const energyProviderInfoAux = await User.find({ _id: userId }, 'cost_per_kwh electricalCompanyOperatorSessions', (err) => {
+      if (err) console.log(err)
+    })
+    const energyProviderInfo = energyProviderInfoAux[0]
+    result.CostPerKwh = energyProviderInfo.cost_per_kwh
+
+    for (const i in energyProviderInfo.electricalCompanyOperatorSessions) {
+      const myPointAux = await Session.find({ _id: energyProviderInfo.electricalCompanyOperatorSessions[i] }, 'point', (err) => {
+        if (err) console.log(err)
+      })
+      const myPoint = myPointAux[0].point
+
+      const myStationAux = await Point.find({ _id: myPoint }, 'station', (err) => {
+        if (err) console.log(err)
+      })
+      const myStation = myStationAux[0].station
+
+      if (!stations.some(element => JSON.stringify(element.stationId) === JSON.stringify(myStation))) {
+        const myStationInfoAux = await Station.find({ _id: myStation }, 'name address contact_info operator', (err) => {
+          if (err) console.log(err)
+        })
+        const myStationInfo = myStationInfoAux[0]
+
+        myElement = {
+          stationId: myStation,
+          name: myStationInfo.name,
+          address: myStationInfo.address,
+          operator: myStationInfo.operator,
+          contactInfo: myStationInfo.contact_info
+        }
+        stations.push(myElement)
+      }
+    }
+    result.stations = stations
     res.send(result)
   } catch (err) {
     res.sendStatus(400)
