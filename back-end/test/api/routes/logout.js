@@ -48,9 +48,10 @@ it('should logout the user (empty header)', (done) => {
     .set('X-OBSERVATORY-AUTH', '')
     .end((err, res) => {
       if (err) {
-        done(err)
+        console.log('HELLO')
+        done()
       }
-      res.should.have.status(400)
+      res.should.have.status(401)
       done()
     })
 })

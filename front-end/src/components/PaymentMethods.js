@@ -22,6 +22,13 @@ class PaymentMethods extends Component {
         this.PaymentMethod();
     }
 
+    replaceChar = (str, arr, char = '*') => {
+        const replacedString = str.split("").map(word => {
+           return arr.includes(word) ? word : char;
+        }).join("");
+        return replacedString;
+    };
+
     async PaymentMethod() {
         let userID = jwt.decode(JSON.parse(localStorage.getItem('login')).token)._id;
 
@@ -35,11 +42,18 @@ class PaymentMethods extends Component {
 
             var rows = [];
             for (var i = 0; i < this.state.length; i++) {
+                for (var j = this.state.payment_card[i].number.length; j > 0; j--) {
+                    if (this.state.payment_card[i].number.charAt(j) === '-')
+                        break;
+                }
+                let stars = this.state.payment_card[i].number.slice(0, j);
+                stars = this.replaceChar(stars, ['-']);
+
                 rows.push(
                     <div className="row justify-content-around align-items-center" key={i}>
                         <div className="payment">
                             <h3>Credit Card</h3>
-                            <p>Card Number: **** **** **** {this.state.payment_card[i].number.slice(this.state.payment_card[i].number.length - 4)}</p>
+                            <p>Card Number: {stars}{this.state.payment_card[i].number.slice(j, this.state.payment_card[i].number.length)}</p>
                             <p>Valid Through: {this.state.payment_card[i].exp_date.slice(0, 2)}/20{this.state.payment_card[i].exp_date.slice(3)}</p>
                             <span>Owner: {this.state.payment_card[i].owner}</span>
                         </div>

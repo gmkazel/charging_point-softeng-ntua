@@ -8,7 +8,6 @@ const check = (variable) => {
 module.exports = class {
   async canAccess (userId, stationId) {
     const user = await userModel.findOne({ _id: userId })
-    console.log(user)
     if (!check(user)) return false
     if (user.account_type === 'admin') return true
     if (user.account_type === 'stationOwner' && user.stations.some(station => station.info.toString() === stationId)) return true
@@ -59,7 +58,6 @@ module.exports = class {
       { $pull: { stations: { info: stationId } } })
 
     if (stationRes && userRes) return true
-    else { }
   }
 
   async addReview (candidateReview, stationId) {

@@ -45,6 +45,6 @@ SessionsPerPoint.flags = {
   }),
 }
 
-SessionsPerPoint.description = 'return all charging sessions on a certain point'
+SessionsPerPoint.description = 'return  info about the charging sessions on a certain point'
 
 module.exports = SessionsPerPoint

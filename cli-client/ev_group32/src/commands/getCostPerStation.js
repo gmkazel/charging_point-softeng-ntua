@@ -10,12 +10,11 @@ const config = require('config')
 
 axios.defaults.httpsAgent = new https.Agent()
 
-class SessionsPerStation extends Command {
+class getCostPerStation extends Command {
   async run() {
     try {
-      const {flags} = this.parse(SessionsPerStation)
-      axios.defaults.headers.common['X-OBSERVATORY-AUTH'] = flags.apikey
-      const status = await axios.get(`${config.BASE_URL}/SessionsPerStation/${flags.station}/${flags.datefrom}/${flags.dateto}`)
+      const {flags} = this.parse(getCostPerStation)
+      const status = await axios.get(`${config.BASE_URL}/CostPerStation/${flags.station}/${flags.datefrom}/${flags.dateto}`)
       console.log(status.data)
     } catch (error) {
       console.error(chalk.red(error))
@@ -23,19 +22,14 @@ class SessionsPerStation extends Command {
   }
 }
 
-SessionsPerStation.flags = {
+getCostPerStation.flags = {
   format: flags.string({
     options: ['json', 'csv'],
     required: true,
     default: 'json',
   }),
-  apikey: flags.string({
-    required: true,
-    description: 'the api key used for authorization',
-  }),
   station: flags.string({
     required: true,
-    description: 'the id of the station to search',
   }),
   datefrom: flags.string({
     required: true,
@@ -45,6 +39,6 @@ SessionsPerStation.flags = {
   }),
 }
 
-SessionsPerStation.description = 'return info about the charging sessions on a certain station'
+getCostPerStation.description = 'return total bill for the station in a certain period'
 
-module.exports = SessionsPerStation
+module.exports = getCostPerStation

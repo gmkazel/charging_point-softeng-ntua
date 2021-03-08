@@ -45,6 +45,6 @@ SessionsPerEV.flags = {
   }),
 }
 
-SessionsPerEV.description = 'return all charging sessions that an electric vehicle has done'
+SessionsPerEV.description = 'return info about the charging sessions that an electric vehicle has done'
 
 module.exports = SessionsPerEV

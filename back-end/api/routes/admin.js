@@ -4,8 +4,9 @@ const router = express.Router()
 const User = require('../services/userService')
 const user = new User()
 
-const userAuth = require('../services/verifyUser')
-const verifyAdmin = require('../services/verifyAdmin')
+const AuthService = require('../services/authService')
+const authService = new AuthService()
+const verifyAdmin = authService.verifyAdmin
 
 const upload = require('../services/csvService')
 const multiparty = require('multiparty')
@@ -22,7 +23,7 @@ router.post('/createSessions/:dest?', createSessions)
 const healthcheck = require('../services/healthcheck')
 router.get('/healthcheck', healthcheck)
 
-router.get('/users/:username', userAuth, verifyAdmin, (req, res) => {
+router.get('/users/:username', verifyAdmin, (req, res) => {
   user.getByUsername(req.params.username, (err, name) => {
     if (err) {
       res.status(400).send(err)
@@ -36,7 +37,7 @@ router.get('/users/:username', userAuth, verifyAdmin, (req, res) => {
   })
 })
 
-router.post('/usermod/:username/:password', userAuth, verifyAdmin, async (req, res) => {
+router.post('/usermod/:username/:password', verifyAdmin, async (req, res) => {
   await user.getByUsername(req.params.username, async (err, name) => {
     if (err) {
       res.status(400).send(err)
