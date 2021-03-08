@@ -14,7 +14,6 @@ class SessionsPerEV extends Command {
   async run() {
     try {
       const {flags} = this.parse(SessionsPerEV)
-      axios.defaults.headers.common['X-OBSERVATORY-AUTH'] = flags.apikey
       const status = await axios.get(`${config.BASE_URL}/SessionsPerEV/${flags.ev}/${flags.datefrom}/${flags.dateto}`)
       console.log(status.data)
     } catch (error) {
@@ -28,10 +27,6 @@ SessionsPerEV.flags = {
     options: ['json', 'csv'],
     required: true,
     default: 'json',
-  }),
-  apikey: flags.string({
-    required: true,
-    description: 'the api key used for authorization',
   }),
   ev: flags.string({
     required: true,
