@@ -45,6 +45,6 @@ SessionsPerStation.flags = {
   }),
 }
 
-SessionsPerStation.description = 'return all charging sessions on a certain station'
+SessionsPerStation.description = 'return info about the charging sessions on a certain station'
 
 module.exports = SessionsPerStation

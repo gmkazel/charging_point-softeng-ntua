@@ -45,6 +45,6 @@ SessionsPerProvider.flags = {
   }),
 }
 
-SessionsPerProvider.description = 'return all charging sessions that a provider has'
+SessionsPerProvider.description = 'return info about the charging sessions that a provider has'
 
 module.exports = SessionsPerProvider

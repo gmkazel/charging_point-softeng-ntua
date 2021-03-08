@@ -42,6 +42,6 @@ kilometersDriven.flags = {
   }),
 }
 
-kilometersDriven.description = 'get kilometers driver between two sessions'
+kilometersDriven.description = 'get kilometers driven between two sessions'
 
 module.exports = kilometersDriven
