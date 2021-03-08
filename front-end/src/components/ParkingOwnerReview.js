@@ -1,70 +1,80 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import NavBar2 from '../components/NavBar2';
 import ParkingOwnerLinks from './ParkingOwnerLinks';
+import { Component } from 'react';
+import axios from 'axios';
+import jwt from 'jsonwebtoken';
 
-function MyReview() {
-    var rows = [];
-    let numrows = 3;
-    let stationname=[
-        'Station1',
-        'Station2',
-        'Station3'
-    ];
-    let clientname=[
-        'Konstantinos Rizavas',
-        'Mpampis Fesatoglou',
-        'Oresths Makrhs'
-    ];
-    let date=[
-        '27/02/2021',
-        '03/08/2020',
-        '20/06/2020'
-    ];
-    let rating=[
-        5,
-        10,
-        3
-    ];
-    let comment=[
-        'E trollarete',
-        'Test',
-        'Gia na doume'
-    ]
 
-    for (var i = 0; i < numrows; i++) {
-        rows.push(
-            <div className="container-fluid">
-                <div className="row justify-content-around align-items-center">
-                    <div className="reviewstation">
-                        <h4>{stationname[i]}</h4>
-                        <h5>{clientname[i]}</h5>
-                        <h6>{date[i]}</h6>
-                        <h6>Rating: {rating[i]}</h6>
-                        <span>{comment[i]}</span>
+class ParkingOwnerReview extends Component {
+    constructor() {
+        super();
+
+        this.state={
+            station:null,
+            lenght:null,
+            render: null
+        }
+        // this.clickHandler = this.clickHandler.bind(this)
+    }
+
+    componentDidMount() {
+        this.MyReview();
+    }
+
+    async MyReview() {
+        let userID = jwt.decode(JSON.parse(localStorage.getItem('login')).token)._id;
+
+        try {
+            let res = await axios.get('http://localhost:8765/evcharge/api/queries/userStations/' + userID);
+            console.log(res);
+            this.setState({
+                station: res.data,
+                length: res.data.length
+            });
+
+            var rows = [];
+            for (let i = 0; i < this.state.length; i++) {
+                rows.push(
+                    <div className="container-fluid" key={i}>
+                        <div className="row justify-content-around align-items-center">
+                            <div className="parkingreviewstation">
+                            <h4>{this.state.station[i].name}</h4>
+                            <p>Reviews:</p>
+                            {this.state.station[i].reviews.map((j, key) => { return <div key={key} value={key}>
+                                <span>{j}</span><br></br>
+                                </div>;})
+                            }
+                            </div>
+                        </div>
+                    </div>
+                );
+            }    
+          
+        this.setState({
+            render: rows
+        })
+    }
+        catch (err) {
+            console.log(err);
+        }
+    }
+
+    render(){
+        return (
+            <div>
+                <NavBar2/>
+
+                <ParkingOwnerLinks/>
+
+                <div className="container-fluid">
+                    <div className="row justify-content-around align-items-center">
+                        {this.state.render}
                     </div>
                 </div>
             </div>
         );
-    }    
-    return rows;
-}
-
-function ParkingOwnerReview() {
-    return (
-        <div>
-            <NavBar2/>
-
-            <ParkingOwnerLinks/>
-
-            <div className="container-fluid">
-                <div className="row justify-content-around align-items-center">
-                    <tbody>
-                        {MyReview()}
-                    </tbody>
-                </div>
-            </div>
-        </div>
-    );
+    }
 }
 
 export default ParkingOwnerReview;
