@@ -1,10 +1,10 @@
 import 'bootstrap/dist/css/bootstrap.css';
+import './ParkingOwnerReview.css';
 import NavBar2 from '../components/NavBar2';
 import ParkingOwnerLinks from './ParkingOwnerLinks';
 import { Component } from 'react';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
-
 
 class ParkingOwnerReview extends Component {
     constructor() {
@@ -39,28 +39,34 @@ class ParkingOwnerReview extends Component {
                     <div className="container-fluid" key={i}>
                         <div className="row justify-content-around align-items-center">
                             <div className="parkingreviewstation">
-                            <h4>{this.state.station[i].name}</h4>
-                            <p>Reviews:</p>
-                            {this.state.station[i].reviews.map((j, key) => { return <div key={key} value={key}>
-                                <span>{j}</span><br></br>
-                                </div>;})
-                            }
+                                <h4>{this.state.station[i].name}</h4>
+                                <strong>Total reviews ({this.state.station[i].reviews.length}):</strong>
+                                {
+                                    this.state.station[i].reviews.map((j, key) => { return (
+                                        <div className="container-fluid review" key={key}>
+                                            <span>Date: {j.date.slice(0, 10)}</span>
+                                            <br/>
+                                            <span>Rating: {j.rating}/5</span>
+                                            <br/>
+                                            <span>Comment: {j.comment}</span>
+                                        </div>
+                                    );})
+                                }
                             </div>
                         </div>
                     </div>
                 );
-            }    
-          
-        this.setState({
-            render: rows
-        })
-    }
+            }
+            this.setState({
+                render: rows
+            })
+        }
         catch (err) {
             console.log(err);
         }
     }
 
-    render(){
+    render() {
         return (
             <div>
                 <NavBar2/>

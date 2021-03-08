@@ -32,47 +32,48 @@ class ParkingOwnerManage extends Component {
                 station: res.data,
                 length: res.data.length
             });
-            
-        // console.log(this.state);
-            
-        var rows = [];
-        for (let i = 0; i < this.state.length; i++) {
-            rows.push(
-                <div className="container-fluid" key={i}>
-                    <div className="row justify-content-around align-items-center">
-                        <div className="parkingreviewstation">
-                        <h4>{this.state.station[i].name}</h4>
-                        <p>Address: {this.state.station[i].address}</p>
-                        <p>Operator: {this.state.station[i].operator}</p>
-                        <p>Points:</p>
-                        {this.state.station[i].points.map((j, key) => {return <div key={key} value={key}>
-                            <span>Point {key+1}: </span>
-                            <span >{j}</span><br></br>
-                            </div>;})
-                            }
-                        <br/>
-                        <div className="container-fluid" >
+
+            var rows = [];
+            for (let i = 0; i < this.state.length; i++) {
+                rows.push(
+                    <div className="container-fluid" key={i}>
                         <div className="row justify-content-around align-items-center">
-                        <div className="button"><button type="submit" className="btn btn-primary btn-block">Edit</button></div>
-                        <div className="button"><button type="submit" className="btn btn-danger btn-block">Delete</button></div>
-                        </div>
-                        </div>
+                            <div className="parkingreviewstation">
+                                <h4>{this.state.station[i].name}</h4>
+                                <p>Address: {this.state.station[i].address}</p>
+                                <p>Operator: {this.state.station[i].operator}</p>
+                                <p>Total points: {this.state.station[i].points.length}</p>
+                                {/* {
+                                    this.state.station[i].points.map((j, key) => {return (
+                                        <div key={key} value={key}>
+                                            <span>Point {key+1}: </span>
+                                            <span >{j}</span>
+                                            <br/>
+                                        </div>
+                                    );})
+                                }
+                                <br/> */}
+                                <div className="container-fluid" >
+                                    <div className="row justify-content-around align-items-center">
+                                        <div className="button"><button type="submit" className="btn btn-primary btn-block">Edit</button></div>
+                                        <div className="button"><button type="submit" className="btn btn-danger btn-block">Delete</button></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            );
-        }    
-
-        this.setState({
-            render: rows
-        })
-    }
+                );
+            }    
+            this.setState({
+                render: rows
+            });
+        }
         catch (err) {
             console.log(err);
         }
     }
 
-    render(){
+    render() {
         return (
             <div>
                 <NavBar2/>

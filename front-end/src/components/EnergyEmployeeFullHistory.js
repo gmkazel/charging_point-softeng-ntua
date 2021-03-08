@@ -40,8 +40,10 @@ class EnergyEmployeeFullHistory extends Component {
                             <h4 className="state">Session completed</h4>
                             <p>Date: {this.state.session[i].start_date.slice(0, 10)}</p>
                             <p>Time: {this.state.session[i].start_date.slice(11, 16)}-{this.state.session[i].end_date.slice(11, 16)}</p>
-                            {/* <p>Operator: {this.state.session[i].StationOperator}</p> */}
-                            <span>Total kW: {this.state.session[i].energy_delivered}</span>
+                            <p>Station: {this.state.session[i].stationName}</p>
+                            <p>Operator: {this.state.session[i].stationOperator}</p>
+                            <p>Total kW: {this.state.session[i].energy_delivered}</p>
+                            <span>Cost/kWh: {this.state.session[i].cost_per_kwh}€</span>
                         </div>
                     </div>
                 );

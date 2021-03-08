@@ -5,6 +5,7 @@ import UserLinks from './UserLinks';
 import { Component } from 'react';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
+import qs from 'qs';
 
 class UserReview extends Component {
     constructor() {
@@ -26,10 +27,34 @@ class UserReview extends Component {
     }
 
     async clickHandler(i) {
-        // let userID = jwt.decode(JSON.parse(localStorage.getItem('login')).token)._id;
+        let userToken = JSON.parse(localStorage.getItem('login')).token;
+        let userID = jwt.decode(JSON.parse(localStorage.getItem('login')).token)._id;
         let rating = this.state.rating[i];
-        let comment = this.state.comment[i];
-        console.log(rating, comment);
+        let comments = this.state.comment[i];
+
+        var data = qs.stringify({
+            date: Date.now(),
+            by: userID,
+            rating: rating,
+            comment: comments
+        });
+        var config = {
+            method: 'post',
+            url: 'http://localhost:8765/evcharge/api/stationmod/addreview/' + userID + '/' + this.state.station[i].stationId,
+            headers: {
+                'X-OBSERVATORY-AUTH': userToken,
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            data: data
+        };
+
+        axios(config)
+        .then(function (response) {
+            console.log(JSON.stringify(response.data));
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
     }
 
     async ReviewStation() {
@@ -41,6 +66,7 @@ class UserReview extends Component {
                 station: res.data,
                 length: res.data.length
             });
+            // console.log(res);
 
             var rows = [];
             for (let i = 0; i < this.state.length; i++) {
@@ -52,57 +78,57 @@ class UserReview extends Component {
                             <div className="container-fluid">
                                 <div className="row justify-content-around align-items-center">
                                     <fieldset>
-                                        <span>1- </span>
+                                        <span>0.5 - </span>
                                         <input type="radio" id="1" name={i} value="1" onChange={() => {
                                             let temp = this.state.rating;
-                                            temp[i] = '1';
+                                            temp[i] = 0.5;
                                             }}/>
                                         <small> </small>
                                         <input type="radio" id="2" name={i} value="2" onChange={() => {
                                             let temp = this.state.rating;
-                                            temp[i] = '2';
+                                            temp[i] = 1;
                                             }}/>
                                         <small> </small>
                                         <input type="radio" id="3" name={i} value="3" onChange={() => {
                                             let temp = this.state.rating;
-                                            temp[i] = '3';
+                                            temp[i] = 1.5;
                                             }}/>
                                         <small> </small>
                                         <input type="radio" id="4" name={i} value="4" onChange={() => {
                                             let temp = this.state.rating;
-                                            temp[i] = '4';
+                                            temp[i] = 2;
                                             }}/>
                                         <small> </small>
                                         <input type="radio" id="5" name={i} value="5" onChange={() => {
                                             let temp = this.state.rating;
-                                            temp[i] = '5';
+                                            temp[i] = 2.5;
                                             }}/>
                                         <small> </small>
                                         <input type="radio" id="6" name={i} value="6" onChange={() => {
                                             let temp = this.state.rating;
-                                            temp[i] = '6';
+                                            temp[i] = 3;
                                             }}/>
                                         <small> </small>
                                         <input type="radio" id="7" name={i} value="7" onChange={() => {
                                             let temp = this.state.rating;
-                                            temp[i] = '7';
+                                            temp[i] = 3.5;
                                             }}/>
                                         <small> </small>
                                         <input type="radio" id="8" name={i} value="8" onChange={() => {
                                             let temp = this.state.rating;
-                                            temp[i] = '8';
+                                            temp[i] = 4;
                                             }}/>
                                         <small> </small>
                                         <input type="radio" id="9" name={i} value="9" onChange={() => {
                                             let temp = this.state.rating;
-                                            temp[i] = '9';
+                                            temp[i] = 4.5;
                                             }}/>
                                         <small> </small>
                                         <input type="radio" id="10" name={i} value="10" onChange={() => {
                                             let temp = this.state.rating;
-                                            temp[i] = '10';
+                                            temp[i] = 5;
                                             }}/>
-                                        <span> -10</span>
+                                        <span> - 5</span>
                                     </fieldset>
                                 </div>
                             </div>
