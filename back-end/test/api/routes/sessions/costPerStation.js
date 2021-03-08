@@ -3,15 +3,13 @@ const common = require('../../../common')
 const chai = common.chai
 const server = common.server
 const config = common.config
-const dayjs = common.dayjs
 const PickRandom = common.pickRandom
 const pickRandom = new PickRandom()
-let randomEV
-let token
+const dayjs = common.dayjs
 
+let randomStation
+let token
 let currentDate
-let firstDate
-let secondDate
 
 before(async () => {
   await common.deleteDatabase()
@@ -19,19 +17,16 @@ before(async () => {
   await common.createSessions()
   token = await common.createAdminAndLogin()
 
-  randomEV = await pickRandom.vehicle()
+  randomStation = await pickRandom.station()
   currentDate = dayjs(Date.now()).format('YYYYMMDD')
-  firstDate = Date.now()
-  firstDate = dayjs(firstDate).subtract(10, 'year').format('YYYYMMDD')
 })
 
-it('it should return the periodicBill', async () => {
+it('it should return the estimated time and cost of normal mode', async () => {
   const res = await chai.request(server)
-    .get(config.BASE_URL + '/PeriodicBill/' + randomEV._id + '/' + firstDate + '/' + currentDate)
+    .get(config.BASE_URL + '/CostPerStation/' + randomStation._id + '/' + '20150101' + '/' + currentDate)
     .set('X-OBSERVATORY-AUTH', token)
     .send()
   res.should.have.status(200)
   const body = res.body
   body.should.have.property('result')
-  Number(body.result).should.be.at.least(0)
 })

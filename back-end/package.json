@@ -4,7 +4,7 @@
   "description": "The backend for our Charging Point platform",
   "main": "server.js",
   "scripts": {
-    "test": "NODE_ENV=test mocha --timeout 10000 --exit",
+    "test": "NODE_ENV=test mocha --timeout 20000 --exit",
     "coverage": "npx nyc npm test",
     "devStart": "NODE_ENV=dev nodemon server.js",
     "start": "NODE_ENV=dev node server.js"
