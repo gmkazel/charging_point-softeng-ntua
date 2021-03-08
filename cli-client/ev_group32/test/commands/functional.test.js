@@ -5,13 +5,13 @@ const {expect} = require('@oclif/test')
 const __homedir = require('os').homedir()
 const fs = require('fs')
 const {exec} = require('child_process')
-const config = require('config')
+require('dotenv').config()
 const faker = require('faker')
 
 const usrnm = faker.internet.userName()
 const params = new URLSearchParams()
-params.append('username', config.DEFAULT_USER_NAME)
-params.append('password', config.DEFAULT_USER_PASSWORD)
+params.append('username', process.env.DEFAULT_USER_NAME)
+params.append('password', process.env.DEFAULT_USER_PASSWORD)
 
 const util = require('util')
 
@@ -46,16 +46,16 @@ describe('resetsessions', () => {
 
 describe('login', () => {
   it('should login as admin', async () => {
-    const res = await runShellCommand(`ev_group32 login --username ${config.DEFAULT_USER_NAME} --passw ${config.DEFAULT_USER_PASSWORD}`)
+    const res = await runShellCommand(`ev_group32 login --username ${process.env.DEFAULT_USER_NAME} --passw ${process.env.DEFAULT_USER_PASSWORD}`)
     expect(res.stdout).to.equal('Successful login!\n')
   })
   it('should not login user - no password', async () => {
-    const res = await runShellCommand(`ev_group32 login --username ${config.DEFAULT_USER_NAME} --passw`)
+    const res = await runShellCommand(`ev_group32 login --username ${process.env.DEFAULT_USER_NAME} --passw`)
     expect(res.stdout).to.equal('')
     expect(res.stderr).to.contain('Error: Flag --passw expects a value\n')
   })
   it('should not login user - no username', async () => {
-    const res = await runShellCommand(`ev_group32 login --passw ${config.DEFAULT_USER_PASSWORD} --username`)
+    const res = await runShellCommand(`ev_group32 login --passw ${process.env.DEFAULT_USER_PASSWORD} --username`)
     expect(res.stdout).to.equal('')
     expect(res.stderr).to.contain('Error: Flag --username expects a value\n')
   })

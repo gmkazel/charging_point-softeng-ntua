@@ -5,7 +5,7 @@ const {Command, flags} = require('@oclif/command')
 const https = require('https')
 const axios = require('axios')
 const chalk = require('chalk')
-const config = require('config')
+require('dotenv').config()
 const fs = require('fs')
 const __homedir = require('os').homedir()
 
@@ -16,7 +16,7 @@ class Logout extends Command {
     try {
       const {flags} = this.parse(Logout)
       axios.defaults.headers.common['X-OBSERVATORY-AUTH'] = flags.apikey
-      await axios.post(`${config.BASE_URL}/logout`)
+      await axios.post(`${process.env.BASE_URL}/logout`)
       console.log('Successful logout!')
       fs.unlinkSync((__homedir +  '/softeng20bAPI.token'))
     } catch (error) {

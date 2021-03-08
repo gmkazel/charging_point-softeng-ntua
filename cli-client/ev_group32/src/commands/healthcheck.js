@@ -6,14 +6,14 @@ const {Command, flags} = require('@oclif/command')
 const https = require('https')
 const axios = require('axios')
 const chalk = require('chalk')
-const config = require('config')
+require('dotenv').config()
 axios.defaults.httpsAgent = new https.Agent()
 
 class HealthCheck extends Command {
   async run() {
     try {
       const {flags} = this.parse(HealthCheck)
-      const status = await axios.get(`${config.BASE_URL}/admin/healthcheck`)
+      const status = await axios.get(`${process.env.BASE_URL}/admin/healthcheck`)
       console.log(status.data)
     } catch (error) {
       console.error(chalk.red(error))
