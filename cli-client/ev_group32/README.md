@@ -12,7 +12,8 @@ The cli-client of Charging Point
 # Usage
 <!-- usage -->
 ```sh-session
-$ npm install -g ev_group32
+$ cd to dir ./cli-client/ev_group32 and run: 
+$ npm link
 $ ev_group32 COMMAND
 running command...
 $ ev_group32 (-v|--version|version)
@@ -28,12 +29,14 @@ USAGE
 * [`ev_group32 addReview`](#ev_group32-addreview)
 * [`ev_group32 addStation`](#ev_group32-addstation)
 * [`ev_group32 admin`](#ev_group32-admin)
+* [`ev_group32 chargingPercentage`](#ev_group32-chargingpercentage)
 * [`ev_group32 deleteStation`](#ev_group32-deletestation)
 * [`ev_group32 editStation`](#ev_group32-editstation)
-* [`ev_group32 estimatedTime`](#ev_group32-estimatedtime)
+* [`ev_group32 estimatedTimeAndCost`](#ev_group32-estimatedtimeandcost)
+* [`ev_group32 getCostPerStation`](#ev_group32-getcostperstation)
 * [`ev_group32 healthcheck`](#ev_group32-healthcheck)
 * [`ev_group32 help [COMMAND]`](#ev_group32-help-command)
-* [`ev_group32 kilometersDriver`](#ev_group32-kilometersdriver)
+* [`ev_group32 kilometersDriven`](#ev_group32-kilometersdriven)
 * [`ev_group32 login`](#ev_group32-login)
 * [`ev_group32 logout`](#ev_group32-logout)
 * [`ev_group32 periodicBill`](#ev_group32-periodicbill)
@@ -110,6 +113,22 @@ OPTIONS
 
 _See code: [src/commands/admin.js](https://github.com/ntua/TL20-32/blob/v1.0.0/src/commands/admin.js)_
 
+## `ev_group32 chargingPercentage`
+
+return the charging percentage in the given point
+
+```
+USAGE
+  $ ev_group32 chargingPercentage
+
+OPTIONS
+  --capacity=capacity  (required) the current capacity of the car's battery
+  --ev=ev              (required) the vehicle to search for
+  --format=json|csv    (required) [default: json]
+```
+
+_See code: [src/commands/chargingPercentage.js](https://github.com/ntua/TL20-32/blob/v1.0.0/src/commands/chargingPercentage.js)_
+
 ## `ev_group32 deleteStation`
 
 add a new station
@@ -148,21 +167,39 @@ OPTIONS
 
 _See code: [src/commands/editStation.js](https://github.com/ntua/TL20-32/blob/v1.0.0/src/commands/editStation.js)_
 
-## `ev_group32 estimatedTime`
+## `ev_group32 estimatedTimeAndCost`
 
 return the estimated time for the car to charge
 
 ```
 USAGE
-  $ ev_group32 estimatedTime
+  $ ev_group32 estimatedTimeAndCost
 
 OPTIONS
   --capacity=capacity  (required) the current capacity of the car
   --ev=ev              (required) the id of the car to search
   --format=json|csv    (required) [default: json]
+  --mode=mode          (required) the charge mode
 ```
 
-_See code: [src/commands/estimatedTime.js](https://github.com/ntua/TL20-32/blob/v1.0.0/src/commands/estimatedTime.js)_
+_See code: [src/commands/estimatedTimeAndCost.js](https://github.com/ntua/TL20-32/blob/v1.0.0/src/commands/estimatedTimeAndCost.js)_
+
+## `ev_group32 getCostPerStation`
+
+return total bill for the station in a certain period
+
+```
+USAGE
+  $ ev_group32 getCostPerStation
+
+OPTIONS
+  --datefrom=datefrom  (required)
+  --dateto=dateto      (required)
+  --format=json|csv    (required) [default: json]
+  --station=station    (required)
+```
+
+_See code: [src/commands/getCostPerStation.js](https://github.com/ntua/TL20-32/blob/v1.0.0/src/commands/getCostPerStation.js)_
 
 ## `ev_group32 healthcheck`
 
@@ -195,21 +232,22 @@ OPTIONS
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.2/src/commands/help.ts)_
 
-## `ev_group32 kilometersDriver`
+## `ev_group32 kilometersDriven`
 
-get kilometers driver between two sessions
+get kilometers driven between two sessions
 
 ```
 USAGE
-  $ ev_group32 kilometersDriver
+  $ ev_group32 kilometersDriven
 
 OPTIONS
+  --ev=ev                      (required) the id of the car to search
   --format=json|csv            (required) [default: json]
   --sessionEnd=sessionEnd      (required) the last session
   --sessionStart=sessionStart  (required) the starting session
 ```
 
-_See code: [src/commands/kilometersDriver.js](https://github.com/ntua/TL20-32/blob/v1.0.0/src/commands/kilometersDriver.js)_
+_See code: [src/commands/kilometersDriven.js](https://github.com/ntua/TL20-32/blob/v1.0.0/src/commands/kilometersDriven.js)_
 
 ## `ev_group32 login`
 
@@ -274,7 +312,7 @@ _See code: [src/commands/resetsessions.js](https://github.com/ntua/TL20-32/blob/
 
 ## `ev_group32 sessionsPerEV`
 
-return all charging sessions that an electric vehicle has done
+return info about the charging sessions that an electric vehicle has done
 
 ```
 USAGE
@@ -292,7 +330,7 @@ _See code: [src/commands/sessionsPerEV.js](https://github.com/ntua/TL20-32/blob/
 
 ## `ev_group32 sessionsPerPoint`
 
-return all charging sessions on a certain point
+return  info about the charging sessions on a certain point
 
 ```
 USAGE
@@ -310,7 +348,7 @@ _See code: [src/commands/sessionsPerPoint.js](https://github.com/ntua/TL20-32/bl
 
 ## `ev_group32 sessionsPerProvider`
 
-return all charging sessions that a provider has
+return info about the charging sessions that a provider has
 
 ```
 USAGE
@@ -328,7 +366,7 @@ _See code: [src/commands/sessionsPerProvider.js](https://github.com/ntua/TL20-32
 
 ## `ev_group32 sessionsPerStation`
 
-return all charging sessions on a certain station
+return info about the charging sessions on a certain station
 
 ```
 USAGE
