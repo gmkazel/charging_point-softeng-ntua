@@ -7,6 +7,7 @@ const Point = require('../models/Point')
 const Station = require('../models/Station')
 const Vehicle = require('../models/Vehicle')
 const SessionService = require('../services/sessionService')
+const dayjs = require('dayjs')
 
 const myService = new SessionService()
 
@@ -107,7 +108,6 @@ router.get('/userCars/:userID', async (req, res, next) => {
       someCar = myCars[i].toJSON()
       someCar.brand = carInfo[0].brand
       someCar.usable_battery_size = carInfo[0].usable_battery_size
-      console.log(someCar)
       result.push(someCar)
     }
 
@@ -450,11 +450,98 @@ router.get('/energyProviderInfo/analytics/:userID/:stationID/:startDate/:endDate
     const startDate = req.params.startDate
     const endDate = req.params.endDate
 
-    if (stationId === 'all') {
-      const myStationsAux = User.find({ _id: userId }, '')
-    } else {
+    const result = []
+    let myElement
 
+    if (stationId === 'all') {
+      // this is the revised code
+      const energyProviderInfoAux = await User.find({ _id: userId }, 'electricalCompanyOperatorSessions', (err) => {
+        if (err) console.log(err)
+      })
+      const energyProviderInfo = energyProviderInfoAux[0]
+
+      for (const i in energyProviderInfo.electricalCompanyOperatorSessions) {
+        const mySessionInfoAux = await Session.find({ _id: energyProviderInfo.electricalCompanyOperatorSessions[i] }, (err) => {
+          if (err) console.log(err)
+        })
+        const mySessionInfo = mySessionInfoAux[0]
+
+        if (dayjs(mySessionInfo.start_date).format('YYYYMMDD') < startDate || dayjs(mySessionInfo.end_date).format('YYYYMMDD') > endDate) { continue }
+
+        const myStationAux = await Point.find({ _id: mySessionInfo.point }, 'station', (err) => {
+          if (err) console.log(err)
+        })
+        const myStation = myStationAux[0].station
+
+        if (!result.some(element => JSON.stringify(element.stationId) === JSON.stringify(myStation))) {
+          myElement = {
+            stationId: myStation,
+            sessions: [mySessionInfo]
+          }
+          result.push(myElement)
+        } else {
+          const existingStationPointer = result.findIndex(element => JSON.stringify(element.stationId) === JSON.stringify(myStation))
+          result[existingStationPointer].sessions.push(mySessionInfo)
+        }
+      }
+      // end of revised code
+    } else {
+      myElement = {
+        stationId: stationId,
+        sessions: []
+      }
+
+      const energyProviderInfoAux = await User.find({ _id: userId }, 'electricalCompanyOperatorSessions', (err) => {
+        if (err) console.log(err)
+      })
+      const energyProviderInfo = energyProviderInfoAux[0]
+
+      for (const i in energyProviderInfo.electricalCompanyOperatorSessions) {
+        const mySessionInfoAux = await Session.find({ _id: energyProviderInfo.electricalCompanyOperatorSessions[i] }, (err) => {
+          if (err) console.log(err)
+        })
+        const mySessionInfo = mySessionInfoAux[0]
+
+        if (dayjs(mySessionInfo.start_date).format('YYYYMMDD') < startDate || dayjs(mySessionInfo.end_date).format('YYYYMMDD') > endDate) { continue }
+
+        const myStationAux = await Point.find({ _id: mySessionInfo.point }, 'station', (err) => {
+          if (err) console.log(err)
+        })
+        const myStation = myStationAux[0].station
+
+        if (myStation != stationId) { continue }
+
+        myElement.sessions.push(mySessionInfo)
+      }
+      result.push(myElement)
     }
+    res.send(result)
+  } catch (err) {
+    res.sendStatus(400)
+    console.log(err)
+  }
+})
+
+router.get('/getAllSessionsForEnergyProvider/:userID', async (req, res, next) => {
+  try {
+    const userId = req.params.userID
+
+    const result = []
+
+    const energyProviderInfoAux = await User.find({ _id: userId }, 'electricalCompanyOperatorSessions', (err) => {
+      if (err) console.log(err)
+    })
+    const energyProviderInfo = energyProviderInfoAux[0]
+
+    for (const i in energyProviderInfo.electricalCompanyOperatorSessions) {
+      const mySessionInfoAux = await Session.find({ _id: energyProviderInfo.electricalCompanyOperatorSessions[i] }, (err) => {
+        if (err) console.log(err)
+      })
+      const mySessionInfo = mySessionInfoAux[0]
+
+      result.push(mySessionInfo)
+    }
+    res.send(result)
   } catch (err) {
     res.sendStatus(400)
     console.log(err)
