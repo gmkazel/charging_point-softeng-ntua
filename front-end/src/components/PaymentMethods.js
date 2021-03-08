@@ -46,14 +46,23 @@ class PaymentMethods extends Component {
                     if (this.state.payment_card[i].number.charAt(j) === '-')
                         break;
                 }
-                let stars = this.state.payment_card[i].number.slice(0, j);
-                stars = this.replaceChar(stars, ['-']);
+                let stars = null;
+                if (j === 0) {
+                    stars = this.state.payment_card[i].number.slice(0, this.state.payment_card[i].number.length - 4);
+                    stars = this.replaceChar(stars, ['-']);
+                    stars = stars + this.state.payment_card[i].number.slice(this.state.payment_card[i].number.length - 4, this.state.payment_card[i].number.length);
+                }
+                else {
+                    stars = this.state.payment_card[i].number.slice(0, j);
+                    stars = this.replaceChar(stars, ['-']);
+                    stars = stars + this.state.payment_card[i].number.slice(j, this.state.payment_card[i].number.length);
+                }
 
                 rows.push(
                     <div className="row justify-content-around align-items-center" key={i}>
                         <div className="payment">
                             <h3>Credit Card</h3>
-                            <p>Card Number: {stars}{this.state.payment_card[i].number.slice(j, this.state.payment_card[i].number.length)}</p>
+                            <p>Card Number: {stars}</p>
                             <p>Valid Through: {this.state.payment_card[i].exp_date.slice(0, 2)}/20{this.state.payment_card[i].exp_date.slice(3)}</p>
                             <span>Owner: {this.state.payment_card[i].owner}</span>
                         </div>

@@ -12,7 +12,8 @@ class SignIn extends Component {
             username: null,
             password: null,
             login: false,
-            token: null
+            token: null,
+            message: ''
         }
 
         this.login = this.login.bind(this)
@@ -21,27 +22,33 @@ class SignIn extends Component {
     async login(event) {
         event.preventDefault()
 
-        const params = new URLSearchParams()
-        params.append('username', this.state.username)
-        params.append('password', this.state.password)
-        const res = await axios.post('http://localhost:8765/evcharge/api/login', params,
-        {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+        try {
+            const params = new URLSearchParams()
+            params.append('username', this.state.username)
+            params.append('password', this.state.password)
+            const res = await axios.post('http://localhost:8765/evcharge/api/login', params,
+            {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
 
-        localStorage.setItem('login', JSON.stringify({
-            login: true,
-            token: res.data.token
-        }))
-        this.setState({login: true})
+            localStorage.setItem('login', JSON.stringify({
+                login: true,
+                token: res.data.token
+            }))
+            this.setState({login: true})
 
-        const res2 = jwt.decode(res.data.token)
-        // console.log(res2)
+            const res2 = jwt.decode(res.data.token)
+            // console.log(res2)
 
-        if (res2.account_type === 'vehicleOwner')
-            window.location.href = "/user";
-        else if (res2.account_type === 'stationOwner')
-            window.location.href = "/parkingowner";
-        else if (res2.account_type === 'electricalCompanyOperator')
-            window.location.href = "/energyemployee";
+            if (res2.account_type === 'vehicleOwner')
+                window.location.href = "/user";
+            else if (res2.account_type === 'stationOwner')
+                window.location.href = "/parkingowner";
+            else if (res2.account_type === 'electricalCompanyOperator')
+                window.location.href = "/energyemployee";
+        }
+        catch (err) {
+            this.setState({message: 'Incorrect combination!'});
+            console.log(err);
+        }
     }
 
     render() {
@@ -63,6 +70,9 @@ class SignIn extends Component {
                                 <input type="text" className="form-control" id="username" name="username" onChange={(e) => {this.setState({username: e.target.value})}} required/><br/>
                                 <label htmlFor="password">Password:</label><br/>
                                 <input type="password" className="form-control" id="password" name="password" onChange={(e) => {this.setState({password: e.target.value})}} required/><br/>
+                                <div className="message">
+                                    {this.state.message}
+                                </div>
                             </div>
                             <button type="submit" className="btn btn-primary btn-block" onClick={this.login}>Submit</button>
                         </form>
