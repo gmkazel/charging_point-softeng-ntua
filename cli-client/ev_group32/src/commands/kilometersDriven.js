@@ -14,7 +14,7 @@ class kilometersDriven extends Command {
   async run() {
     try {
       const {flags} = this.parse(kilometersDriven)
-      const data = await axios.get(`${config.BASE_URL}/KilometersDriven/${flags.sessionStart}/${flags.sessionEnd}`)
+      const data = await axios.get(`${config.BASE_URL}/KilometersDriven/${flags.ev}/${flags.sessionStart}/${flags.sessionEnd}`)
       if (data.data.result < 0) {
         console.log(chalk.red('session start is newer than session end'))
       } else {
@@ -31,6 +31,10 @@ kilometersDriven.flags = {
     options: ['json', 'csv'],
     required: true,
     default: 'json',
+  }),
+  ev: flags.string({
+    required: true,
+    description: 'the id of the car to search',
   }),
   sessionStart: flags.string({
     required: true,
