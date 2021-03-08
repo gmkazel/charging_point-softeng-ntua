@@ -39,7 +39,7 @@ class ParkingOwnerAnalytics extends Component {
 
         try {
             let res = await axios.get('http://localhost:8765/evcharge/api/queries/userStations/' + userID);
-            console.log(res);
+            // console.log(res);
 
             let temp = ['All Stations'];
             for (let i = 0; i < res.data.length; i++) {
@@ -282,10 +282,10 @@ class ParkingOwnerAnalytics extends Component {
             });
 
             startDate = this.getStartDate(endDate, 6);
-            console.log(userID, stationID, startDate, endDate);
+
             try {
                 let res = await axios.get('http://localhost:8765/evcharge/api/queries/userStations/analytics/' + userID + '/' + stationID + '/' + startDate + '/' + endDate);
-                console.log(res);
+                // console.log(res);
 
                 let totalSessionstemp = [0, 0, 0, 0, 0, 0];
                 let kWtemp = [0, 0, 0, 0, 0, 0];

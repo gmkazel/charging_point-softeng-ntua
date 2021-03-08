@@ -123,3 +123,4 @@ exports.pickRandom = pickRandom
 exports.createAdminAndLogin = createAdminAndLogin
 exports.createUsers = createUsers
 exports.createSessions = createSessions
+exports.getRndInteger = getRndInteger
