@@ -1,9 +1,5 @@
-.padding {
-    padding: 3rem !important;
-    margin-left: 460px
-}
-
 .card {
+    width: 450px;
     margin-bottom: 1.5rem
 }
 
