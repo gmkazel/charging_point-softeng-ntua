@@ -7,7 +7,7 @@ const {Command, flags} = require('@oclif/command')
 const https = require('https')
 const axios = require('axios')
 const chalk = require('chalk')
-require('dotenv').config()
+const config = require('config')
 
 axios.defaults.httpsAgent = new https.Agent()
 
@@ -22,7 +22,7 @@ class addStation extends Command {
       params.append('energy_provider', flags.energyProvider)
 
       axios.defaults.headers.common['X-OBSERVATORY-AUTH'] = flags.apikey
-      const status = await axios.post(`${process.env.BASE_URL}/stationmod/add/${flags.user}`,  params, {headers: {
+      const status = await axios.post(`${config.BASE_URL}/stationmod/add/${flags.user}`,  params, {headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       }})
       console.log(status.data)

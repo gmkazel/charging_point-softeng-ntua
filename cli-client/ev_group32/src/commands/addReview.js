@@ -7,7 +7,7 @@ const {Command, flags} = require('@oclif/command')
 const https = require('https')
 const axios = require('axios')
 const chalk = require('chalk')
-require('dotenv').config()
+const config = require('config')
 
 axios.defaults.httpsAgent = new https.Agent()
 
@@ -21,7 +21,7 @@ class addReview extends Command {
       params.append('rating', flags.rating)
       params.append('comment', flags.comment)
       axios.defaults.headers.common['X-OBSERVATORY-AUTH'] = flags.apikey
-      const status = await axios.post(`${process.env.BASE_URL}/stationmod/addreview/${flags.user}/${flags.station}`,  params, {headers: {
+      const status = await axios.post(`${config.BASE_URL}/stationmod/addreview/${flags.user}/${flags.station}`,  params, {headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       }})
       console.log(status.data)

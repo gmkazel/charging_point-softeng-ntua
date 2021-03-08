@@ -7,7 +7,7 @@ const https = require('https')
 const axios = require('axios')
 const chalk = require('chalk')
 const fs = require('fs')
-require('dotenv').config()
+const config = require('config')
 const FormData = require('form-data')
 axios.defaults.httpsAgent = new https.Agent()
 
@@ -17,27 +17,27 @@ class admin extends Command {
       const {flags} = this.parse(admin)
 
       if (flags.healthcheck !== undefined) {
-        const status = await axios.get(`${process.env.BASE_URL}/admin/healthcheck`)
+        const status = await axios.get(`${config.BASE_URL}/admin/healthcheck`)
         console.log(status.data)
       } else if (flags.resetsessions !== undefined) {
-        await axios.post(`${process.env.BASE_URL}/admin/resetsessions`)
+        await axios.post(`${config.BASE_URL}/admin/resetsessions`)
         console.log('Reset Successful')
       } else {
         axios.defaults.headers.common['X-OBSERVATORY-AUTH'] = flags.apikey
 
         if (flags.usermod !== undefined) {
-          const status = await axios.post(`${process.env.BASE_URL}/admin/usermod/${flags.username}/${flags.passw}`)
+          const status = await axios.post(`${config.BASE_URL}/admin/usermod/${flags.username}/${flags.passw}`)
           console.log(status.data)
         }
         if (flags.users !== undefined) {
-          const status = await axios.get(`${process.env.BASE_URL}/admin/users/${flags.username}`)
+          const status = await axios.get(`${config.BASE_URL}/admin/users/${flags.username}`)
           console.log({username: status.data[0].username, apikey: status.data[0].api_key})
         }
         if (flags.sessionsupd !== undefined) {
           const form = new FormData()
           form.append('file', fs.createReadStream(flags.source))
 
-          const status = await axios.post(`${process.env.BASE_URL}/admin/system/sessionsupd`, form, {headers: form.getHeaders()})
+          const status = await axios.post(`${config.BASE_URL}/admin/system/sessionsupd`, form, {headers: form.getHeaders()})
           console.log(status.data)
         }
       }

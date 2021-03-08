@@ -7,7 +7,7 @@ const {Command, flags} = require('@oclif/command')
 const https = require('https')
 const axios = require('axios')
 const chalk = require('chalk')
-require('dotenv').config()
+const config = require('config')
 
 axios.defaults.httpsAgent = new https.Agent()
 
@@ -17,7 +17,7 @@ class deleteStation extends Command {
       const {flags} = this.parse(deleteStation)
 
       axios.defaults.headers.common['X-OBSERVATORY-AUTH'] = flags.apikey
-      const status = await axios.post(`${process.env.BASE_URL}/stationmod/delete/${flags.user}/${flags.station}`)
+      const status = await axios.post(`${config.BASE_URL}/stationmod/delete/${flags.user}/${flags.station}`)
       console.log(status.data)
     } catch (error) {
       console.error(chalk.red(error))

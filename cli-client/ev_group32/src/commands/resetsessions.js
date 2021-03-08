@@ -6,14 +6,14 @@ const {Command, flags} = require('@oclif/command')
 const https = require('https')
 const axios = require('axios')
 const chalk = require('chalk')
-require('dotenv').config()
+const config = require('config')
 axios.defaults.httpsAgent = new https.Agent()
 
 class resetSessions extends Command {
   async run() {
     try {
       const {flags} = this.parse(resetSessions)
-      await axios.post(`${process.env.BASE_URL}/admin/resetsessions`)
+      await axios.post(`${config.BASE_URL}/admin/resetsessions`)
       console.log('Reset Successful')
     } catch (error) {
       console.error(chalk.red(error))

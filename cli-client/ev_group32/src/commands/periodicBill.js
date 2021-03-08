@@ -6,7 +6,7 @@ const {Command, flags} = require('@oclif/command')
 const https = require('https')
 const axios = require('axios')
 const chalk = require('chalk')
-require('dotenv').config()
+const config = require('config')
 
 axios.defaults.httpsAgent = new https.Agent()
 
@@ -14,7 +14,7 @@ class periodicBill extends Command {
   async run() {
     try {
       const {flags} = this.parse(periodicBill)
-      const status = await axios.get(`${process.env.BASE_URL}/periodicBill/${flags.ev}/${flags.datefrom}/${flags.dateto}`)
+      const status = await axios.get(`${config.BASE_URL}/periodicBill/${flags.ev}/${flags.datefrom}/${flags.dateto}`)
       console.log(status.data)
     } catch (error) {
       console.error(chalk.red(error))

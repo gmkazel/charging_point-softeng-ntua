@@ -7,7 +7,7 @@ const fs = require('fs')
 const https = require('https')
 const axios = require('axios')
 const chalk = require('chalk')
-require('dotenv').config()
+const config = require('config')
 const __homedir = require('os').homedir()
 
 axios.defaults.httpsAgent = new https.Agent()
@@ -20,7 +20,7 @@ class Login extends Command {
       params.append('username', flags.username)
       params.append('password', flags.passw)
 
-      const status = await axios.post(`${process.env.BASE_URL}/login`, params, {headers: {
+      const status = await axios.post(`${config.BASE_URL}/login`, params, {headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       }})
       fs.writeFileSync((__homedir + '/softeng20bAPI.token'), status.data.token)
