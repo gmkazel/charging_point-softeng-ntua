@@ -539,7 +539,23 @@ router.get('/getAllSessionsForEnergyProvider/:userID', async (req, res, next) =>
       })
       const mySessionInfo = mySessionInfoAux[0]
 
-      result.push(mySessionInfo)
+      const myStationAux = await Point.find({ _id: mySessionInfo.point }, 'station', (err) => {
+        if (err) console.log(err)
+      })
+      const myStation = myStationAux[0].station
+
+      const myStationInfoAux = await Station.find({ _id: myStation }, 'name address operator', (err) => {
+        if (err) console.log(err)
+      })
+      const myStationInfo = myStationInfoAux[0]
+
+      const mySessionInfoNew = mySessionInfo.toJSON()
+
+      mySessionInfoNew.stationName = myStationInfo.name
+      mySessionInfoNew.stationAddress = myStationInfo.address
+      mySessionInfoNew.stationOperator = myStationInfo.operator
+
+      result.push(mySessionInfoNew)
     }
     res.send(result)
   } catch (err) {
