@@ -24,4 +24,27 @@ mongoose.connection.on('connected', () => {
   })
 })
 
+process.on('SIGTERM', () => {
+  console.info('SIGTERM signal received.')
+  console.log('Closing http server.')
+  app.close(() => {
+    console.log('Http server closed.')
+  })
+})
+
+process.on('SIGTERM', shutDown)
+process.on('SIGINT', shutDown)
+
+function shutDown () {
+  console.log('Received kill signal, shutting down gracefully')
+  app.close(() => {
+    console.log('Closed out remaining connections')
+    process.exit(0)
+  })
+
+  setTimeout(() => {
+    console.error('Could not close connections in time, forcefully shutting down')
+    process.exit(1)
+  }, 10000)
+}
 module.exports = app

@@ -1,6 +1,9 @@
 const express = require('express')
 const router = express.Router()
-const userAuth = require('../services/verifyUser')
+const AuthService = require('../services/authService')
+
+const authService = new AuthService()
+const userAuth = authService.verifyUser
 
 const userLogin = require('../services/userLogin')
 router.post('/login', userLogin)
@@ -12,7 +15,7 @@ const admin = require('./admin')
 router.use('/admin', admin)
 
 const stationmod = require('./stationmod.js')
-router.use('/stationmod', userAuth, stationmod)
+router.use('/stationmod', stationmod)
 
 const sessions = require('./sessions.js')
 router.use('', sessions)
