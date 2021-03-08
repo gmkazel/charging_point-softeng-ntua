@@ -7,6 +7,7 @@
     "test": "NODE_ENV=test mocha --timeout 20000 --exit",
     "coverage": "npx nyc npm test",
     "devStart": "NODE_ENV=dev nodemon server.js",
+    "testServer": "NODE_ENV=test node server.js",
     "start": "NODE_ENV=dev node server.js"
   },
   "keywords": [

@@ -24,6 +24,7 @@
     "https": "^1.0.0",
     "mocha-suppress-logs": "^0.2.0",
     "mongoose": "^5.11.19",
+    "oclif": "^1.16.1",
     "path": "^0.12.7"
   },
   "devDependencies": {
@@ -62,7 +63,7 @@
     "postpack": "rm -f oclif.manifest.json",
     "posttest": "eslint .",
     "prepack": "oclif-dev manifest && oclif-dev readme",
-    "test": "NODE_ENV=test mocha \"test/**/*.test.js\" --exit",
+    "test": "NODE_ENV=test mocha \"test/**/*.test.js\" --exit && mongo test --eval \"db.dropDatabase()\"",
     "version": "oclif-dev readme && git add README.md"
   }
 }
