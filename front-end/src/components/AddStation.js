@@ -8,38 +8,38 @@ function AddStation() {
         <div>
             <NavBar2/>
 
-            <div class="padding">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4>Enter station details</h4>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <label for="name">Name</label>
-                                            <input class="form-control" id="name" type="text" placeholder="Enter station name"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <label for="ccnumber">Address</label>
-                                            <div class="input-group">
-                                                <input class="form-control" type="text" placeholder="Example 19"/>
-                                            </div>
-                                        </div>
+            <br/>
+
+            <div className="container-fluid">
+                <div className="row justify-content-around align-items-center">
+                    <div className="card">
+                        <div className="card-header">
+                            <h4>Enter station details</h4>
+                        </div>
+                        <div className="card-body">
+                            <div className="row">
+                                <div className="col-sm-12">
+                                    <div className="form-group">
+                                        <label htmlFor="name">Name</label>
+                                        <input className="form-control" id="name" type="text" placeholder="Enter station name"/>
                                     </div>
                                 </div>
                             </div>
-                            <div class="card-footer">
-                                <div className="container-fluid">
-                                    <div className="row justify-content-around align-items-center">
-                                        <button class="btn btn-sm btn-success" type="submit">Submit</button>
+                            <div className="row">
+                                <div className="col-sm-12">
+                                    <div className="form-group">
+                                        <label htmlFor="ccnumber">Address</label>
+                                        <div className="input-group">
+                                            <input className="form-control" type="text" placeholder="Example 19"/>
+                                        </div>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="card-footer">
+                            <div className="container-fluid">
+                                <div className="row justify-content-around align-items-center">
+                                    <button className="btn btn-sm btn-success" type="submit">Submit</button>
                                 </div>
                             </div>
                         </div>
