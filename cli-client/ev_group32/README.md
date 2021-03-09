@@ -12,7 +12,8 @@ The cli-client of Charging Point
 # Usage
 <!-- usage -->
 ```sh-session
-$ npm install -g ev_group32
+cd to dir ./cli-client/ev_group32 and run: 
+$ sudo npm link
 $ ev_group32 COMMAND
 running command...
 $ ev_group32 (-v|--version|version)
@@ -25,14 +26,17 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
+* [`ev_group32 addPoint`](#ev_group32-addpoint)
 * [`ev_group32 addReview`](#ev_group32-addreview)
 * [`ev_group32 addStation`](#ev_group32-addstation)
 * [`ev_group32 admin`](#ev_group32-admin)
 * [`ev_group32 chargingPercentage`](#ev_group32-chargingpercentage)
+* [`ev_group32 deletePoint`](#ev_group32-deletepoint)
 * [`ev_group32 deleteStation`](#ev_group32-deletestation)
 * [`ev_group32 editStation`](#ev_group32-editstation)
 * [`ev_group32 estimatedTimeAndCost`](#ev_group32-estimatedtimeandcost)
 * [`ev_group32 getCostPerStation`](#ev_group32-getcostperstation)
+* [`ev_group32 getPoint`](#ev_group32-getpoint)
 * [`ev_group32 healthcheck`](#ev_group32-healthcheck)
 * [`ev_group32 help [COMMAND]`](#ev_group32-help-command)
 * [`ev_group32 kilometersDriven`](#ev_group32-kilometersdriven)
@@ -44,6 +48,22 @@ USAGE
 * [`ev_group32 sessionsPerPoint`](#ev_group32-sessionsperpoint)
 * [`ev_group32 sessionsPerProvider`](#ev_group32-sessionsperprovider)
 * [`ev_group32 sessionsPerStation`](#ev_group32-sessionsperstation)
+
+## `ev_group32 addPoint`
+
+add a new point to a station
+
+```
+USAGE
+  $ ev_group32 addPoint
+
+OPTIONS
+  --apikey=apikey    the api key used for authorization
+  --format=json|csv  (required) [default: json]
+  --station=station  (required) the id of the station
+```
+
+_See code: [src/commands/addPoint.js](https://github.com/ntua/TL20-32/blob/v1.0.0/src/commands/addPoint.js)_
 
 ## `ev_group32 addReview`
 
@@ -128,6 +148,22 @@ OPTIONS
 
 _See code: [src/commands/chargingPercentage.js](https://github.com/ntua/TL20-32/blob/v1.0.0/src/commands/chargingPercentage.js)_
 
+## `ev_group32 deletePoint`
+
+get information about a station point
+
+```
+USAGE
+  $ ev_group32 deletePoint
+
+OPTIONS
+  --apikey=apikey    the api key used for authorization
+  --format=json|csv  (required) [default: json]
+  --point=point      (required) the id of the point to search
+```
+
+_See code: [src/commands/deletePoint.js](https://github.com/ntua/TL20-32/blob/v1.0.0/src/commands/deletePoint.js)_
+
 ## `ev_group32 deleteStation`
 
 add a new station
@@ -199,6 +235,22 @@ OPTIONS
 ```
 
 _See code: [src/commands/getCostPerStation.js](https://github.com/ntua/TL20-32/blob/v1.0.0/src/commands/getCostPerStation.js)_
+
+## `ev_group32 getPoint`
+
+get information about a station point
+
+```
+USAGE
+  $ ev_group32 getPoint
+
+OPTIONS
+  --apikey=apikey    the api key used for authorization
+  --format=json|csv  (required) [default: json]
+  --point=point      (required) the id of the point to search
+```
+
+_See code: [src/commands/getPoint.js](https://github.com/ntua/TL20-32/blob/v1.0.0/src/commands/getPoint.js)_
 
 ## `ev_group32 healthcheck`
 
