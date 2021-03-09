@@ -54,8 +54,7 @@ class EditStation extends Component {
            
            axios(config)
            .then(function (response) {
-                // window.location.href = "/parkingowner/manage";
-                console.log("banana");
+                window.location.href = "/parkingowner/manage";
                 console.log(JSON.stringify(response.data));
            })
            .catch(function (error) {

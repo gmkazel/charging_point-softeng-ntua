@@ -52,8 +52,8 @@ module.exports = class {
 
     schema.validate(candidateStation)
 
-    await findByIdAndUpdate(stationId, candidateStation)
-    const res = findById(stationId)
+    await stationModel.findByIdAndUpdate(stationId, candidateStation)
+    const res = stationModel.findById(stationId)
     return res
   }
 
