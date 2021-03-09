@@ -124,6 +124,61 @@ describe('chargingPercentage', () => {
   })
 })
 
+describe('estimatedTimeAndCost', () => {
+  it('it should return the estimated time and cost of normal mode', async () => {
+    const car = await Vehicle.findOne()
+    const currentCapacity = getRndInteger(1, car.usable_battery_size)
+    const res = await runShellCommand(`ev_group32 estimatedTimeAndCost --ev ${car._id} --capacity ${currentCapacity} --mode normal`)
+    expect(res.stdout).to.contain('time')
+    expect(res.stdout).to.contain('cost')
+  })
+  it('it should return the estimated time and cost of fast mode', async () => {
+    const car = await Vehicle.findOne()
+    const currentCapacity = getRndInteger(1, car.usable_battery_size)
+    const res = await runShellCommand(`ev_group32 estimatedTimeAndCost --ev ${car._id} --capacity ${currentCapacity} --mode fast`)
+    expect(res.stdout).to.contain('time')
+    expect(res.stdout).to.contain('cost')
+  })
+  it('it should not return estimated time and cost - invalid mode', async () => {
+    const car = await Vehicle.findOne()
+    const currentCapacity = getRndInteger(1, car.usable_battery_size)
+    const res = await runShellCommand(`ev_group32 estimatedTimeAndCost --ev ${car._id} --capacity ${currentCapacity} --mode superfast`)
+    expect(res.stdout).to.equal('')
+    expect(res.stderr).to.equal('Error: Request failed with status code 400\n')
+  })
+  it('it should not return estimated time and cost - greater capacity', async () => {
+    const car = await Vehicle.findOne()
+    const currentCapacity = getRndInteger(car.usable_battery_size + 1, car.usable_battery_size + 10)
+    const res = await runShellCommand(`ev_group32 estimatedTimeAndCost --ev ${car._id} --capacity ${currentCapacity} --mode normal`)
+    expect(res.stdout).to.equal('')
+    expect(res.stderr).to.equal('Error: Request failed with status code 400\n')
+  })
+  it('it should not return estimated time and cost - negative capacity', async () => {
+    const car = await Vehicle.findOne()
+    const res = await runShellCommand(`ev_group32 estimatedTimeAndCost --ev ${car._id} --capacity -1 --mode normal`)
+    expect(res.stdout).to.equal('')
+    expect(res.stderr).to.equal('Error: Request failed with status code 400\n')
+  })
+  it('it should not return estimated time and cost - no vehicleID', async () => {
+    const res = await runShellCommand('ev_group32 estimatedTimeAndCost --capacity 1 --mode normal --ev')
+    expect(res.stdout).to.equal('')
+    expect(res.stderr).to.contain('Error: Flag --ev expects a value\n')
+  })
+  it('it should not return estimated time and cost - no capacity', async () => {
+    const car = await Vehicle.findOne()
+    const res = await runShellCommand(`ev_group32 estimatedTimeAndCost --ev ${car._id} --mode normal --capacity`)
+    expect(res.stdout).to.equal('')
+    expect(res.stderr).to.contain('Error: Flag --capacity expects a value\n')
+  })
+  it('it should not return estimated time and cost - no mode', async () => {
+    const car = await Vehicle.findOne()
+    const currentCapacity = getRndInteger(1, car.usable_battery_size)
+    const res = await runShellCommand(`ev_group32 estimatedTimeAndCost --ev ${car._id} --capacity ${currentCapacity} --mode`)
+    expect(res.stdout).to.equal('')
+    expect(res.stderr).to.contain('Error: Flag --mode expects a value\n')
+  })
+})
+
 function getRndInteger(min, max) {
   return Math.floor(Math.random() * (max - min)) + min
 }
