@@ -44,11 +44,6 @@ describe('points', () => {
       expect(res.stdout).to.contain('station')
       expect(res.stdout).to.contain('total_energy_delivered')
     })
-    it('it adds a point in the db - wrong apikey', async () => {
-      const station = await Station.findOne()
-      const res = await runShellCommand(`ev_group32 addPoint --station ${station._id} --apikey 1fdsf`)
-      expect(res.stderr).to.equal('Error: Request failed with status code 401\n')
-    })
     it('it adds a point in the db - no apikey', async () => {
       const station = await Station.findOne()
       const res = await runShellCommand(`ev_group32 addPoint --station ${station._id}`)
@@ -64,11 +59,6 @@ describe('points', () => {
       expect(res.stdout).to.contain('sessions')
       expect(res.stdout).to.contain('_id')
       expect(res.stdout).to.contain('station')
-    })
-    it('it searches for a point in the db - wrong apikey', async () => {
-      const point = await Point.findOne()
-      const res = await runShellCommand(`ev_group32 getPoint --point ${point._id} --apikey 231dsa`)
-      expect(res.stderr).to.contain('Error: Request failed with status code 401\n')
     })
     it('it searches for a point in the db - no apikey', async () => {
       const point = await Point.findOne()
@@ -87,11 +77,6 @@ describe('points', () => {
       const res = await runShellCommand(`ev_group32 deletePoint --point ${point._id} --apikey ${fs.readFileSync(__homedir + '/softeng20bAPI.token',
         {encoding: 'utf8', flag: 'r'})}`)
       expect(res.stdout).to.equal('{ result: \'OK\' }\n')
-    })
-    it('it deletes a point - wrong apikey', async () => {
-      const point = await Point.findOne()
-      const res = await runShellCommand(`ev_group32 deletePoint --point ${point._id} --apikey fsda132`)
-      expect(res.stderr).to.equal('Error: Request failed with status code 401\n')
     })
   })
   describe('logout', () => {
