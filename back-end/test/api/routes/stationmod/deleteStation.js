@@ -36,17 +36,11 @@ it('it should delete a station', async () => {
 })
 
 it('it should delete a station- not right owner', async () => {
-  try {
-    const newrandStationOwner = await pickRandom.stationOwner()
-    const res = await chai.request(server)
-      .post(config.BASE_URL + '/stationmod/delete/' + newrandStationOwner._id + '/' + randStation._id)
-      .set('X-OBSERVATORY-AUTH', token)
-
-    res.should.have.status(200)
-    const checkEntry = await Station.findById(randStation._id)
-    const result = checkEntry === null
-    result.should.be.equal(true)
-  } catch (err) {
-    err.should.not.be.equal(undefined)
-  }
+  // try {
+  const newrandStationOwner = await pickRandom.vehicleOwner()
+  const res = await chai.request(server)
+    .post(config.BASE_URL + '/stationmod/delete/' + newrandStationOwner._id + '/' + randStation._id)
+    .set('X-OBSERVATORY-AUTH', token)
+  console.log(res)
+  res.should.have.status(401)
 })

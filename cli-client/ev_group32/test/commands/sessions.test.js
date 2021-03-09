@@ -9,8 +9,6 @@ const Station = require('../../../../back-end/api/models/Station')
 const User = require('../../../../back-end/api/models/User')
 const Point = require('../../../../back-end/api/models/Point')
 const Vehicle = require('../../../../back-end/api/models/Vehicle')
-const config = require('config')
-const axios = require('axios')
 
 require('../testserver')
 
@@ -27,20 +25,11 @@ async function runShellCommand(command) {
   return result
 }
 
-async function createDB() {
-  await axios.post(`${config.BASE_URL}/admin/createUsers`)
-  await axios.post(`${config.BASE_URL}/admin/createSessions`)
-}
-
-before(() => {
-  createDB()
-})
-
 describe('sessions', () => {
   describe('sessionsPerEV',  () => {
     it('it finds a car in the db', async () => {
       const car = await Vehicle.findOne()
-      const res = await runShellCommand(`ev_group32 sessionsPerEV --ev ${car._id} --datefrom 20180101 --dateto 20200101`)
+      const res = await runShellCommand(`ev_group32 sessionsPerEV --ev ${car._id} --datefrom 20160101 --dateto 20220101`)
       expect(res.stdout).to.contain(`VehicleID: '${car._id}'`)
       expect(res.stdout).to.contain('RequestTimestamp')
       expect(res.stdout).to.contain('PeriodFrom')
