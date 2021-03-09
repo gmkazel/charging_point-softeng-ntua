@@ -21,7 +21,7 @@ before(async () => {
   currentDate = dayjs(Date.now()).format('YYYYMMDD')
 })
 
-it('it should return the estimated time and cost of normal mode', async () => {
+it('it should return the cost per station', async () => {
   const res = await chai.request(server)
     .get(config.BASE_URL + '/CostPerStation/' + randomStation._id + '/' + '20150101' + '/' + currentDate)
     .set('X-OBSERVATORY-AUTH', token)
