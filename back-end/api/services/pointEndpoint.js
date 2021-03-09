@@ -14,7 +14,7 @@ module.exports = class {
     }
 
     try {
-      if (!pointService.canAccess(req, pointId)) {
+      if (!await pointService.canAccess(req, pointId)) {
         res.status(401)
         res.send(new Error('User cannot access point'))
         return next('route')
@@ -61,7 +61,7 @@ module.exports = class {
     }
 
     try {
-      if (!pointService.canAccess(req, pointId)) {
+      if (!await pointService.canAccess(req, pointId)) {
         res.status(401)
         res.send(new Error('User cannot access point'))
         return next('route')
