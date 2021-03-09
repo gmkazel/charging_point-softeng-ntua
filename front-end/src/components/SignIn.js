@@ -46,7 +46,7 @@ class SignIn extends Component {
                 window.location.href = "/energyemployee";
         }
         catch (err) {
-            this.setState({message: 'Incorrect combination!'});
+            this.setState({message: 'Invalid combination!'});
             console.log(err);
         }
     }

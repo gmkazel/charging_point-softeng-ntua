@@ -15,6 +15,7 @@ import ParkingOwnerAnalytics from '../components/ParkingOwnerAnalytics';
 import ParkingOwnerFullHistory from '../components/ParkingOwnerFullHistory';
 import ParkingOwnerManage from '../components/ParkingOwnerManage';
 import AddStation from '../components/AddStation';
+import EditStation from '../components/EditStation';
 import ParkingOwnerReview from '../components/ParkingOwnerReview';
 
 const ParkingOwnerPage = () => {
@@ -28,6 +29,7 @@ const ParkingOwnerPage = () => {
             <Route exact path="/parkingowner/analytics/history" component={ParkingOwnerFullHistory}/>
             <Route exact path="/parkingowner/manage" component={ParkingOwnerManage}/>
             <Route exact path="/parkingowner/manage/add" component={AddStation}/>
+            <Route exact path="/parkingowner/manage/edit" component={EditStation}/>
             <Route exact path="/parkingowner/review" component={ParkingOwnerReview}/>
             <Redirect to="/parkingowner/analytics"/>
           </Switch>
