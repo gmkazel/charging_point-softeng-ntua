@@ -1,6 +1,7 @@
 const stationModel = require('../models/Station')
 const userModel = require('../models/User')
 const Joi = require('joi-oid')
+const { findByIdAndUpdate, findById } = require('../models/Station')
 
 const check = (variable) => {
   return (typeof (variable) !== 'undefined' && variable !== null)
@@ -50,6 +51,10 @@ module.exports = class {
     })
 
     schema.validate(candidateStation)
+
+    await findByIdAndUpdate(stationId, candidateStation)
+    const res = findById(stationId)
+    return res
   }
 
   async delete (userId, stationId) {
