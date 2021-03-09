@@ -14,6 +14,7 @@ class estimatedTimeAndCost extends Command {
   async run() {
     try {
       const {flags} = this.parse(estimatedTimeAndCost)
+      axios.defaults.headers.common['X-OBSERVATORY-AUTH'] = flags.apikey
       const status = await axios.get(`${config.BASE_URL}/estimatedTimeAndCost/${flags.ev}/${flags.capacity}/${flags.mode}`)
       console.log(status.data)
     } catch (error) {
@@ -27,6 +28,10 @@ estimatedTimeAndCost.flags = {
     options: ['json', 'csv'],
     required: true,
     default: 'json',
+  }),
+  apikey: flags.string({
+    required: true,
+    description: 'the api key used for authorization',
   }),
   ev: flags.string({
     required: true,

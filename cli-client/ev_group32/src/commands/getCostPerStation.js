@@ -14,6 +14,7 @@ class getCostPerStation extends Command {
   async run() {
     try {
       const {flags} = this.parse(getCostPerStation)
+      axios.defaults.headers.common['X-OBSERVATORY-AUTH'] = flags.apikey
       const status = await axios.get(`${config.BASE_URL}/CostPerStation/${flags.station}/${flags.datefrom}/${flags.dateto}`)
       console.log(status.data)
     } catch (error) {
@@ -27,6 +28,10 @@ getCostPerStation.flags = {
     options: ['json', 'csv'],
     required: true,
     default: 'json',
+  }),
+  apikey: flags.string({
+    required: true,
+    description: 'the api key used for authorization',
   }),
   station: flags.string({
     required: true,

@@ -109,13 +109,4 @@ describe('admin', () => {
       expect(res.stdout).to.contain('SessionsInUploadedFile')
     })
   })
-
-  describe('logout', () => {
-    it('logout for current user', () => {
-      exec(`ev_group32 logout --apikey ${fs.readFileSync(__homedir + '/softeng20bAPI.token',
-        {encoding: 'utf8', flag: 'r'})}`, (error, stdout) => {
-        expect(stdout).to.equal('Successful logout!\n')
-      })
-    })
-  })
 })

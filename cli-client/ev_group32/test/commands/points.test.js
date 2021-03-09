@@ -6,7 +6,6 @@ const {exec} = require('child_process')
 const util = require('util')
 const execProm = util.promisify(exec)
 const Station = require('../../../../back-end/api/models/Station')
-const config = require('config')
 
 const fs = require('fs')
 const Point = require('../../../../back-end/api/models/Point')
@@ -28,12 +27,6 @@ async function runShellCommand(command) {
 }
 
 describe('points', () => {
-  describe('login', () => {
-    it('should login as admin', async () => {
-      const res = await runShellCommand(`ev_group32 login --username ${config.DEFAULT_USER_NAME} --passw ${config.DEFAULT_USER_PASSWORD}`)
-      expect(res.stdout).to.equal('Successful login!\n')
-    })
-  })
   describe('addPoint',  () => {
     it('it adds a point in the db', async () => {
       const station = await Station.findOne()
@@ -77,14 +70,6 @@ describe('points', () => {
       const res = await runShellCommand(`ev_group32 deletePoint --point ${point._id} --apikey ${fs.readFileSync(__homedir + '/softeng20bAPI.token',
         {encoding: 'utf8', flag: 'r'})}`)
       expect(res.stdout).to.equal('{ result: \'OK\' }\n')
-    })
-  })
-  describe('logout', () => {
-    it('logout for current user', () => {
-      exec(`ev_group32 logout --apikey ${fs.readFileSync(__homedir + '/softeng20bAPI.token',
-        {encoding: 'utf8', flag: 'r'})}`, (error, stdout) => {
-        expect(stdout).to.equal('Successful logout!\n')
-      })
     })
   })
 })

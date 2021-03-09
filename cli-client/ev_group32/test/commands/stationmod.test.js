@@ -7,7 +7,6 @@ const util = require('util')
 const execProm = util.promisify(exec)
 const Station = require('../../../../back-end/api/models/Station')
 const User = require('../../../../back-end/api/models/User')
-const config = require('config')
 
 const fs = require('fs')
 const __homedir = require('os').homedir()
@@ -27,13 +26,7 @@ async function runShellCommand(command) {
   return result
 }
 
-describe('sessions', () => {
-  describe('login', () => {
-    it('should login as admin', async () => {
-      const res = await runShellCommand(`ev_group32 login --username ${config.DEFAULT_USER_NAME} --passw ${config.DEFAULT_USER_PASSWORD}`)
-      expect(res.stdout).to.equal('Successful login!\n')
-    })
-  })
+describe('stations', () => {
   describe('addReview',  () => {
     it('it adds a review in the db', async () => {
       const user = await User.findOne()
@@ -90,7 +83,9 @@ describe('sessions', () => {
       const energyProv = await User.findOne({account_type: 'electricalCompanyOperator'})
       const res = await runShellCommand(`ev_group32 editStation --station ${station._id} --stationName '54 Vincenzo Island, Robelton' --address '242 Brycen Mews, East Ansel' --energyProvider ${energyProv._id} --operator Tamara.Pagac69 --user ${stationOwner._id} --apikey ${fs.readFileSync(__homedir + '/softeng20bAPI.token',
         {encoding: 'utf8', flag: 'r'})}`)
-      expect(res.stdout).to.equal('\n')
+      expect(res.stdout).to.contain('name')
+      expect(res.stdout).to.contain('energy_provider')
+      expect(res.stdout).to.contain('_id')
     })
     it('it edits a station in the db - not right owner', async () => {
       const station = await Station.findOne()
@@ -117,12 +112,13 @@ describe('sessions', () => {
       expect(res.stderr).to.equal('Error: Request failed with status code 401\n')
     })
   })
-  describe('logout', () => {
-    it('logout for current user', () => {
-      exec(`ev_group32 logout --apikey ${fs.readFileSync(__homedir + '/softeng20bAPI.token',
-        {encoding: 'utf8', flag: 'r'})}`, (error, stdout) => {
-        expect(stdout).to.equal('Successful logout!\n')
-      })
+})
+
+describe('logout', () => {
+  it('logout for current user', () => {
+    exec(`ev_group32 logout --apikey ${fs.readFileSync(__homedir + '/softeng20bAPI.token',
+      {encoding: 'utf8', flag: 'r'})}`, (error, stdout) => {
+      expect(stdout).to.equal('Successful logout!\n')
     })
   })
 })
