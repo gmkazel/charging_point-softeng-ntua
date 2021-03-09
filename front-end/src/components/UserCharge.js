@@ -81,7 +81,7 @@ class UserCharge extends Component {
 
                 <div className="container-fluid">
                     {
-                        this.state.cars.map((car, key) => {return(
+                        this.state.cars.map((car, key) => {return (
                             <div className="row justify-content-around align-items-center" key={key}>
                                 <div className="reviewstation">
                                     <h3>{car.brand + ' ' + car.model}</h3>
@@ -98,8 +98,8 @@ class UserCharge extends Component {
                                     <p>{this.state.time[key]}</p>
                                     <button className="btn btn-sm btn-success" type="submit">Begin charge</button>
                                 </div>
-                            </div>)
-                        })
+                            </div>
+                        )})
                     }
                 </div>
             </div>

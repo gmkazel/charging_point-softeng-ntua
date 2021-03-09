@@ -12,9 +12,8 @@ class ParkingOwnerManage extends Component {
         super();
 
         this.state={
-            station:null,
-            lenght:null,
-            render: null
+            stations: ['test'],
+            points: ['test']
         }
     }
 
@@ -27,50 +26,29 @@ class ParkingOwnerManage extends Component {
 
         try {
             let res = await axios.get('http://localhost:8765/evcharge/api/queries/userStations/' + userID);
-            // console.log(res);
-            this.setState({
-                station: res.data,
-                length: res.data.length
-            });
+            console.log(res);
 
-            var rows = [];
-            for (let i = 0; i < this.state.length; i++) {
-                rows.push(
-                    <div className="container-fluid" key={i}>
-                        <div className="row justify-content-around align-items-center">
-                            <div className="parkingreviewstation">
-                                <h4>{this.state.station[i].name}</h4>
-                                <p>Address: {this.state.station[i].address}</p>
-                                <p>Operator: {this.state.station[i].operator}</p>
-                                <p>Total points: {this.state.station[i].points.length}</p>
-                                {/* {
-                                    this.state.station[i].points.map((j, key) => {return (
-                                        <div key={key} value={key}>
-                                            <span>Point {key+1}: </span>
-                                            <span >{j}</span>
-                                            <br/>
-                                        </div>
-                                    );})
-                                }
-                                <br/> */}
-                                <div className="container-fluid" >
-                                    <div className="row justify-content-around align-items-center">
-                                        <div className="button"><button type="submit" className="btn btn-primary btn-block">Edit</button></div>
-                                        <div className="button"><button type="submit" className="btn btn-danger btn-block">Delete</button></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                );
-            }    
+            let temp = [];
+            for (var i = 0; i < res.data.length; i++) {
+                temp.push(res.data[i].points);
+            }
+
             this.setState({
-                render: rows
+                stations: res.data,
+                points: temp
             });
         }
         catch (err) {
             console.log(err);
         }
+    }
+
+    editHandler(i) {
+
+    }
+
+    deleteHandler(i) {
+
     }
 
     render() {
@@ -81,9 +59,24 @@ class ParkingOwnerManage extends Component {
                 <ParkingOwnerLinks/>
 
                 <div className="container-fluid">
-                    <div className="row justify-content-around align-items-center">
-                            {this.state.render}
-                    </div>
+                    {
+                        this.state.stations.map((station, key) => {return (
+                            <div className="row justify-content-around align-items-center" key={key}>
+                                <div className="parkingreviewstation">
+                                    <h4>{station.name}</h4>
+                                    <p>Address: {station.address}</p>
+                                    <p>Operator: {station.operator}</p>
+                                    <p>Total points: {this.state.points[key].length}</p>
+                                    <div className="container-fluid">
+                                        <div className="row justify-content-around align-items-center">
+                                            <div className="button"><button type="submit" className="btn btn-primary btn-block" onClick={() => this.editHandler(key)}>Edit</button></div>
+                                            <div className="button"><button type="submit" className="btn btn-danger btn-block" onClick={() => this.deleteHandler(key)}>Delete</button></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )})
+                    }
                 </div>
 
                 <div className="container-fluid">
