@@ -29,12 +29,15 @@ async function runShellCommand(command) {
 
 async function createDB() {
   await axios.post(`${config.BASE_URL}/admin/createUsers`)
-  await axios.post(`${config.BASE_URL}/admin/createSessions`)
 }
 
-before(() => {
-  createDB()
+before(async () => {
+  await createDB()
 })
+
+// after(async () => {
+//   await deleteDatabase()
+// })
 
 describe('admin', () => {
   describe('healthCheck', () => {
@@ -45,12 +48,12 @@ describe('admin', () => {
   })
 
   describe('resetsessions', () => {
-    it('it resets all sessions', async () => {
+    it('it resets all sessions - and then creates them again', async () => {
       const res = await runShellCommand('ev_group32 resetsessions')
+      await axios.post(`${config.BASE_URL}/admin/createSessions`)
       expect(res.stdout).to.equal('Reset Successful\n')
     })
   })
-
   describe('login', () => {
     it('should login as admin', async () => {
       const res = await runShellCommand(`ev_group32 login --username ${config.DEFAULT_USER_NAME} --passw ${config.DEFAULT_USER_PASSWORD}`)
