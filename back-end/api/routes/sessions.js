@@ -4,7 +4,10 @@ const SessionService = require('../services/sessionService')
 
 const myService = new SessionService()
 
-router.get('/SessionsPerPoint/:pointID/:yyyymmdd_from/:yyyymmdd_to', async (req, res, next) => {
+const AuthService = require('../services/authService')
+const authService = new AuthService()
+
+router.get('/SessionsPerPoint/:pointID/:yyyymmdd_from/:yyyymmdd_to', authService.verifyStationOwner, async (req, res, next) => {
   try {
     const pointId = req.params.pointID
     const startDate = req.params.yyyymmdd_from
@@ -19,7 +22,7 @@ router.get('/SessionsPerPoint/:pointID/:yyyymmdd_from/:yyyymmdd_to', async (req,
   }
 })
 
-router.get('/SessionsPerStation/:stationID/:yyyymmdd_from/:yyyymmdd_to', async (req, res, next) => {
+router.get('/SessionsPerStation/:stationID/:yyyymmdd_from/:yyyymmdd_to', authService.verifyStationOwner, async (req, res, next) => {
   try {
     const stationId = req.params.stationID
     const startDate = req.params.yyyymmdd_from
@@ -33,7 +36,7 @@ router.get('/SessionsPerStation/:stationID/:yyyymmdd_from/:yyyymmdd_to', async (
   }
 })
 
-router.get('/SessionsPerEV/:vehicleID/:yyyymmdd_from/:yyyymmdd_to', async (req, res, next) => {
+router.get('/SessionsPerEV/:vehicleID/:yyyymmdd_from/:yyyymmdd_to', authService.verifyUser, async (req, res, next) => {
   try {
     const vehicleId = req.params.vehicleID
     const startDate = req.params.yyyymmdd_from
@@ -47,7 +50,7 @@ router.get('/SessionsPerEV/:vehicleID/:yyyymmdd_from/:yyyymmdd_to', async (req, 
   }
 })
 
-router.get('/SessionsPerProvider/:providerID/:yyyymmdd_from/:yyyymmdd_to', async (req, res, next) => {
+router.get('/SessionsPerProvider/:providerID/:yyyymmdd_from/:yyyymmdd_to', authService.verifyElectricalCompanyOperator, async (req, res, next) => {
   try {
     const providerId = req.params.providerID
     const startDate = req.params.yyyymmdd_from
@@ -61,7 +64,7 @@ router.get('/SessionsPerProvider/:providerID/:yyyymmdd_from/:yyyymmdd_to', async
   }
 })
 
-router.get('/KilometersDriven/:vehicleID/:Session1ID/:Session2ID', async (req, res, next) => {
+router.get('/KilometersDriven/:vehicleID/:Session1ID/:Session2ID', authService.verifyUser, async (req, res, next) => {
   try {
     const car = req.params.vehicleID
     const session1 = req.params.Session1ID
@@ -75,7 +78,7 @@ router.get('/KilometersDriven/:vehicleID/:Session1ID/:Session2ID', async (req, r
   }
 })
 
-router.get('/PeriodicBill/:vehicleID/:yyyymmdd_from/:yyyymmdd_to', async (req, res, next) => {
+router.get('/PeriodicBill/:vehicleID/:yyyymmdd_from/:yyyymmdd_to', authService.verifyUser, async (req, res, next) => {
   try {
     const vehicleId = req.params.vehicleID
     const startDate = req.params.yyyymmdd_from
@@ -89,7 +92,7 @@ router.get('/PeriodicBill/:vehicleID/:yyyymmdd_from/:yyyymmdd_to', async (req, r
   }
 })
 
-router.get('/EstimatedTimeAndCost/:vehicleID/:current_capacity/:mode', async (req, res, next) => {
+router.get('/EstimatedTimeAndCost/:vehicleID/:current_capacity/:mode', authService.verifyUser, async (req, res, next) => {
   try {
     const vehicleId = req.params.vehicleID
     const currentCapacity = req.params.current_capacity
@@ -103,7 +106,7 @@ router.get('/EstimatedTimeAndCost/:vehicleID/:current_capacity/:mode', async (re
   }
 })
 
-router.get('/ChargingPercentage/:vehicleID/:current_capacity', async (req, res, next) => {
+router.get('/ChargingPercentage/:vehicleID/:current_capacity', authService.verifyUser, async (req, res, next) => {
   try {
     const vehicleId = req.params.vehicleID
     const currentCapacity = req.params.current_capacity
@@ -116,7 +119,7 @@ router.get('/ChargingPercentage/:vehicleID/:current_capacity', async (req, res, 
   }
 })
 
-router.get('/CostPerStation/:stationID/:yyyymmdd_from/:yyyymmdd_to', async (req, res, next) => {
+router.get('/CostPerStation/:stationID/:yyyymmdd_from/:yyyymmdd_to', authService.verifyUser, async (req, res, next) => {
   try {
     const stationId = req.params.stationID
     const startDate = req.params.yyyymmdd_from
