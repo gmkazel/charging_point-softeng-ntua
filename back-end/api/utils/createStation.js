@@ -12,9 +12,10 @@ module.exports = async (count) => {
   for (let i = 0; i < count; i++) {
     const random = getRandomInt(userCount)
     const randUser = await userModel.findOne({ account_type: 'electricalCompanyOperator' }, 'username _id').skip(random)
+    const stationCity = faker.fake('{{address.city}}')
     const newStation = {
-      name: faker.fake('{{address.streetAddress}}, {{address.city}}'),
-      address: faker.fake('{{address.streetAddress}}, {{address.city}}'),
+      name: 'ChargingPoint ' + stationCity + ' Station',
+      address: faker.fake('{{address.streetAddress}}') + ', ' + stationCity,
       contact_info:
       {
         email: faker.internet.email(),
@@ -43,10 +44,10 @@ module.exports = async (count) => {
   return finalStations
 }
 
-function getRandomInt(max) {
+function getRandomInt (max) {
   return Math.floor(Math.random() * Math.floor(max))
 }
 
-function getRndInteger(min, max) {
+function getRndInteger (min, max) {
   return Math.floor(Math.random() * (max - min)) + min
 }

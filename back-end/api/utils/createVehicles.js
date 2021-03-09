@@ -36,14 +36,14 @@ const DummyModel = mongoose.model('dummy_Vehicles', VehicleSchema)
 const vehiclesModel = require('../models/Vehicle')
 
 module.exports = class Vehicle {
-  getVehiclesCount () {
-    const len = DummyModel.countDocuments()
+  async getVehiclesCount () {
+    const len = await DummyModel.countDocuments()
     return len
   }
 
-  createDataset (JSONFile) {
+  async createDataset (JSONFile) {
     const dataset = require(JSONFile).data
-    const res = DummyModel.insertMany(dataset)
+    const res = await DummyModel.insertMany(dataset)
     return res
   }
 
@@ -53,13 +53,13 @@ module.exports = class Vehicle {
     for (let i = 0; i < count; i++) {
       const v = await DummyModel.findOneAndDelete()
       const w = await vehiclesModel.create({ model: v.model, ac_charger: v.ac_charger, dc_charger: v.dc_charger, brand: v.brand, type: v.type, usable_battery_size: v.usable_battery_size, stations: [] })
-      await vehicles.push(w)
+      vehicles.push(w)
     }
 
     return vehicles
   }
 
-  dropDataset () {
-    DummyModel.collection.drop()
+  async dropDataset () {
+    await DummyModel.collection.drop()
   }
 }
