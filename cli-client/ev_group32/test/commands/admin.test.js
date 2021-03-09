@@ -10,7 +10,6 @@ const axios = require('axios')
 const usrnm = faker.internet.userName()
 const params = new URLSearchParams()
 const util = require('util')
-const {doesNotMatch} = require('assert')
 const execProm = util.promisify(exec)
 params.append('username', config.DEFAULT_USER_NAME)
 params.append('password', config.DEFAULT_USER_PASSWORD)
@@ -28,20 +27,17 @@ async function runShellCommand(command) {
   return result
 }
 
-async function deleteDatabase() {
-  await exec('mongo test --eval "db.dropDatabase()"', (error, stdout, stderr) => {
-    if (error) throw (error)
-  })
-}
-
 async function createDB() {
-  await deleteDatabase()
   await axios.post(`${config.BASE_URL}/admin/createUsers`)
 }
 
 before(async () => {
   await createDB()
 })
+
+// after(async () => {
+//   await deleteDatabase()
+// })
 
 describe('admin', () => {
   describe('healthCheck', () => {
@@ -52,14 +48,11 @@ describe('admin', () => {
   })
 
   describe('resetsessions', () => {
-    it('it resets all sessions', async () => {
+    it('it resets all sessions - and then creates them again', async () => {
       const res = await runShellCommand('ev_group32 resetsessions')
+      await axios.post(`${config.BASE_URL}/admin/createSessions`)
       expect(res.stdout).to.equal('Reset Successful\n')
     })
-  })
-  it('createSessions again', async done => {
-    await axios.post(`${config.BASE_URL}/admin/createSessions`)
-    done()
   })
   describe('login', () => {
     it('should login as admin', async () => {

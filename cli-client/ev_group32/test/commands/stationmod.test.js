@@ -114,7 +114,7 @@ describe('sessions', () => {
       const user = await User.findOne({account_type: 'vehicleOwner'})
       const res = await runShellCommand(`ev_group32 deleteStation --station ${station._id} --user ${user._id} --apikey ${fs.readFileSync(__homedir + '/softeng20bAPI.token',
         {encoding: 'utf8', flag: 'r'})}`)
-      expect(res.stdout).to.equal('Error: Request failed with status code 401\n')
+      expect(res.stderr).to.equal('Error: Request failed with status code 401\n')
     })
   })
   describe('logout', () => {
