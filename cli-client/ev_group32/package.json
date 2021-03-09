@@ -64,7 +64,7 @@
     "postpack": "rm -f oclif.manifest.json",
     "posttest": "eslint .",
     "prepack": "oclif-dev manifest && oclif-dev readme",
-    "test": "NODE_ENV=test cd \"../../back-end\" && npm run testServer & mocha \"test/**/*.test.js\" --exit && killall node",
+    "test": "NODE_ENV=test cd \"../../back-end\" && npm run testServer & mocha \"test/**/*.test.js\" --exit ; killall node",
     "version": "oclif-dev readme && git add README.md"
   }
 }
