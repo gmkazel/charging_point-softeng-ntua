@@ -167,6 +167,31 @@ describe('estimatedTimeAndCost', () => {
   })
 })
 
+describe('periodicBill', () => {
+  it('it should return the periodicBill', async () => {
+    const car = await Vehicle.findOne()
+    const res = await runShellCommand(`ev_group32 periodicBill --ev ${car._id} --datefrom 20170101 --dateto 20220101`)
+    expect(res.stdout).to.contain('result')
+  })
+  it('it should not return the periodicBill - no vehicleID', async () => {
+    const res = await runShellCommand('ev_group32 periodicBill --datefrom 20170101 --dateto 20220101 --ev')
+    expect(res.stdout).to.equal('')
+    expect(res.stderr).to.contain('Error: Flag --ev expects a value\n')
+  })
+  it('it should not return the periodicBill - no datefrom', async () => {
+    const car = await Vehicle.findOne()
+    const res = await runShellCommand(`ev_group32 periodicBill --ev ${car._id} --dateto 20220101 --datefrom`)
+    expect(res.stdout).to.equal('')
+    expect(res.stderr).to.contain('Error: Flag --datefrom expects a value\n')
+  })
+  it('it should not return the periodicBill - no dateto', async () => {
+    const car = await Vehicle.findOne()
+    const res = await runShellCommand(`ev_group32 periodicBill --ev ${car._id} --datefrom 20170101 --dateto`)
+    expect(res.stdout).to.equal('')
+    expect(res.stderr).to.contain('Error: Flag --dateto expects a value\n')
+  })
+})
+
 function getRndInteger(min, max) {
   return Math.floor(Math.random() * (max - min)) + min
 }
