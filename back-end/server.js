@@ -1,3 +1,4 @@
+console.log = function () {}
 const config = require('config')
 const express = require('express')
 const mongoose = require('mongoose')
@@ -31,14 +32,6 @@ mongoose.connection.on('connected', () => {
   server = app.listen(config.PORT, function () {
     console.log('Server is listening at port ' + config.PORT)
     app.emit('appStarted')
-  })
-})
-
-process.on('SIGTERM', () => {
-  console.info('SIGTERM signal received.')
-  console.log('Closing http server.')
-  app.close(() => {
-    console.log('Http server closed.')
   })
 })
 
