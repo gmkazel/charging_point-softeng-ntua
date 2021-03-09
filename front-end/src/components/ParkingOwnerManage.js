@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import { Component } from 'react';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
+import qs from 'qs';
 
 class ParkingOwnerManage extends Component {
     constructor() {
@@ -44,11 +45,34 @@ class ParkingOwnerManage extends Component {
     }
 
     editHandler(i) {
-
+        localStorage.setItem('station', JSON.stringify({
+            station: this.state.stations[i]
+        }))
+        window.location.href = "/parkingowner/manage/edit";
     }
 
     deleteHandler(i) {
+        let userToken = JSON.parse(localStorage.getItem('login')).token;
+        let userID = jwt.decode(JSON.parse(localStorage.getItem('login')).token)._id;
 
+        var data = qs.stringify({});
+        var config = {
+          method: 'post',
+          url: 'http://localhost:8765/evcharge/api/stationmod/delete/' + userID + '/' + this.state.stations[i]._id,
+          headers: { 
+            'X-OBSERVATORY-AUTH': userToken
+          },
+          data : data
+        };
+        
+        axios(config)
+        .then(function (response) {
+            window.location.reload(false);
+            console.log(JSON.stringify(response.data));
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
     }
 
     render() {

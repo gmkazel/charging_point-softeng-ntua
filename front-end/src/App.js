@@ -35,6 +35,7 @@ class App extends Component {
                     <Route exact path="/parkingowner/analytics/history" component={ParkingOwnerPage}/>
                     <Route exact path="/parkingowner/manage" component={ParkingOwnerPage}/>
                     <Route exact path="/parkingowner/manage/add" component={ParkingOwnerPage}/>
+                    <Route exact path="/parkingowner/manage/edit" component={ParkingOwnerPage}/>
                     <Route exact path="/parkingowner/review" component={ParkingOwnerPage}/>
 
                     <Route exact path="/energyemployee" component={EnergyEmployeePage}/>
