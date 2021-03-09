@@ -4,6 +4,7 @@ const AuthService = require('../services/authService')
 
 const authService = new AuthService()
 const userAuth = authService.verifyUser
+const stationAuth = authService.verifyStationOwner
 
 const userLogin = require('../services/userLogin')
 router.post('/login', userLogin)
@@ -22,5 +23,8 @@ router.use('', sessions)
 
 const queriesAux = require('./queriesAux.js')
 router.use('/queries', queriesAux)
+
+const point = require('./point.js')
+router.use('/point', stationAuth, point)
 
 module.exports = router

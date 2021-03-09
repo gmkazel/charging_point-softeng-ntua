@@ -5,8 +5,18 @@ const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const app = express()
 let server
+
 if (config.util.getEnv('NODE_ENV') !== 'test') {
   app.use(morgan('combined'))
+  const figlet = require('figlet')
+  figlet('Charging Point', function (err, data) {
+    if (err) {
+      console.log('Something went wrong...')
+      console.dir(err)
+      return
+    }
+    console.log(data)
+  })
 }
 
 require('./api/utils/initDB')()

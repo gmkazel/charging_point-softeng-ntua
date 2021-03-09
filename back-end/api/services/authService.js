@@ -72,6 +72,7 @@ async function checkUser (req) {
   if (userData.api_key !== tokenData.token) { throw new Error('Not authorized') }
   const parseData = {
     api_key: userData.api_key,
+    id: userData._id,
     username: userData.username,
     account_type: userData.account_type
   }
