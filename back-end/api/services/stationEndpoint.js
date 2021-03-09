@@ -48,7 +48,7 @@ module.exports = class stationEndpoint {
     if (!await stationService.canAccess(userId, stationId)) {
       res.status(401)
       res.send()
-      return res.next('routes')
+      // return res.next('routes')
     }
 
     try {
