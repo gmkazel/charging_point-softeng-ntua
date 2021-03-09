@@ -192,6 +192,31 @@ describe('periodicBill', () => {
   })
 })
 
+describe('getCostPerStation', () => {
+  it('it should return the cost of the station', async () => {
+    const station = await Station.findOne()
+    const res = await runShellCommand(`ev_group32 getCostPerStation --station ${station._id} --datefrom 20170101 --dateto 20220101`)
+    expect(res.stdout).to.contain('result')
+  })
+  it('it should not return the cost of the station - no stationID', async () => {
+    const res = await runShellCommand('ev_group32 getCostPerStation --datefrom 20170101 --dateto 20220101 --station')
+    expect(res.stdout).to.equal('')
+    expect(res.stderr).to.contain('Error: Flag --station expects a value\n')
+  })
+  it('it should not return the cost of the station - no datefrom', async () => {
+    const station = await Station.findOne()
+    const res = await runShellCommand(`ev_group32 getCostPerStation --station ${station._id} --dateto 20220101 --datefrom`)
+    expect(res.stdout).to.equal('')
+    expect(res.stderr).to.contain('Error: Flag --datefrom expects a value\n')
+  })
+  it('it should not return the cost of the station - no dateto', async () => {
+    const station = await Station.findOne()
+    const res = await runShellCommand(`ev_group32 getCostPerStation --station ${station._id} --datefrom 20170101 --dateto`)
+    expect(res.stdout).to.equal('')
+    expect(res.stderr).to.contain('Error: Flag --dateto expects a value\n')
+  })
+})
+
 function getRndInteger(min, max) {
   return Math.floor(Math.random() * (max - min)) + min
 }
