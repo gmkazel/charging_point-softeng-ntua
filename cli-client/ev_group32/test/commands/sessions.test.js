@@ -89,3 +89,41 @@ describe('sessions', () => {
     })
   })
 })
+
+describe('chargingPercentage', () => {
+  it('it should return the charging percentage', async () => {
+    const car = await Vehicle.findOne()
+    const currentCapacity = getRndInteger(1, car.usable_battery_size)
+    const res = await runShellCommand(`ev_group32 chargingPercentage --ev ${car._id} --capacity ${currentCapacity}`)
+    const calc = ((currentCapacity / car.usable_battery_size) * 100).toFixed(2)
+    expect(res.stdout).to.equal(`{ result: '${calc}%' }\n`)
+  })
+  it('it should not return the percentage - greater capacity', async () => {
+    const car = await Vehicle.findOne()
+    const currentCapacity = getRndInteger(car.usable_battery_size + 1, car.usable_battery_size + 10)
+    const res = await runShellCommand(`ev_group32 chargingPercentage --ev ${car._id} --capacity ${currentCapacity}`)
+    expect(res.stdout).to.equal('')
+    expect(res.stderr).to.equal('Error: Request failed with status code 400\n')
+  })
+  it('it should not return the percentage - negative capacity', async () => {
+    const car = await Vehicle.findOne()
+    const res = await runShellCommand(`ev_group32 chargingPercentage --ev ${car._id} --capacity -1`)
+    expect(res.stdout).to.equal('')
+    expect(res.stderr).to.equal('Error: Request failed with status code 400\n')
+  })
+  it('it should not return the percentage - no vehicleID', async () => {
+    const res = await runShellCommand('ev_group32 chargingPercentage --capacity 1 --ev')
+    expect(res.stdout).to.equal('')
+    expect(res.stderr).to.contain('Error: Flag --ev expects a value\n')
+  })
+  it('it should not return the percentage - no capacity', async () => {
+    const car = await Vehicle.findOne()
+    const res = await runShellCommand(`ev_group32 chargingPercentage --ev ${car._id} --capacity`)
+    expect(res.stdout).to.equal('')
+    expect(res.stderr).to.contain('Error: Flag --capacity expects a value\n')
+  })
+})
+
+function getRndInteger(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min
+}
