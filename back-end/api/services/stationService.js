@@ -1,8 +1,6 @@
 const stationModel = require('../models/Station')
 const userModel = require('../models/User')
 const Joi = require('joi-oid')
-const { findByIdAndUpdate, findById } = require('../models/Station')
-
 const check = (variable) => {
   return (typeof (variable) !== 'undefined' && variable !== null)
 }
@@ -25,7 +23,7 @@ module.exports = class {
         phone: Joi.string(),
         website: Joi.string().max(2000)
       },
-      operator: Joi.string()
+      operator: Joi.string().required()
     })
     schema.validate(candidateStation)
 
