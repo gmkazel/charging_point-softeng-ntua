@@ -10,6 +10,7 @@ const axios = require('axios')
 const usrnm = faker.internet.userName()
 const params = new URLSearchParams()
 const util = require('util')
+const {doesNotMatch} = require('assert')
 const execProm = util.promisify(exec)
 params.append('username', config.DEFAULT_USER_NAME)
 params.append('password', config.DEFAULT_USER_PASSWORD)
@@ -27,13 +28,19 @@ async function runShellCommand(command) {
   return result
 }
 
-async function createDB() {
-  await axios.post(`${config.BASE_URL}/admin/createUsers`)
-  await axios.post(`${config.BASE_URL}/admin/createSessions`)
+async function deleteDatabase() {
+  await exec('mongo test --eval "db.dropDatabase()"', (error, stdout, stderr) => {
+    if (error) throw (error)
+  })
 }
 
-before(() => {
-  createDB()
+async function createDB() {
+  await deleteDatabase()
+  await axios.post(`${config.BASE_URL}/admin/createUsers`)
+}
+
+before(async () => {
+  await createDB()
 })
 
 describe('admin', () => {
@@ -50,7 +57,10 @@ describe('admin', () => {
       expect(res.stdout).to.equal('Reset Successful\n')
     })
   })
-
+  it('createSessions again', async done => {
+    await axios.post(`${config.BASE_URL}/admin/createSessions`)
+    done()
+  })
   describe('login', () => {
     it('should login as admin', async () => {
       const res = await runShellCommand(`ev_group32 login --username ${config.DEFAULT_USER_NAME} --passw ${config.DEFAULT_USER_PASSWORD}`)

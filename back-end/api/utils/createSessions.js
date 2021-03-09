@@ -51,7 +51,7 @@ async function createSessions (date, kilometers, saveToCSV, sessions) {
   const random1 = getRandomInt(pointsCount)
   const randVehicle = await vehicleModel.findOne({}, '_id').skip(random)
   const randPoint = await pointModel.findOne({}, '_id').skip(random1)
-  const randStation = await stationModel.findOne({ points: randPoint._id }, 'energy_provider')
+  const randStation = await stationModel.findOne({ points: { $in: randPoint._id } }, 'energy_provider')
   const randUser = randStation.energy_provider
 
   const costPerMinute = getRndFloat(0.03, 0.07)
