@@ -217,6 +217,51 @@ describe('getCostPerStation', () => {
   })
 })
 
+describe('kilometersDriven', () => {
+  it('it should return the kilometers driven between the given sessions', async () => {
+    const car = await Vehicle.findOne()
+    const sessions = car.sessions
+    const session1ID = await sessions[0]
+    const session2ID = await sessions[1]
+    const res = await runShellCommand(`ev_group32 kilometersDriven --ev ${car._id} --sessionStart ${session1ID} --sessionEnd ${session2ID}`)
+    expect(res.stdout).to.contain('result')
+  })
+  it('it should not return the kilometers driven between the given sessions - invalid chronological order', async () => {
+    const car = await Vehicle.findOne()
+    const sessions = car.sessions
+    const session1ID = await sessions[0]
+    const session2ID = await sessions[1]
+    const res = await runShellCommand(`ev_group32 kilometersDriven --ev ${car._id} --sessionStart ${session2ID} --sessionEnd ${session1ID}`)
+    expect(res.stdout).to.equal('')
+    expect(res.stderr).to.contain('Error: Request failed with status code 400\n')
+  })
+  it('it should not return the kilometers driven between the given sessions - no vehicleID', async () => {
+    const car = await Vehicle.findOne()
+    const sessions = car.sessions
+    const session1ID = await sessions[0]
+    const session2ID = await sessions[1]
+    const res = await runShellCommand(`ev_group32 kilometersDriven --sessionStart ${session1ID} --sessionEnd ${session2ID} --ev`)
+    expect(res.stdout).to.equal('')
+    expect(res.stderr).to.contain('Error: Flag --ev expects a value\n')
+  })
+  it('it should not return the kilometers driven between the given sessions - no sessionStart', async () => {
+    const car = await Vehicle.findOne()
+    const sessions = car.sessions
+    const session2ID = await sessions[1]
+    const res = await runShellCommand(`ev_group32 kilometersDriven --ev ${car._id} --sessionEnd ${session2ID} --sessionStart`)
+    expect(res.stdout).to.equal('')
+    expect(res.stderr).to.contain('Error: Flag --sessionStart expects a value\n')
+  })
+  it('it should not return the kilometers driven between the given sessions - no sessionEnd', async () => {
+    const car = await Vehicle.findOne()
+    const sessions = car.sessions
+    const session1ID = await sessions[0]
+    const res = await runShellCommand(`ev_group32 kilometersDriven --ev ${car._id} --sessionStart ${session1ID} --sessionEnd`)
+    expect(res.stdout).to.equal('')
+    expect(res.stderr).to.contain('Error: Flag --sessionEnd expects a value\n')
+  })
+})
+
 function getRndInteger(min, max) {
   return Math.floor(Math.random() * (max - min)) + min
 }
