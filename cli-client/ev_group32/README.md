@@ -12,8 +12,7 @@ The cli-client of Charging Point
 # Usage
 <!-- usage -->
 ```sh-session
-$ cd to dir ./cli-client/ev_group32 and run: 
-$ npm link
+$ npm install -g ev_group32
 $ ev_group32 COMMAND
 running command...
 $ ev_group32 (-v|--version|version)
@@ -319,7 +318,6 @@ USAGE
   $ ev_group32 sessionsPerEV
 
 OPTIONS
-  --apikey=apikey      (required) the api key used for authorization
   --datefrom=datefrom  (required)
   --dateto=dateto      (required)
   --ev=ev              (required) the id of the car to search
@@ -337,7 +335,6 @@ USAGE
   $ ev_group32 sessionsPerPoint
 
 OPTIONS
-  --apikey=apikey      (required) the api key used for authorization
   --datefrom=datefrom  (required)
   --dateto=dateto      (required)
   --format=json|csv    (required) [default: json]
@@ -355,7 +352,6 @@ USAGE
   $ ev_group32 sessionsPerProvider
 
 OPTIONS
-  --apikey=apikey      (required) the api key used for authorization
   --datefrom=datefrom  (required)
   --dateto=dateto      (required)
   --format=json|csv    (required) [default: json]
@@ -373,7 +369,6 @@ USAGE
   $ ev_group32 sessionsPerStation
 
 OPTIONS
-  --apikey=apikey      (required) the api key used for authorization
   --datefrom=datefrom  (required)
   --dateto=dateto      (required)
   --format=json|csv    (required) [default: json]

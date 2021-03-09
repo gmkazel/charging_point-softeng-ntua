@@ -27,17 +27,24 @@ async function runShellCommand(command) {
   return result
 }
 
+async function deleteDatabase() {
+  await runShellCommand('mongo test --eval "db.dropDatabase()"', error => {
+    if (error) throw (error)
+  })
+}
+
 async function createDB() {
   await axios.post(`${config.BASE_URL}/admin/createUsers`)
 }
 
 before(async () => {
+  await deleteDatabase()
   await createDB()
 })
 
-// after(async () => {
-//   await deleteDatabase()
-// })
+after(async () => {
+  await deleteDatabase()
+})
 
 describe('admin', () => {
   describe('healthCheck', () => {
@@ -96,7 +103,7 @@ describe('admin', () => {
     })
 
     it('it uploads a csv', async () => {
-      const res = await runShellCommand(`ev_group32 admin --sessionsupd --source ${__homedir + '/softeng20bAPI.token'} --apikey ${fs.readFileSync(__homedir + '/softeng20bAPI.token',
+      const res = await runShellCommand(`ev_group32 admin --sessionsupd --source ./test/stationsExample.csv --apikey ${fs.readFileSync(__homedir + '/softeng20bAPI.token',
         {encoding: 'utf8', flag: 'r'})}`)
 
       expect(res.stdout).to.contain('SessionsInUploadedFile')
