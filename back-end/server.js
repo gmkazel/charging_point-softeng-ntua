@@ -1,4 +1,3 @@
-console.log = function () {}
 const config = require('config')
 const express = require('express')
 const mongoose = require('mongoose')
@@ -19,7 +18,7 @@ if (config.util.getEnv('NODE_ENV') !== 'test') {
     console.log(data)
   })
 }
-
+console.log = config.util.getEnv('NODE_ENV') === 'test' ? function () {} : console.log
 require('./api/utils/initDB')()
 
 app.use(bodyParser.json()) // support json encoded bodies
@@ -37,6 +36,7 @@ mongoose.connection.on('connected', () => {
 
 process.on('SIGTERM', shutDown)
 process.on('SIGINT', shutDown)
+process.on('exit', shutDown)
 
 function shutDown () {
   console.log('Received kill signal, shutting down gracefully')
