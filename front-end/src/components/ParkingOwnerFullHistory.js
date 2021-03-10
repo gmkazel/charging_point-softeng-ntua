@@ -71,6 +71,8 @@ class ParkingOwnerFullHistory extends Component {
 
                     {this.state.render}
                 </div>
+
+                <br/>
             </div>
         );
     }

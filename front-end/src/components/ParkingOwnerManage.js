@@ -14,7 +14,8 @@ class ParkingOwnerManage extends Component {
 
         this.state={
             stations: ['test'],
-            points: ['test']
+            points: ['test'],
+            contact_info: ['test']
         }
     }
 
@@ -27,16 +28,19 @@ class ParkingOwnerManage extends Component {
 
         try {
             let res = await axios.get('http://localhost:8765/evcharge/api/queries/userStations/' + userID);
-            console.log(res);
+            // console.log(res);
 
             let temp = [];
+            let temp2 = [];
             for (var i = 0; i < res.data.length; i++) {
                 temp.push(res.data[i].points);
+                temp2.push(res.data[i].contact_info);
             }
 
             this.setState({
                 stations: res.data,
-                points: temp
+                points: temp,
+                contact_info: temp2
             });
         }
         catch (err) {
@@ -57,14 +61,14 @@ class ParkingOwnerManage extends Component {
 
         var data = qs.stringify({});
         var config = {
-          method: 'post',
-          url: 'http://localhost:8765/evcharge/api/stationmod/delete/' + userID + '/' + this.state.stations[i]._id,
-          headers: { 
-            'X-OBSERVATORY-AUTH': userToken
-          },
-          data : data
+            method: 'post',
+            url: 'http://localhost:8765/evcharge/api/stationmod/delete/' + userID + '/' + this.state.stations[i]._id,
+            headers: { 
+                'X-OBSERVATORY-AUTH': userToken
+            },
+            data: data
         };
-        
+
         axios(config)
         .then(function (response) {
             window.location.reload(false);
@@ -89,6 +93,8 @@ class ParkingOwnerManage extends Component {
                                 <div className="parkingreviewstation">
                                     <h4>{station.name}</h4>
                                     <p>Address: {station.address}</p>
+                                    <p>Phone: {this.state.contact_info[key].phone}</p>
+                                    <p>Email: {this.state.contact_info[key].email}</p>
                                     <p>Operator: {station.operator}</p>
                                     <p>Total points: {this.state.points[key].length}</p>
                                     <div className="container-fluid">
@@ -108,6 +114,8 @@ class ParkingOwnerManage extends Component {
                         <Link to="/parkingowner/manage/add"><button className="btn btn-primary">+ Add a new station</button></Link>
                     </div>
                 </div>
+
+                <br/>
             </div>
         );
     }

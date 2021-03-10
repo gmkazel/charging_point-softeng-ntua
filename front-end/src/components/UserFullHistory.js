@@ -70,6 +70,8 @@ class UserFullHistory extends Component {
 
                     {this.state.render}
                 </div>
+
+                <br/>
             </div>
         );
     }

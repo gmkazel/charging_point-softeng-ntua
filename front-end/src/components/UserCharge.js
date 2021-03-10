@@ -102,6 +102,8 @@ class UserCharge extends Component {
                         )})
                     }
                 </div>
+
+                <br/>
             </div>
         );
     }

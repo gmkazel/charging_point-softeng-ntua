@@ -38,25 +38,25 @@ class AddStation extends Component {
                 webaite: ''
             },
             operator: this.state.operator
-           });
-           var config = {
-             method: 'post',
-             url: 'http://localhost:8765/evcharge/api/stationmod/add/' + userID,
-             headers: { 
-               'X-OBSERVATORY-AUTH': userToken, 
-               'Content-Type': 'application/x-www-form-urlencoded'
-             },
-             data : data
-           };
-           
-           axios(config)
-           .then(function (response) {
-                window.location.href = "/parkingowner/manage";
-                console.log(JSON.stringify(response.data));
-           })
-           .catch(function (error) {
-                console.log(error);
-           });
+        });
+        var config = {
+            method: 'post',
+            url: 'http://localhost:8765/evcharge/api/stationmod/add/' + userID,
+            headers: { 
+                'X-OBSERVATORY-AUTH': userToken, 
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            data: data
+        };
+
+        axios(config)
+        .then(function (response) {
+            console.log(JSON.stringify(response.data));
+            window.location.href = "/parkingowner/manage";
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
     }
 
     render() {
@@ -116,7 +116,7 @@ class AddStation extends Component {
                                         <div className="form-group">
                                             <label htmlFor="ccnumber">Phone</label>
                                             <div className="input-group">
-                                                <input className="form-control" type="text" placeholder="Enter phone number" onChange={(e) => this.setState({phone: e.target.value})}/>
+                                                <input className="form-control" type="text" placeholder="Enter station's phone number" onChange={(e) => this.setState({phone: e.target.value})}/>
                                             </div>
                                         </div>
                                     </div>
@@ -126,7 +126,7 @@ class AddStation extends Component {
                                         <div className="form-group">
                                             <label htmlFor="ccnumber">Email</label>
                                             <div className="input-group">
-                                                <input className="form-control" type="text" placeholder="someone@mail.com" onChange={(e) => this.setState({email: e.target.value})}/>
+                                                <input className="form-control" type="text" placeholder="email@example.com" onChange={(e) => this.setState({email: e.target.value})}/>
                                             </div>
                                         </div>
                                     </div>
@@ -148,6 +148,8 @@ class AddStation extends Component {
                         <Link to="/parkingowner/manage"><button className="btn btn-primary">&#8592; Back to station management</button></Link>
                     </div>
                 </div>
+
+                <br/>
             </div>
         );
     }

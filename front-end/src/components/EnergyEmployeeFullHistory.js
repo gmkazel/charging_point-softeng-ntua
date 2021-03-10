@@ -71,6 +71,8 @@ class EnergyEmployeeFullHistory extends Component {
 
                     {this.state.render}
                 </div>
+
+                <br/>
             </div>
         );
     }

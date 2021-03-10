@@ -15,7 +15,6 @@ class ParkingOwnerReview extends Component {
             lenght:null,
             render: null
         }
-        // this.clickHandler = this.clickHandler.bind(this)
     }
 
     componentDidMount() {

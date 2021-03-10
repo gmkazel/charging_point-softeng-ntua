@@ -12,7 +12,7 @@ class EditStation extends Component {
         super();
 
         let station = JSON.parse(localStorage.getItem('station')).station
-        // console.log(station)
+
         this.state={
             id: station._id,
             name: station.name,
@@ -20,7 +20,7 @@ class EditStation extends Component {
             provider: station.energy_provider,
             operator: station.operator,
             phone: station.contact_info.phone[0],
-            email: station.contact_info.email,
+            email: station.contact_info.email
         }
 
         this.editHandler = this.editHandler.bind(this)
@@ -29,7 +29,7 @@ class EditStation extends Component {
     editHandler() {
         let userToken = JSON.parse(localStorage.getItem('login')).token;
         let userID = jwt.decode(JSON.parse(localStorage.getItem('login')).token)._id;
-        console.log(this.state, userID, userToken)
+        // console.log(this.state, userID, userToken)
 
         var data = qs.stringify({
             name: this.state.name,
@@ -38,28 +38,28 @@ class EditStation extends Component {
             condact_info:  {
                 email: this.state.email,
                 phone: this.state.phone,
-                webaite: ''
+                website: ''
             },
             operator: this.state.operator
-           });
-           var config = {
-             method: 'post',
-             url: 'http://localhost:8765/evcharge/api/stationmod/edit/' + userID +'/'+ this.state.id,
-             headers: { 
-               'X-OBSERVATORY-AUTH': userToken, 
-               'Content-Type': 'application/x-www-form-urlencoded'
-             },
-             data : data
-           };
-           
-           axios(config)
-           .then(function (response) {
-                window.location.href = "/parkingowner/manage";
-                console.log(JSON.stringify(response.data));
-           })
-           .catch(function (error) {
-                console.log(error);
-           });
+        });
+        var config = {
+            method: 'post',
+            url: 'http://localhost:8765/evcharge/api/stationmod/edit/' + userID +'/'+ this.state.id,
+            headers: { 
+                'X-OBSERVATORY-AUTH': userToken, 
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            data : data
+        };
+
+        axios(config)
+        .then(function (response) {
+            console.log(JSON.stringify(response.data));
+            window.location.href = "/parkingowner/manage";
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
     }
 
     render() {
@@ -151,6 +151,8 @@ class EditStation extends Component {
                         <Link to="/parkingowner/manage"><button className="btn btn-primary">&#8592; Back to station management</button></Link>
                     </div>
                 </div>
+
+                <br/>
             </div>
         );
     }

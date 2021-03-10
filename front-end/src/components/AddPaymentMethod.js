@@ -93,6 +93,8 @@ function AddPaymentMethod() {
                     <Link to="/user/paymentmethods"><button className="btn btn-primary">&#8592; Back to payment methods</button></Link>
                 </div>
             </div>
+
+            <br/>
         </div>
     );
 }

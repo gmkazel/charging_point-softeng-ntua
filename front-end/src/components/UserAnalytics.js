@@ -440,6 +440,8 @@ class UserAnalytics extends Component {
                         <Link to="/user/analytics/history"><button className="btn btn-primary">See full charge history</button></Link>
                     </div>
                 </div>
+
+                <br/>
             </div>
         )
     }

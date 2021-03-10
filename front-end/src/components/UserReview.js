@@ -168,6 +168,8 @@ class UserReview extends Component {
 
                     {this.state.render}
                 </div>
+
+                <br/>
             </div>
         );
     }

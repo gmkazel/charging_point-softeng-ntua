@@ -92,6 +92,8 @@ class PaymentMethods extends Component {
                         <Link to="/user/paymentmethods/add"><button className="btn btn-primary">+ Add a new payment method</button></Link>
                     </div>
                 </div>
+
+                <br/>
             </div>
         );
     }
