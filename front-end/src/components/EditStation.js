@@ -29,16 +29,15 @@ class EditStation extends Component {
     editHandler() {
         let userToken = JSON.parse(localStorage.getItem('login')).token;
         let userID = jwt.decode(JSON.parse(localStorage.getItem('login')).token)._id;
-        // console.log(this.state, userID, userToken)
+        // console.log(this.state)
 
         var data = qs.stringify({
             name: this.state.name,
             address: this.state.address,
             energy_provider: this.state.provider,
-            condact_info:  {
+            contact_info: {
                 email: this.state.email,
-                phone: this.state.phone,
-                website: ''
+                phone: [this.state.phone]
             },
             operator: this.state.operator
         });
@@ -107,16 +106,6 @@ class EditStation extends Component {
                                 <div className="row">
                                     <div className="col-sm-12">
                                         <div className="form-group">
-                                            <label htmlFor="ccnumber">Operator</label>
-                                            <div className="input-group">
-                                                <input className="form-control" type="text" value={this.state.operator} onChange={(e) => this.setState({operator: e.target.value})}/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-sm-12">
-                                        <div className="form-group">
                                             <label htmlFor="ccnumber">Phone</label>
                                             <div className="input-group">
                                                 <input className="form-control" type="text" value={this.state.phone} onChange={(e) => this.setState({phone: e.target.value})}/>
@@ -130,6 +119,16 @@ class EditStation extends Component {
                                             <label htmlFor="ccnumber">Email</label>
                                             <div className="input-group">
                                                 <input className="form-control" type="text" value={this.state.email} onChange={(e) => this.setState({email: e.target.value})}/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-sm-12">
+                                        <div className="form-group">
+                                            <label htmlFor="ccnumber">Operator</label>
+                                            <div className="input-group">
+                                                <input className="form-control" type="text" value={this.state.operator} onChange={(e) => this.setState({operator: e.target.value})}/>
                                             </div>
                                         </div>
                                     </div>
