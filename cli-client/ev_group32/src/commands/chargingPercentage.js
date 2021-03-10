@@ -15,7 +15,12 @@ class chargingPercentage extends Command {
     try {
       const {flags} = this.parse(chargingPercentage)
       axios.defaults.headers.common['X-OBSERVATORY-AUTH'] = flags.apikey
-      const status = await axios.get(`${config.BASE_URL}/ChargingPercentage/${flags.ev}/${flags.capacity}`)
+      let status
+      if (flags.format === 'csv') {
+        status = await axios.get(`${config.BASE_URL}/ChargingPercentage/${flags.ev}/${flags.capacity}/csv`)
+      } else {
+        status = await axios.get(`${config.BASE_URL}/ChargingPercentage/${flags.ev}/${flags.capacity}`)
+      }
       console.log(status.data)
     } catch (error) {
       console.error(chalk.red(error))

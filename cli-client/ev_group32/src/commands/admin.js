@@ -17,27 +17,48 @@ class admin extends Command {
       const {flags} = this.parse(admin)
 
       if (flags.healthcheck !== undefined) {
-        const status = await axios.get(`${config.BASE_URL}/admin/healthcheck`)
+        let status
+        if (flags.format === 'csv') {
+          status = await axios.get(`${config.BASE_URL}/admin/healthcheck/csv`)
+        } else {
+          status = await axios.get(`${config.BASE_URL}/admin/healthcheck`)
+        }
         console.log(status.data)
       } else if (flags.resetsessions !== undefined) {
         await axios.post(`${config.BASE_URL}/admin/resetsessions`)
+
         console.log('Reset Successful')
       } else {
         axios.defaults.headers.common['X-OBSERVATORY-AUTH'] = flags.apikey
 
         if (flags.usermod !== undefined) {
-          const status = await axios.post(`${config.BASE_URL}/admin/usermod/${flags.username}/${flags.passw}`)
+          let status
+          if (flags.format === 'csv') {
+            status = await axios.post(`${config.BASE_URL}/admin/usermod/${flags.username}/${flags.passw}/csv`)
+          } else {
+            status = await axios.post(`${config.BASE_URL}/admin/usermod/${flags.username}/${flags.passw}`)
+          }
           console.log(status.data)
         }
         if (flags.users !== undefined) {
-          const status = await axios.get(`${config.BASE_URL}/admin/users/${flags.username}`)
+          let status
+          if (flags.format === 'csv') {
+            status = await axios.get(`${config.BASE_URL}/admin/users/${flags.username}/csv`)
+          } else {
+            status = await axios.get(`${config.BASE_URL}/admin/users/${flags.username}`)
+          }
           console.log({username: status.data[0].username, apikey: status.data[0].api_key})
         }
         if (flags.sessionsupd !== undefined) {
           const form = new FormData()
           form.append('file', fs.createReadStream(flags.source))
 
-          const status = await axios.post(`${config.BASE_URL}/admin/system/sessionsupd`, form, {headers: form.getHeaders()})
+          let status
+          if (flags.format === 'csv') {
+            status = await axios.post(`${config.BASE_URL}/admin/system/sessionsupd/csv`, form, {headers: form.getHeaders()})
+          } else {
+            status = await axios.post(`${config.BASE_URL}/admin/system/sessionsupd`, form, {headers: form.getHeaders()})
+          }
           console.log(status.data)
         }
       }

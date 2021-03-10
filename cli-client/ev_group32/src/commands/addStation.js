@@ -22,9 +22,16 @@ class addStation extends Command {
       params.append('energy_provider', flags.energyProvider)
 
       axios.defaults.headers.common['X-OBSERVATORY-AUTH'] = flags.apikey
-      const status = await axios.post(`${config.BASE_URL}/stationmod/add/${flags.user}`,  params, {headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      }})
+      let status
+      if (flags.format === 'csv') {
+        status = await axios.post(`${config.BASE_URL}/stationmod/add/${flags.user}/csv`,  params, {headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        }})
+      } else {
+        status = await axios.post(`${config.BASE_URL}/stationmod/add/${flags.user}`,  params, {headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        }})
+      }
       console.log(status.data)
     } catch (error) {
       console.error(chalk.red(error))

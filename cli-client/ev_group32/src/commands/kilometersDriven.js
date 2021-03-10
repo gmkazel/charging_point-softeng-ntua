@@ -15,7 +15,12 @@ class kilometersDriven extends Command {
     try {
       const {flags} = this.parse(kilometersDriven)
       axios.defaults.headers.common['X-OBSERVATORY-AUTH'] = flags.apikey
-      const data = await axios.get(`${config.BASE_URL}/KilometersDriven/${flags.ev}/${flags.sessionStart}/${flags.sessionEnd}`)
+      let data
+      if (flags.format === 'csv') {
+        data = await axios.get(`${config.BASE_URL}/KilometersDriven/${flags.ev}/${flags.sessionStart}/${flags.sessionEnd}/csv`)
+      } else {
+        data = await axios.get(`${config.BASE_URL}/KilometersDriven/${flags.ev}/${flags.sessionStart}/${flags.sessionEnd}`)
+      }
       if (data.data.result < 0) {
         console.log(chalk.red('session start is newer than session end'))
       } else {

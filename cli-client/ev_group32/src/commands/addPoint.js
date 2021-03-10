@@ -16,7 +16,12 @@ class addPoint extends Command {
     try {
       const {flags} = this.parse(addPoint)
       axios.defaults.headers.common['X-OBSERVATORY-AUTH'] = flags.apikey
-      const status = await axios.post(`${config.BASE_URL}/point/add/${flags.station}`)
+      let status
+      if (flags.format === 'csv') {
+        status = await axios.post(`${config.BASE_URL}/point/add/${flags.station}/csv`)
+      } else {
+        status = await axios.post(`${config.BASE_URL}/point/add/${flags.station}`)
+      }
       console.log(status.data)
     } catch (error) {
       console.error(chalk.red(error))

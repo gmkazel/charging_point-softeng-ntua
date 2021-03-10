@@ -17,7 +17,12 @@ class deleteStation extends Command {
       const {flags} = this.parse(deleteStation)
 
       axios.defaults.headers.common['X-OBSERVATORY-AUTH'] = flags.apikey
-      const status = await axios.post(`${config.BASE_URL}/stationmod/delete/${flags.user}/${flags.station}`)
+      let status
+      if (flags.format === 'csv') {
+        status = await axios.post(`${config.BASE_URL}/stationmod/delete/${flags.user}/${flags.station}/csv`)
+      } else {
+        status = await axios.post(`${config.BASE_URL}/stationmod/delete/${flags.user}/${flags.station}`)
+      }
       console.log(status.data)
     } catch (error) {
       console.error(chalk.red(error))

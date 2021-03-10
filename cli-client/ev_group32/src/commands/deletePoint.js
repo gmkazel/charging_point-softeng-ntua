@@ -18,9 +18,17 @@ class deletePoint extends Command {
       const params = new URLSearchParams()
 
       axios.defaults.headers.common['X-OBSERVATORY-AUTH'] = flags.apikey
-      const status = await axios.post(`${config.BASE_URL}/point/delete/${flags.point}`,  params, {headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      }})
+
+      let status
+      if (flags.format === 'csv') {
+        status = await axios.post(`${config.BASE_URL}/point/delete/${flags.point}/csv`,  params, {headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        }})
+      } else {
+        status = await axios.post(`${config.BASE_URL}/point/delete/${flags.point}`,  params, {headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        }})
+      }
       console.log(status.data)
     } catch (error) {
       console.error(chalk.red(error))
