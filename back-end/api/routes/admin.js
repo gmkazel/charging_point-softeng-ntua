@@ -24,7 +24,7 @@ const healthcheck = require('../services/healthcheck')
 router.get('/healthcheck', healthcheck)
 
 const csvjson = require('../services/JSONToCSV')
-router.get('/users/:username/:format?', (req, res, next) => {
+router.get('/users/:username/:format?', verifyAdmin, (req, res, next) => {
   user.getByUsername(req.params.username, (err, name) => {
     if (err) {
       res.status(400).send(err)
