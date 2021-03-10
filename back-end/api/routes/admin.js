@@ -23,7 +23,8 @@ router.post('/createSessions/:dest?', createSessions)
 const healthcheck = require('../services/healthcheck')
 router.get('/healthcheck', healthcheck)
 
-router.get('/users/:username', verifyAdmin, (req, res) => {
+const csvjson = require('../services/JSONToCSV')
+router.get('/users/:username/:format?', (req, res, next) => {
   user.getByUsername(req.params.username, (err, name) => {
     if (err) {
       res.status(400).send(err)
@@ -31,13 +32,14 @@ router.get('/users/:username', verifyAdmin, (req, res) => {
       if (!Object.keys(name).length) {
         res.sendStatus(204)
       } else {
-        res.send(name)
+        res.locals.data = name
+        return next()
       }
     }
   })
-})
+}, csvjson)
 
-router.post('/usermod/:username/:password', verifyAdmin, async (req, res) => {
+router.post('/usermod/:username/:password/:format?', verifyAdmin, async (req, res) => {
   await user.getByUsername(req.params.username, async (err, name) => {
     if (err) {
       res.status(400).send(err)
@@ -50,15 +52,15 @@ router.post('/usermod/:username/:password', verifyAdmin, async (req, res) => {
   })
 })
 
-router.post('/system/sessionsupd', (req, res) => {
+router.post('/system/sessionsupd/:format?', (req, res, next) => {
   const form = new multiparty.Form()
   form.parse(req, function (err, fields, files) {
     if (err) {
       res.sendStatus(400)
     }
-    upload(files, res)
+    upload(files, res, next)
   })
-})
+}, csvjson)
 
 // BAD REQUESTS
 

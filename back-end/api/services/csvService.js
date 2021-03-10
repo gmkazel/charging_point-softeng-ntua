@@ -5,7 +5,7 @@ const pointModel = require('../models/Point')
 const vehicleModel = require('../models/Vehicle')
 const userModel = require('../models/User')
 
-const upload = async (req, res) => {
+const upload = async (req, res, next) => {
   if (req.file[0] === undefined) {
     return res.status(400).send('Please upload a csv file!')
   }
@@ -30,11 +30,12 @@ const upload = async (req, res) => {
           }
           Session.find()
             .then(data => {
-              res.send({
+              res.locals.data = {
                 SessionsInUploadedFile: jsonArrayObj.length,
                 SessionsImported: jsonArrayObj.length,
                 TotalSessionsInDatabase: data.length
-              })
+              }
+              return next()
             })
         }
       })

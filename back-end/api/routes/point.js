@@ -4,10 +4,12 @@ const router = express.Router()
 const PointEndpoint = require('../services/pointEndpoint')
 const pointEndpoint = new PointEndpoint()
 
-router.get('/get/:pointId', pointEndpoint.getPoint)
+const csvjson = require('../services/JSONToCSV')
 
-router.post('/add/:stationId', pointEndpoint.addPoint)
+router.get('/get/:pointId/:format?', pointEndpoint.getPoint, csvjson)
 
-router.post('/delete/:pointId', pointEndpoint.removePoint)
+router.post('/add/:stationId/:format?', pointEndpoint.addPoint, csvjson)
+
+router.post('/delete/:pointId/:format?', pointEndpoint.removePoint, csvjson)
 
 module.exports = router

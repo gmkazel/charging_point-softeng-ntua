@@ -20,15 +20,14 @@ module.exports = class stationEndpoint {
 
     try {
       const result = await stationService.add(userId, cand)
-      res.send(result)
-      next()
+      res.locals.data = result
+      return next()
     } catch (err) {
       console.log(err)
       res.status(400)
       res.send()
       return next('route')
     }
-    next()
   }
 
   async deleteStation (req, res, next) {
@@ -48,20 +47,19 @@ module.exports = class stationEndpoint {
     if (!await stationService.canAccess(userId, stationId)) {
       res.status(401)
       res.send()
-      // return res.next('routes')
+      return next('route')
     }
 
     try {
       const result = await stationService.delete(userId, stationId)
-      res.send({ deleted: result })
-      next()
+      res.locals.data = { deleted: result }
+      return next()
     } catch (err) {
       console.log(err)
       res.status(400)
       res.send()
       return next('route')
     }
-    next()
   }
 
   async editStation (req, res, next) {
@@ -87,14 +85,13 @@ module.exports = class stationEndpoint {
 
     try {
       const result = await stationService.edit(stationId, cand)
-      res.send(result)
-      next()
+      res.locals.data = result
+      return next()
     } catch (err) {
       res.status(400)
       res.send()
       return next('route')
     }
-    next()
   }
 
   async addReview (req, res, next) {
@@ -119,14 +116,13 @@ module.exports = class stationEndpoint {
     }
     try {
       const result = await stationService.addReview(review, stationId)
-      res.send({ added: result })
-      next()
+      res.locals.data = { added: result }
+      return next()
     } catch (err) {
       console.log(err)
       res.status(400)
       res.send(err)
       return next('route')
     }
-    next()
   }
 }

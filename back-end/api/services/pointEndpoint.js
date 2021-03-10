@@ -20,15 +20,14 @@ module.exports = class {
         return next('route')
       }
       const result = await pointService.get(pointId)
-      res.send(result)
-      next()
+      res.locals.data = result
+      return next()
     } catch (err) {
       console.log(err)
       res.status(400)
       res.send(err)
       return next('route')
     }
-    next()
   }
 
   async addPoint (req, res, next) {
@@ -41,15 +40,14 @@ module.exports = class {
 
     try {
       const result = await pointService.add(stationId)
-      res.send(result)
-      next()
+      res.locals.data = result
+      return next()
     } catch (err) {
       console.log(err)
       res.status(400)
       res.send(err)
       return next('route')
     }
-    next()
   }
 
   async removePoint (req, res, next) {
@@ -67,14 +65,14 @@ module.exports = class {
         return next('route')
       }
       await pointService.remove(pointId)
-      res.send({ result: 'OK' })
-      next()
+
+      res.locals.data = { result: 'OK' }
+      return next()
     } catch (err) {
       console.log(err)
       res.status(400)
       res.send(err)
       return next('route')
     }
-    next()
   }
 }

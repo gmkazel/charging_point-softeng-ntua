@@ -9,12 +9,14 @@ const stationOwnerAuth = authService.verifyStationOwner
 const StationEndpoint = require('../services/stationEndpoint')
 const stationEndpoint = new StationEndpoint()
 
-router.post('/addreview/:userId/:stationId', vehicleOwnerAuth, stationEndpoint.addReview)
+const csvjson = require('../services/JSONToCSV')
 
-router.post('/add/:userId', stationOwnerAuth, stationEndpoint.addStation)
+router.post('/addreview/:userId/:stationId/:format?', vehicleOwnerAuth, stationEndpoint.addReview, csvjson)
 
-router.post('/edit/:userId/:stationId', stationOwnerAuth, stationEndpoint.editStation)
+router.post('/add/:userId/:format?', stationOwnerAuth, stationEndpoint.addStation, csvjson)
 
-router.post('/delete/:userId/:stationId', stationOwnerAuth, stationEndpoint.deleteStation)
+router.post('/edit/:userId/:stationId/:format?', stationOwnerAuth, stationEndpoint.editStation, csvjson)
+
+router.post('/delete/:userId/:stationId/:format?', stationOwnerAuth, stationEndpoint.deleteStation, csvjson)
 
 module.exports = router
