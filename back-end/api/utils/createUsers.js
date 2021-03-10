@@ -132,8 +132,8 @@ async function createAdmin () {
 }
 
 async function createRealAdmin () {
-  const usrnm = 'admin'
-  const psw = 'petrol4ever'
+  const usrnm = config.DEFAULT_USER_NAME
+  const psw = config.DEFAULT_USER_PASSWORD
   dict[usrnm] = psw
   const newuser = {
     username: usrnm,
