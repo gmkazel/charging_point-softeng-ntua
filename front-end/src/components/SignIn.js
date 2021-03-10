@@ -44,6 +44,8 @@ class SignIn extends Component {
                 window.location.href = "/parkingowner";
             else if (res2.account_type === 'electricalCompanyOperator')
                 window.location.href = "/energyemployee";
+            else if (res2.account_type === 'admin')
+                window.location.href = "/admin";
         }
         catch (err) {
             this.setState({message: 'Invalid combination!'});

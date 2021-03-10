@@ -13,7 +13,8 @@ import MainPage from './pages/mainpage';
 import NotFoundPage from './pages/404';
 import UserPage from './pages/user';
 import ParkingOwnerPage from './pages/parkingowner';
-import EnergyEmployeePage from './pages/energyemployee'
+import EnergyEmployeePage from './pages/energyemployee';
+import Admin from './pages/adminuser';
 
 class App extends Component {
     render () {
@@ -41,6 +42,8 @@ class App extends Component {
                     <Route exact path="/energyemployee" component={EnergyEmployeePage}/>
                     <Route exact path="/energyemployee/analytics" component={EnergyEmployeePage}/>
                     <Route exact path="/energyemployee/analytics/history" component={EnergyEmployeePage}/>
+
+                    <Route exact path="/admin" component={Admin}/>
 
                     <Route exact path="/404" component={NotFoundPage}/>
                     <Redirect to="/404"/>
