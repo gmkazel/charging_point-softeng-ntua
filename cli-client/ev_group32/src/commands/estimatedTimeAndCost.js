@@ -15,7 +15,12 @@ class estimatedTimeAndCost extends Command {
     try {
       const {flags} = this.parse(estimatedTimeAndCost)
       axios.defaults.headers.common['X-OBSERVATORY-AUTH'] = flags.apikey
-      const status = await axios.get(`${config.BASE_URL}/estimatedTimeAndCost/${flags.ev}/${flags.capacity}/${flags.mode}`)
+      let status
+      if (flags.format === 'csv') {
+        status = await axios.get(`${config.BASE_URL}/estimatedTimeAndCost/${flags.ev}/${flags.capacity}/${flags.mode}/csv`)
+      } else {
+        status = await axios.get(`${config.BASE_URL}/estimatedTimeAndCost/${flags.ev}/${flags.capacity}/${flags.mode}`)
+      }
       console.log(status.data)
     } catch (error) {
       console.error(chalk.red(error))

@@ -15,7 +15,12 @@ class SessionsPerProvider extends Command {
     try {
       const {flags} = this.parse(SessionsPerProvider)
       axios.defaults.headers.common['X-OBSERVATORY-AUTH'] = flags.apikey
-      const status = await axios.get(`${config.BASE_URL}/SessionsPerProvider/${flags.provider}/${flags.datefrom}/${flags.dateto}`)
+      let status
+      if (flags.format === 'csv') {
+        status = await axios.get(`${config.BASE_URL}/SessionsPerProvider/${flags.provider}/${flags.datefrom}/${flags.dateto}/csv`)
+      } else {
+        status = await axios.get(`${config.BASE_URL}/SessionsPerProvider/${flags.provider}/${flags.datefrom}/${flags.dateto}`)
+      }
       console.log(status.data)
     } catch (error) {
       console.error(chalk.red(error))

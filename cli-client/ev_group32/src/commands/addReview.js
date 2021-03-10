@@ -21,9 +21,16 @@ class addReview extends Command {
       params.append('rating', flags.rating)
       params.append('comment', flags.comment)
       axios.defaults.headers.common['X-OBSERVATORY-AUTH'] = flags.apikey
-      const status = await axios.post(`${config.BASE_URL}/stationmod/addreview/${flags.user}/${flags.station}`,  params, {headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      }})
+      let status
+      if (flags.format === 'csv') {
+        status = await axios.post(`${config.BASE_URL}/stationmod/addreview/${flags.user}/${flags.station}/csv`,  params, {headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        }})
+      } else {
+        status = await axios.post(`${config.BASE_URL}/stationmod/addreview/${flags.user}/${flags.station}`,  params, {headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        }})
+      }
       console.log(status.data)
     } catch (error) {
       console.error(chalk.red(error))

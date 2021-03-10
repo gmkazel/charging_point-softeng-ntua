@@ -13,7 +13,12 @@ class HealthCheck extends Command {
   async run() {
     try {
       const {flags} = this.parse(HealthCheck)
-      const status = await axios.get(`${config.BASE_URL}/admin/healthcheck`)
+      let status
+      if (flags.format === 'csv') {
+        status = await axios.get(`${config.BASE_URL}/admin/healthcheck/csv`)
+      } else {
+        status = await axios.get(`${config.BASE_URL}/admin/healthcheck`)
+      }
       console.log(status.data)
     } catch (error) {
       console.error(chalk.red(error))

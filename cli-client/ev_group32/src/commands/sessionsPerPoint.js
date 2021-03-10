@@ -15,7 +15,12 @@ class SessionsPerPoint extends Command {
     try {
       const {flags} = this.parse(SessionsPerPoint)
       axios.defaults.headers.common['X-OBSERVATORY-AUTH'] = flags.apikey
-      const status = await axios.get(`${config.BASE_URL}/SessionsPerPoint/${flags.point}/${flags.datefrom}/${flags.dateto}`)
+      let status
+      if (flags.format === 'csv') {
+        status = await axios.get(`${config.BASE_URL}/SessionsPerPoint/${flags.point}/${flags.datefrom}/${flags.dateto}/csv`)
+      } else {
+        status = await axios.get(`${config.BASE_URL}/SessionsPerPoint/${flags.point}/${flags.datefrom}/${flags.dateto}`)
+      }
       console.log(status.data)
     } catch (error) {
       console.error(chalk.red(error))

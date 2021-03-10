@@ -15,7 +15,12 @@ class SessionsPerStation extends Command {
     try {
       const {flags} = this.parse(SessionsPerStation)
       axios.defaults.headers.common['X-OBSERVATORY-AUTH'] = flags.apikey
-      const status = await axios.get(`${config.BASE_URL}/SessionsPerStation/${flags.station}/${flags.datefrom}/${flags.dateto}`)
+      let status
+      if (flags.format === 'csv') {
+        status = await axios.get(`${config.BASE_URL}/SessionsPerStation/${flags.station}/${flags.datefrom}/${flags.dateto}/csv`)
+      } else {
+        status = await axios.get(`${config.BASE_URL}/SessionsPerStation/${flags.station}/${flags.datefrom}/${flags.dateto}`)
+      }
       console.log(status.data)
     } catch (error) {
       console.error(chalk.red(error))
