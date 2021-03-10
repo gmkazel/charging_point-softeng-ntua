@@ -46,6 +46,7 @@ async function createVehicleOwner () {
         phone: [faker.phone.phoneNumber()]
       },
     address: faker.fake('{{address.streetAddress}}, {{address.city}}'),
+    account_type: 'vehicleOwner',
     cars: cars,
     payment_card: [{
       owner: faker.fake('{{name.lastName}}_{{name.firstName}}'),
