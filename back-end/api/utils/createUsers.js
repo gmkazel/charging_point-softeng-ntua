@@ -15,6 +15,7 @@ module.exports = async () => {
 
   for (let i = 0; i < config.dummyElectricalOperatorsCount; i++) { await createElectricalOperators() }
   for (let i = 0; i < config.dummyAdminsCount; i++) { await createAdmin() }
+  await createRealAdmin()
   for (let i = 0; i < config.dummyVehicleOwnersCount; i++) { await createVehicleOwner() }
   for (let i = 0; i < config.dummyStationOwnersCount; i++) { await createStationOwner() }
 
@@ -115,6 +116,24 @@ async function createStationOwner () {
 async function createAdmin () {
   const usrnm = faker.fake('{{name.lastName}}_{{name.firstName}}')
   const psw = faker.internet.password()
+  dict[usrnm] = psw
+  const newuser = {
+    username: usrnm,
+    password: psw,
+    contact_info:
+    {
+      email: faker.internet.email(),
+      phone: [faker.phone.phoneNumber()]
+    },
+    account_type: 'admin'
+  }
+  const someUser = await user.createUserF(newuser)
+  return someUser
+}
+
+async function createRealAdmin () {
+  const usrnm = 'admin'
+  const psw = 'petrol4ever'
   dict[usrnm] = psw
   const newuser = {
     username: usrnm,
