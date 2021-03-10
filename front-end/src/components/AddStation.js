@@ -24,7 +24,6 @@ class AddStation extends Component {
     }
 
     addHandler() {
-        console.log(this.state);
         let userToken = JSON.parse(localStorage.getItem('login')).token;
         let userID = jwt.decode(JSON.parse(localStorage.getItem('login')).token)._id;
 
@@ -32,10 +31,9 @@ class AddStation extends Component {
             name: this.state.name,
             address: this.state.address,
             energy_provider: this.state.provider,
-            condact_info:  {
+            contact_info: {
                 email: this.state.email,
-                phone: this.state.phone,
-                webaite: ''
+                phone: [this.state.phone]
             },
             operator: this.state.operator
         });
@@ -104,16 +102,6 @@ class AddStation extends Component {
                                 <div className="row">
                                     <div className="col-sm-12">
                                         <div className="form-group">
-                                            <label htmlFor="ccnumber">Operator</label>
-                                            <div className="input-group">
-                                                <input className="form-control" type="text" placeholder="John Smith" onChange={(e) => this.setState({operator: e.target.value})}/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-sm-12">
-                                        <div className="form-group">
                                             <label htmlFor="ccnumber">Phone</label>
                                             <div className="input-group">
                                                 <input className="form-control" type="text" placeholder="Enter station's phone number" onChange={(e) => this.setState({phone: e.target.value})}/>
@@ -127,6 +115,16 @@ class AddStation extends Component {
                                             <label htmlFor="ccnumber">Email</label>
                                             <div className="input-group">
                                                 <input className="form-control" type="text" placeholder="email@example.com" onChange={(e) => this.setState({email: e.target.value})}/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-sm-12">
+                                        <div className="form-group">
+                                            <label htmlFor="ccnumber">Operator</label>
+                                            <div className="input-group">
+                                                <input className="form-control" type="text" placeholder="John Smith" onChange={(e) => this.setState({operator: e.target.value})}/>
                                             </div>
                                         </div>
                                     </div>
