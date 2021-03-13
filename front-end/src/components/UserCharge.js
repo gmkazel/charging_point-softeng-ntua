@@ -4,6 +4,7 @@ import NavBar2 from '../components/NavBar2';
 import UserLinks from './UserLinks';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
+import qs from 'qs';
 
 class UserCharge extends Component {
     constructor() {
@@ -23,23 +24,33 @@ class UserCharge extends Component {
     }
 
     async changeHandler(i, mode) {
+        let userToken = JSON.parse(localStorage.getItem('login')).token;
         let temp = this.state.selection;
         temp[i] = mode;
 
-        try {
-            let res = await axios.get('http://localhost:8765/evcharge/api/EstimatedTimeAndCost/' + this.state.cars[i].info + '/4.217/' + mode);
-            // console.log(res);
+        var data = qs.stringify({});
+        var config = {
+            method: 'get',
+            url: 'http://localhost:8765/evcharge/api/EstimatedTimeAndCost/' + this.state.cars[i].info + '/4.217/' + mode,
+            headers: {
+                'X-OBSERVATORY-AUTH': userToken,
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            data: data
+        };
 
+        axios(config)
+        .then((response) => {
             temp = this.state.cost;
-            temp[i] = res.data.cost + '€';
+            temp[i] = response.data.cost + '€';
             temp = this.state.time;
-            temp[i] = res.data.time;
-
+            temp[i] = response.data.time;
             this.forceUpdate();
-        }
-        catch (err) {
-            console.log(err);
-        }
+            console.log(JSON.stringify(response.data));
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
     }
 
     async Charge() {

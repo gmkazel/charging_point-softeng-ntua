@@ -78,57 +78,57 @@ class UserReview extends Component {
                             <div className="container-fluid">
                                 <div className="row justify-content-around align-items-center">
                                     <fieldset>
-                                        <span>0.5 - </span>
+                                        <span>1 - </span>
                                         <input type="radio" id="1" name={i} value="1" onChange={() => {
-                                            let temp = this.state.rating;
-                                            temp[i] = 0.5;
-                                            }}/>
-                                        <small> </small>
-                                        <input type="radio" id="2" name={i} value="2" onChange={() => {
                                             let temp = this.state.rating;
                                             temp[i] = 1;
                                             }}/>
                                         <small> </small>
-                                        <input type="radio" id="3" name={i} value="3" onChange={() => {
-                                            let temp = this.state.rating;
-                                            temp[i] = 1.5;
-                                            }}/>
-                                        <small> </small>
-                                        <input type="radio" id="4" name={i} value="4" onChange={() => {
+                                        <input type="radio" id="2" name={i} value="2" onChange={() => {
                                             let temp = this.state.rating;
                                             temp[i] = 2;
                                             }}/>
                                         <small> </small>
-                                        <input type="radio" id="5" name={i} value="5" onChange={() => {
-                                            let temp = this.state.rating;
-                                            temp[i] = 2.5;
-                                            }}/>
-                                        <small> </small>
-                                        <input type="radio" id="6" name={i} value="6" onChange={() => {
+                                        <input type="radio" id="3" name={i} value="3" onChange={() => {
                                             let temp = this.state.rating;
                                             temp[i] = 3;
                                             }}/>
                                         <small> </small>
-                                        <input type="radio" id="7" name={i} value="7" onChange={() => {
-                                            let temp = this.state.rating;
-                                            temp[i] = 3.5;
-                                            }}/>
-                                        <small> </small>
-                                        <input type="radio" id="8" name={i} value="8" onChange={() => {
+                                        <input type="radio" id="4" name={i} value="4" onChange={() => {
                                             let temp = this.state.rating;
                                             temp[i] = 4;
                                             }}/>
                                         <small> </small>
+                                        <input type="radio" id="5" name={i} value="5" onChange={() => {
+                                            let temp = this.state.rating;
+                                            temp[i] = 5;
+                                            }}/>
+                                        <small> </small>
+                                        <input type="radio" id="6" name={i} value="6" onChange={() => {
+                                            let temp = this.state.rating;
+                                            temp[i] = 6;
+                                            }}/>
+                                        <small> </small>
+                                        <input type="radio" id="7" name={i} value="7" onChange={() => {
+                                            let temp = this.state.rating;
+                                            temp[i] = 7;
+                                            }}/>
+                                        <small> </small>
+                                        <input type="radio" id="8" name={i} value="8" onChange={() => {
+                                            let temp = this.state.rating;
+                                            temp[i] = 8;
+                                            }}/>
+                                        <small> </small>
                                         <input type="radio" id="9" name={i} value="9" onChange={() => {
                                             let temp = this.state.rating;
-                                            temp[i] = 4.5;
+                                            temp[i] = 9;
                                             }}/>
                                         <small> </small>
                                         <input type="radio" id="10" name={i} value="10" onChange={() => {
                                             let temp = this.state.rating;
-                                            temp[i] = 5;
+                                            temp[i] = 10;
                                             }}/>
-                                        <span> - 5</span>
+                                        <span> - 10</span>
                                     </fieldset>
                                 </div>
                             </div>

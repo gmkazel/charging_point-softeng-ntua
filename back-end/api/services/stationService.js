@@ -67,7 +67,7 @@ module.exports = class {
     const schema = Joi.object({
       date: Joi.date().required(),
       by: Joi.objectId().required(),
-      rating: Joi.number().min(1).max(5).required(),
+      rating: Joi.number().min(1).max(10).required(),
       comment: Joi.string().required()
     })
 

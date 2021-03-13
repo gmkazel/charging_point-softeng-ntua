@@ -25,7 +25,7 @@ class EnergyEmployeeFullHistory extends Component {
 
         try {
             let res = await axios.get('http://localhost:8765/evcharge/api/queries/getAllSessionsForEnergyProvider/' + userID);
-            console.log(res);
+            // console.log(res);
 
             this.setState({
                 session: res.data,

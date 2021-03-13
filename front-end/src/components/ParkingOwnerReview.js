@@ -26,7 +26,7 @@ class ParkingOwnerReview extends Component {
 
         try {
             let res = await axios.get('http://localhost:8765/evcharge/api/queries/userStations/' + userID);
-            console.log(res);
+            // console.log(res);
             this.setState({
                 station: res.data,
                 length: res.data.length
@@ -43,11 +43,11 @@ class ParkingOwnerReview extends Component {
                                 {
                                     this.state.station[i].reviews.map((j, key) => { return (
                                         <div className="container-fluid review" key={key}>
-                                            <span>Date: {j.date.slice(0, 10)}</span>
+                                            <strong>Date:</strong><span> {j.date.slice(0, 10)}</span>
                                             <br/>
-                                            <span>Rating: {j.rating}/5</span>
+                                            <strong>Rating:</strong><span> {j.rating}/10</span>
                                             <br/>
-                                            <span>Comment: {j.comment}</span>
+                                            <span>{j.comment}</span>
                                         </div>
                                     );})
                                 }
