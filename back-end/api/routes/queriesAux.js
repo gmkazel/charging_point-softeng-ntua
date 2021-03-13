@@ -557,6 +557,7 @@ router.get('/getAllSessionsForEnergyProvider/:userID', async (req, res, next) =>
 
       result.push(mySessionInfoNew)
     }
+    result.sort((a, b) => b.start_date - a.start_date)
     res.send(result)
   } catch (err) {
     res.sendStatus(400)
