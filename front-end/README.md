@@ -9,8 +9,11 @@ First of all you need to install NodeJS with npm. Run the command
 ```
 npm install
 ```
+for the necessary packages to be installed. 
 
-for the necessary packages to be installed. The app is ready! Type
+Then using mkcert you have to create the key.pem and cert.pem files in order to use https (the files are stored in the front-end/.cert folder)
+
+The app is ready! Type
 
 ```
 npm start
