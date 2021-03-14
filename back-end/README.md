@@ -12,6 +12,8 @@ npm install
 ```
 to install all the necessary packages and then fill out your config files, config/dev.json and config/test.json
 
+Finally using mkcert you have to create the key.pem and cert.pem files in order to use https (the files are stored in the back-end/.cert folder)
+
 You are ready to start the server! Just type in terminal
 ```
 npm start
