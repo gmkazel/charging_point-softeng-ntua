@@ -11,8 +11,10 @@ The cli-client of Charging Point
 <!-- tocstop -->
 # Usage
 <!-- usage -->
+Fill out your config files, config/dev.json and config/test.json and then:
+
 ```sh-session
-cd to dir ./cli-client/ev_group32 and run: 
+cd to dir ./cli-client/ev_group32 and run:
 $ sudo npm link
 $ ev_group32 COMMAND
 running command...
