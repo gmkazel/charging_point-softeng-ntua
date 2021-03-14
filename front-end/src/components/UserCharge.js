@@ -31,7 +31,7 @@ class UserCharge extends Component {
         var data = qs.stringify({});
         var config = {
             method: 'get',
-            url: 'http://localhost:8765/evcharge/api/EstimatedTimeAndCost/' + this.state.cars[i].info + '/4.217/' + mode,
+            url: 'https://localhost:8765/evcharge/api/EstimatedTimeAndCost/' + this.state.cars[i].info + '/4.217/' + mode,
             headers: {
                 'X-OBSERVATORY-AUTH': userToken,
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -57,7 +57,7 @@ class UserCharge extends Component {
         let userID = jwt.decode(JSON.parse(localStorage.getItem('login')).token)._id;
 
         try {
-            let res = await axios.get('http://localhost:8765/evcharge/api/queries/userCars/' + userID);
+            let res = await axios.get('https://localhost:8765/evcharge/api/queries/userCars/' + userID);
             // console.log(res);
 
             this.setState({

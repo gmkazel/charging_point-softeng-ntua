@@ -40,7 +40,7 @@ class UserReview extends Component {
         });
         var config = {
             method: 'post',
-            url: 'http://localhost:8765/evcharge/api/stationmod/addreview/' + userID + '/' + this.state.station[i].stationId,
+            url: 'https://localhost:8765/evcharge/api/stationmod/addreview/' + userID + '/' + this.state.station[i].stationId,
             headers: {
                 'X-OBSERVATORY-AUTH': userToken,
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -61,7 +61,7 @@ class UserReview extends Component {
         let userID = jwt.decode(JSON.parse(localStorage.getItem('login')).token)._id;
 
         try {
-            let res = await axios.get('http://localhost:8765/evcharge/api/queries/stationsVisited/' + userID);
+            let res = await axios.get('https://localhost:8765/evcharge/api/queries/stationsVisited/' + userID);
             this.setState({
                 station: res.data,
                 length: res.data.length

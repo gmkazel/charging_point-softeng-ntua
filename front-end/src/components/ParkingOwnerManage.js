@@ -27,7 +27,7 @@ class ParkingOwnerManage extends Component {
         let userID = jwt.decode(JSON.parse(localStorage.getItem('login')).token)._id;
 
         try {
-            let res = await axios.get('http://localhost:8765/evcharge/api/queries/userStations/' + userID);
+            let res = await axios.get('https://localhost:8765/evcharge/api/queries/userStations/' + userID);
             // console.log(res);
 
             let temp = [];
@@ -62,8 +62,8 @@ class ParkingOwnerManage extends Component {
         var data = qs.stringify({});
         var config = {
             method: 'post',
-            url: 'http://localhost:8765/evcharge/api/stationmod/delete/' + userID + '/' + this.state.stations[i]._id,
-            headers: { 
+            url: 'https://localhost:8765/evcharge/api/stationmod/delete/' + userID + '/' + this.state.stations[i]._id,
+            headers: {
                 'X-OBSERVATORY-AUTH': userToken
             },
             data: data

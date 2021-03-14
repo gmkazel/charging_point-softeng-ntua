@@ -36,7 +36,7 @@ class EnergyEmployeeAnalytics extends Component {
         let userID = jwt.decode(JSON.parse(localStorage.getItem('login')).token)._id;
 
         try {
-            let res = await axios.get('http://localhost:8765/evcharge/api/queries/energyProviderInfo/' + userID);
+            let res = await axios.get('https://localhost:8765/evcharge/api/queries/energyProviderInfo/' + userID);
             // console.log(res);
 
             let temp = ['All Stations'];
@@ -148,7 +148,7 @@ class EnergyEmployeeAnalytics extends Component {
             startDate = this.getStartDate(endDate, 1);
 
             try {
-                let res = await axios.get('http://localhost:8765/evcharge/api/queries/energyProviderInfo/analytics/' + userID + '/' + stationID + '/' + startDate + '/' + endDate);
+                let res = await axios.get('https://localhost:8765/evcharge/api/queries/energyProviderInfo/analytics/' + userID + '/' + stationID + '/' + startDate + '/' + endDate);
                 // console.log(res);
 
                 let totalSessionstemp = [0, 0, 0, 0];
@@ -211,7 +211,7 @@ class EnergyEmployeeAnalytics extends Component {
             startDate = this.getStartDate(endDate, 3);
 
             try {
-                let res = await axios.get('http://localhost:8765/evcharge/api/queries/energyProviderInfo/analytics/' + userID + '/' + stationID + '/' + startDate + '/' + endDate);
+                let res = await axios.get('https://localhost:8765/evcharge/api/queries/energyProviderInfo/analytics/' + userID + '/' + stationID + '/' + startDate + '/' + endDate);
                 // console.log(res);
 
                 let totalSessionstemp = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -270,7 +270,7 @@ class EnergyEmployeeAnalytics extends Component {
             startDate = this.getStartDate(endDate, 6);
 
             try {
-                let res = await axios.get('http://localhost:8765/evcharge/api/queries/energyProviderInfo/analytics/' + userID + '/' + stationID + '/' + startDate + '/' + endDate);
+                let res = await axios.get('https://localhost:8765/evcharge/api/queries/energyProviderInfo/analytics/' + userID + '/' + stationID + '/' + startDate + '/' + endDate);
                 // console.log(res);
 
                 let totalSessionstemp = [0, 0, 0, 0, 0, 0];
@@ -314,7 +314,7 @@ class EnergyEmployeeAnalytics extends Component {
             startDate = this.getStartDate(endDate, 12);
 
             try {
-                let res = await axios.get('http://localhost:8765/evcharge/api/queries/energyProviderInfo/analytics/' + userID + '/' + stationID + '/' + startDate + '/' + endDate);
+                let res = await axios.get('https://localhost:8765/evcharge/api/queries/energyProviderInfo/analytics/' + userID + '/' + stationID + '/' + startDate + '/' + endDate);
                 // console.log(res);
 
                 let totalSessionstemp = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];

@@ -1,10 +1,21 @@
 const config = require('config')
 const express = require('express')
+const https = require('https')
+const fs = require('fs')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
+const cors = require('cors')
 const app = express()
-let server
+app.use(cors())
+let sslServer
+
+const key = fs.readFileSync('.cert/key.pem')
+const cert = fs.readFileSync('.cert/cert.pem')
+const options = {
+  key: key,
+  cert: cert
+}
 
 if (config.util.getEnv('NODE_ENV') !== 'test') {
   app.use(morgan('combined'))
@@ -28,7 +39,8 @@ const api = require('./api/routes/api')
 app.use(config.BASE_URL, api)
 
 mongoose.connection.on('connected', () => {
-  server = app.listen(config.PORT, function () {
+  sslServer = https.createServer(options, app)
+  sslServer.listen(config.PORT, () => {
     console.log('Server is listening at port ' + config.PORT)
     app.emit('appStarted')
   })
@@ -40,7 +52,7 @@ process.on('exit', shutDown)
 
 function shutDown () {
   console.log('Received kill signal, shutting down gracefully')
-  server.close(() => {
+  sslServer.close(() => {
     console.log('Closed out remaining connections')
     process.exit(0)
   })

@@ -38,7 +38,7 @@ class UserAnalytics extends Component {
         let userID = jwt.decode(JSON.parse(localStorage.getItem('login')).token)._id;
 
         try {
-            let res = await axios.get('http://localhost:8765/evcharge/api/queries/userCars/' + userID);
+            let res = await axios.get('https://localhost:8765/evcharge/api/queries/userCars/' + userID);
             // console.log(res);
 
             let temp = ['All Cars'];
@@ -150,7 +150,7 @@ class UserAnalytics extends Component {
             startDate = this.getStartDate(endDate, 1);
 
             try {
-                let res = await axios.get('http://localhost:8765/evcharge/api/queries/userCars/analytics/' + userID + '/' + carID + '/' + startDate + '/' + endDate);
+                let res = await axios.get('https://localhost:8765/evcharge/api/queries/userCars/analytics/' + userID + '/' + carID + '/' + startDate + '/' + endDate);
                 // console.log(res);
 
                 let kmtemp = [0, 0, 0, 0];
@@ -219,7 +219,7 @@ class UserAnalytics extends Component {
             startDate = this.getStartDate(endDate, 3);
 
             try {
-                let res = await axios.get('http://localhost:8765/evcharge/api/queries/userCars/analytics/' + userID + '/' + carID + '/' + startDate + '/' + endDate);
+                let res = await axios.get('https://localhost:8765/evcharge/api/queries/userCars/analytics/' + userID + '/' + carID + '/' + startDate + '/' + endDate);
                 // console.log(res);
 
                 let kmtemp = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -284,7 +284,7 @@ class UserAnalytics extends Component {
             startDate = this.getStartDate(endDate, 6);
 
             try {
-                let res = await axios.get('http://localhost:8765/evcharge/api/queries/userCars/analytics/' + userID + '/' + carID + '/' + startDate + '/' + endDate);
+                let res = await axios.get('https://localhost:8765/evcharge/api/queries/userCars/analytics/' + userID + '/' + carID + '/' + startDate + '/' + endDate);
                 // console.log(res);
 
                 let kmtemp = [0, 0, 0, 0, 0, 0];
@@ -331,7 +331,7 @@ class UserAnalytics extends Component {
             startDate = this.getStartDate(endDate, 12);
 
             try {
-                let res = await axios.get('http://localhost:8765/evcharge/api/queries/userCars/analytics/' + userID + '/' + carID + '/' + startDate + '/' + endDate);
+                let res = await axios.get('https://localhost:8765/evcharge/api/queries/userCars/analytics/' + userID + '/' + carID + '/' + startDate + '/' + endDate);
                 // console.log(res);
 
                 let kmtemp = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];

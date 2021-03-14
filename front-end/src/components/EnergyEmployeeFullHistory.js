@@ -24,7 +24,7 @@ class EnergyEmployeeFullHistory extends Component {
         let userID = jwt.decode(JSON.parse(localStorage.getItem('login')).token)._id;
 
         try {
-            let res = await axios.get('http://localhost:8765/evcharge/api/queries/getAllSessionsForEnergyProvider/' + userID);
+            let res = await axios.get('https://localhost:8765/evcharge/api/queries/getAllSessionsForEnergyProvider/' + userID);
             // console.log(res);
 
             this.setState({

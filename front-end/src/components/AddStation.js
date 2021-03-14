@@ -1,6 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import NavBar2 from './NavBar2';
-import './AddStation.css'; 
+import './AddStation.css';
 import { Link } from 'react-router-dom';
 import { Component } from 'react';
 import axios from 'axios';
@@ -39,9 +39,9 @@ class AddStation extends Component {
         });
         var config = {
             method: 'post',
-            url: 'http://localhost:8765/evcharge/api/stationmod/add/' + userID,
-            headers: { 
-                'X-OBSERVATORY-AUTH': userToken, 
+            url: 'https://localhost:8765/evcharge/api/stationmod/add/' + userID,
+            headers: {
+                'X-OBSERVATORY-AUTH': userToken,
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
             data: data
