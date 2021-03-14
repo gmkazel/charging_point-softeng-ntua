@@ -39,6 +39,7 @@
     "build": "react-scripts build",
     "eject": "react-scripts eject",
     "start": "PORT=8766 HTTPS=true SSL_CRT_FILE=./.cert/cert.pem SSL_KEY_FILE=./.cert/key.pem react-scripts start",
+    "winStart": "set PORT=8766 && set HTTPS=true && set SSL_CRT_FILE=./.cert/cert.pem && set SSL_KEY_FILE=./.cert/key.pem && react-scripts start",
     "test": "react-scripts test"
   },
   "version": "0.1.0"

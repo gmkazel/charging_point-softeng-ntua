@@ -193,9 +193,22 @@ router.get('/getAllSessions/:userID', async (req, res, next) => {
         const carInfo = await Vehicle.find({ _id: carSessions[j].car }, 'model brand', (err) => {
           if (err) console.log(err)
         })
+
+        const myStationAux = await Point.find({ _id: carSessions[j].point }, 'station', (err) => {
+          if (err) console.log(err)
+        })
+        const myStation = myStationAux[0].station
+
+        const myStationInfoAux = await Station.find({ _id: myStation }, 'name address', (err) => {
+          if (err) console.log(err)
+        })
+        const myStationInfo = myStationInfoAux[0]
+
         someSession = carSessions[j].toJSON()
         someSession.carModel = carInfo[0].model
         someSession.carBrand = carInfo[0].brand
+        someSession.stationName = myStationInfo.name
+        someSession.stationAddress = myStationInfo.address
         result = result.concat(someSession)
       }
       result = result.concat(someSession)

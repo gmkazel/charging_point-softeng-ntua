@@ -1,7 +1,7 @@
 {
     "BASE_URL": "host-adress",
     "DATABASE_URL": "database-adress/(dev?test)",
-    "DEFAULT_USER_NAME": "uuer",
+    "DEFAULT_USER_NAME": "user",
     "DEFAULT_USER_PASSWORD": "password",
     "PORT": 8765,
     "SALTROUNDS": 5,

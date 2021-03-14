@@ -48,7 +48,9 @@
     "coverage": "npx nyc npm test",
     "devStart": "NODE_ENV=dev nodemon server.js",
     "start": "NODE_ENV=dev HTTPS=true SSL_CRT_FILE=./.cert/cert.pem SSL_KEY_FILE=./.cert/key.pem node server.js",
+    "winStart": "set HTTPS=true && set SSL_CRT_FILE=./.cert/cert.pem && set SSL_KEY_FILE=./.cert/key.pem && node server.js",
     "test": "NODE_ENV=test HTTPS=true SSL_CRT_FILE=./.cert/cert.pem SSL_KEY_FILE=./.cert/key.pem mocha --timeout 20000 --exit",
+    "winTest": "set NODE_ENV=test && set HTTPS=true && set SSL_CRT_FILE=./.cert/cert.pem && set SSL_KEY_FILE=./.cert/key.pem && mocha --timeout 20000 --exit",
     "testServer": "NODE_ENV=test node server.js"
   },
   "version": "1.0.0"
